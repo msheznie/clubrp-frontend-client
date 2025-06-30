@@ -1,0 +1,71 @@
+<!-- invoice.component.html -->
+<div class="mb-6 w-full p-4 bg-white border border-gray-200 rounded-lg shadow-sm sm:p-8 dark:bg-gray-800 dark:border-gray-700">
+    <div class="flex justify-between items-start border-b pb-4">
+      <div>
+        <h2 class="font-bold text-lg">Oman Automobile Association LLC</h2>
+        <p class="text-sm">PO Box 2874, CPO Seeb, PC 111<br>
+        Sultanate of Oman<br>
+        Affiliated to the A.I.T & F.I.A<br>
+        Tel : (+968) 123 4567 / 987 6543<br>
+        Email : info&#64;dummymail.com<br>
+        Website : www.omanauto.org<br>
+        WhatsApp : (+968) 123 4567</p>
+      </div>
+      <div class="text-right text-sm">
+        <button mat-icon-button class="float-right">
+          <mat-icon>print</mat-icon>
+        </button>
+        <p class="font-bold">INVOICE NO. <span class="text-black">#123-456</span></p>
+        <p>Invoice Date: 10/03/2022</p>
+        <p>Payment Due Date: 31/03/2022</p>
+        <p class="font-bold">Balance Due: <span class="text-black">OMR 600.000</span></p>
+      </div>
+    </div>
+  
+    <table mat-table class="w-full mt-6">
+      <thead class="bg-gray-100 text-left">
+        <tr>
+          <th class="p-2">Description</th>
+          <th class="p-2">Amount (OMR)</th>
+          <th class="p-2">Discount (OMR)</th>
+          <th class="p-2">Net Amount (OMR)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="p-2">Government Fee</td>
+          <td class="p-2">200.000</td>
+          <td class="p-2">0.000</td>
+          <td class="p-2">200.000</td>
+        </tr>
+        <tr>
+          <td class="p-2">Registration Fee</td>
+          <td class="p-2">300.000</td>
+          <td class="p-2">0.000</td>
+          <td class="p-2">300.000</td>
+        </tr>
+      </tbody>
+    </table>
+  
+    <div class="flex justify-end mt-6 text-sm">
+      <div class="w-full max-w-sm">
+        <div class="flex justify-between py-1">
+          <span class="font-semibold text-gray-500">SUBTOTAL</span>
+          <span>500.000</span>
+        </div>
+        <div class="flex justify-between py-1">
+          <span class="font-semibold text-gray-500">TAX</span>
+          <span>50.000</span>
+        </div>
+        <div class="flex justify-between py-1">
+          <span class="font-semibold text-gray-500">DISCOUNT</span>
+          <span>0.000</span>
+        </div>
+        <div class="flex justify-between py-2 border-t mt-2 font-bold text-lg">
+          <span>TOTAL</span>
+          <span>550.000</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  

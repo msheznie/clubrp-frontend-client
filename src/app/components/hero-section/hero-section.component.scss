@@ -1,0 +1,68 @@
+.hero {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    width: 100%;
+    bottom: 0;
+    h1{
+        color: #353535;
+        font-size: 4rem;
+        line-height: 1.1;
+    }
+    .welcome-text{
+        color: #353535;
+        font-size: 1.7rem;
+        margin-bottom: 1.5rem;
+    }
+    .welcome-desc{
+        color: #353535;
+        margin-top: 1.8rem;
+        line-height: 1.6;
+        margin-bottom: 0;
+    }
+    .card{
+        background: rgba(255, 255, 255, 0.5);
+        padding: 2rem;
+        border-radius: 30px;
+        width: 38%;
+        text-align: left;
+        -webkit-backdrop-filter: blur(10px);
+        backdrop-filter: blur(2px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.11), 0 6px 6px rgba(0, 0, 0, 0.06);
+        display: flex ;
+        justify-content: space-between;
+        flex-flow: wrap;
+    }
+    .cards {
+        display: flex;
+        justify-content: end;
+        gap: 20px;
+        margin-top: 40px;
+    }
+    .card h3 {
+        font-size: 1.5rem;
+        color: #3D3F3E;
+        font-weight: 500;
+        line-height: 1.2;
+    }
+    .card p {
+        color: #3D3F3E;
+        span{
+            color: #E0272A;
+        }
+    }
+    .card p.applied{
+        padding-bottom: 0;
+        margin-bottom: 0;
+    }
+    .card button {
+        background: #444444;
+        color: #fff;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 20px;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+  }
+  

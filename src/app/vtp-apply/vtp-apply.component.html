@@ -1,0 +1,65 @@
+<app-navbar></app-navbar>
+<div class="container mx-auto px-20">
+    <mat-stepper
+    class="example-stepper" labelPosition="bottom" #steppe>
+    <mat-step [stepControl]="firstFormGroup" label="Terms and Conditions">
+        <form [formGroup]="firstFormGroup">
+            <div class="container mx-auto">
+                <app-terms-and-conditions></app-terms-and-conditions>
+              </div>
+              <div class="flex justify-end">
+                <button mat-button matStepperNext>Next</button>
+              </div>
+        </form>
+    </mat-step>
+    <mat-step [stepControl]="secondFormGroup" label="Basic Information">
+      <form [formGroup]="secondFormGroup">
+        <app-basic-information></app-basic-information>
+        <app-particular-of-vehicle></app-particular-of-vehicle>
+        <app-owner-address-sultanate-of-oman></app-owner-address-sultanate-of-oman>
+        <app-owner-address-home-country></app-owner-address-home-country>
+        <app-reference-sultanate-oman></app-reference-sultanate-oman>
+        <app-references-your-home-country></app-references-your-home-country>
+        <app-attachments></app-attachments>
+        <div class="flex justify-end gap-4">
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button matStepperNext>Next</button>
+        </div>
+      </form>
+    </mat-step>
+    <mat-step [stepControl]="threeFormGroup" label="Terms & Conditions">
+      <form [formGroup]="threeFormGroup">
+        <app-terms-and-condition></app-terms-and-condition>
+        <div class="flex justify-end gap-4">
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button matStepperNext>Next</button>
+        </div>
+      </form>
+    </mat-step>
+    <mat-step [stepControl]="foreFormGroup" label="Waiting for Approvals">
+      <form [formGroup]="foreFormGroup">
+        <app-approvals></app-approvals>
+        <div class="flex justify-end gap-4">
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button matStepperNext>Next</button>
+        </div>
+      </form>
+    </mat-step>
+    <mat-step [stepControl]="fiveFormGroup" label="Fee and Chargers">
+      <form [formGroup]="fiveFormGroup">
+       <app-fee-and-chargers></app-fee-and-chargers>
+       <div class="flex justify-end gap-4">
+        <button mat-button matStepperPrevious>Back</button>
+        <button mat-button matStepperNext>Pay</button>
+      </div>
+</form>
+    </mat-step>
+    <!-- <mat-step>
+      <ng-template matStepLabel>Done</ng-template>
+      <p>You are now done.</p>
+      <div>
+        <button mat-button matStepperPrevious>Back</button>
+      </div>
+    </mat-step> -->
+  </mat-stepper>
+</div>
