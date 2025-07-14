@@ -1,11 +1,18 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { HomeComponent } from './home/home.component';
-import { VtpApplyComponent } from './vtp-apply/vtp-apply.component';
+import { HomeComponent } from './modules/landing/home/home.component';
+
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
-  { path: 'vtp-apply', component: VtpApplyComponent },
+  
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
+  
+  {
+    path: 'vtp-apply',
+    loadChildren: () => import('./modules/client/vtp-apply/vtp-apply-routes')
+      .then(m => m.VTP_APPLY_ROUTES) 
+  },
 ];
 
 @NgModule({
