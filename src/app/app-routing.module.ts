@@ -5,7 +5,7 @@ import { HomeComponent } from './modules/landing/home/home.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
-  
+
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   
   {
@@ -13,6 +13,8 @@ const routes: Routes = [
     loadChildren: () => import('./modules/client/vtp-apply/vtp-apply-routes')
       .then(m => m.VTP_APPLY_ROUTES) 
   },
+
+  { path: '**', component: HomeComponent},
 ];
 
 @NgModule({
