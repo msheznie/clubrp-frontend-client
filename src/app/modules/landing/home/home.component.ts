@@ -12,9 +12,9 @@ import { ApiService } from '../../../shared/services/api.service';
 })
 export class HomeComponent {
     private api = inject(ApiService);
-    users: any[] = [];
+    // users: any[] = [];
 
     ngOnInit() {
-        this.api.get<any[]>('/users').subscribe(data => this.users = data);
+        // this.api.get<any[]>('/users').subscribe(data => this.users = data);
     }
 }
