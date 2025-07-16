@@ -1,0 +1,9 @@
+{
+    "production": false,
+    "BASE_URL" : "http://localhost:8000",
+    "client_id" : 2,
+    "client_secret" : "AaZO9zZqCNT1GhbR0JRPSNggO72FSg6CDlQSB5uI",
+    "webSocket": true,
+    "socketUrl": "https://notification-qa.uat-gears-int.com",
+    "appName": "IDL"
+}
