@@ -136,18 +136,28 @@ nav ul li a {
     font-size: 22px;
 }
 
-// .card button {
-//     background: white;
-//     color: black;
-//     padding: 10px 20px;
-//     border: none;
-//     border-radius: 20px;
-//     cursor: pointer;
-//     margin-top: 10px;
-// }
-// .mat-horizontal-stepper-header{
-//     flex-direction: column;
-// }
+.card .primary-button {
+    background: #444444;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.card .secondary-button {
+    background: transparent;
+    color: #444444;
+    padding: 10px 20px;
+    border: solid 1px #444444;
+    border-radius: 20px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+.mat-horizontal-stepper-header{
+    flex-direction: column;
+}
 .mat-step-header:hover:not([aria-disabled]), .mat-step-header:hover[aria-disabled=false] {
     background-color: transparent !important;
 }
