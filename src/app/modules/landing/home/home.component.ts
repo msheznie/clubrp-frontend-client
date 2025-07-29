@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
-import { NavbarComponent } from "../../client/navbar/navbar.component";
-import { HeroSectionComponent } from "../../client/hero-section/hero-section.component";
+import { NavbarComponent } from "../../common/components/navbar/navbar.component";
+import { HeroSectionComponent } from "../../common/components/hero-section/hero-section.component";
 import { ApiService } from '../../../shared/services/api.service';
 
 @Component({

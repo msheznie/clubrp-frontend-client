@@ -1,0 +1,91 @@
+.mat-expansion-panel.mat-expanded .mat-expansion-panel-header img {
+    filter: none !important;
+}
+
+.mat-expansion-panel .mat-expansion-panel-header img {
+    filter: grayscale(100%) !important;
+}
+
+.mat-expansion-panel-header-title,
+.mat-expansion-panel-header-description {
+    font-weight: 400;
+}
+
+::ng-deep .mat-expansion-indicator::after {
+    border-color: #000 !important;
+}
+
+::ng-deep .mdc-notched-outline__notch {
+    border: none;
+}
+
+::ng-deep .custom-radio {
+    .mat-mdc-radio-button .mdc-radio .mdc-radio__native-control:enabled:checked+.mdc-radio__background .mdc-radio__outer-circle {
+        border-color: #3FA5FF !important;
+    }
+
+    .mat-mdc-radio-button .mdc-radio .mdc-radio__native-control:enabled+.mdc-radio__background .mdc-radio__inner-circle {
+        border-color: #3FA5FF !important;
+    }
+
+    .mat-mdc-radio-button.mat-mdc-radio-checked .mdc-radio__background::before {
+        background-color: transparent !important;
+    }
+
+    .mdc-form-field {
+        display: inline-flex;
+        align-items: center;
+        vertical-align: middle;
+        flex-direction: row-reverse;
+    }
+
+    .mdc-form-field>label {
+        padding-left: 0;
+        font-size: 13px;
+        font-weight: 500;
+    }
+}
+
+::ng-deep .example-chip-list.mat-mdc-form-field {
+    .mat-mdc-form-field-flex {
+        height: auto !important;
+    }
+
+    .mat-mdc-form-field-infix {
+        padding: 8px 0 8px 0 !important;
+    }
+
+    .mat-mdc-standard-chip:not(.mdc-evolution-chip--disabled) {
+        background-color: #7d7d7d !important;
+
+        .mdc-evolution-chip__text-label {
+            color: #fff !important;
+        }
+
+        .mdc-evolution-chip__icon--trailing {
+            color: #ccc !important;
+        }
+    }
+}
+
+@-moz-document url-prefix() {
+    * {
+      scrollbar-width: thin;
+      scrollbar-color: #e4e4e4 transparent;
+    }
+  }
+  
+  /* Works on Chrome, Edge, and Safari */
+  *::-webkit-scrollbar {
+    width: 5px;
+    height: 10px;
+  }
+  
+  *::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  *::-webkit-scrollbar-thumb {
+    background-color: #e4e4e4;
+    border-radius: 20px;
+  }

@@ -1,5 +1,5 @@
 <section class="hero">
-    <div class="hero-content w-[75%]">
+    <div class="hero-content md:w-[75%]">
         <p class="welcome-text">Welcome to</p>
         <h1><strong>OMAN</strong> Automobile <br> Association</h1>
         <p class="welcome-desc">
@@ -21,7 +21,7 @@
         <div class="card">
             <h3>Vehicle Travel Permit<br> (VTP)</h3>
             <p>Lorem ipsum is simply dummy text of the printing and typesetting industry.</p>
-            <button routerLink="/vtp-apply">Apply Now</button>
+            <button [routerLink]="['/vtp-apply']" routerLinkActive="router-link-active" >Apply Now</button>
         </div>
     </div>
 </section>

@@ -1,0 +1,37 @@
+<div class="p-8">
+    <div class="flex justify-center items-center gap-2 mt-4">
+        <img src="/assets/img/oaa-logo.png" class="" alt="oaa-logo" />
+        <img src="/assets/img/fia-logo.png" class="" alt="oaa-logo" />
+    </div>
+    <div class="flex justify-center items-center mt-4">
+        <span class="text-[32px] text-[#202020]">Login to <span class="text-[32px] text-[#E0272A]"> OAA</span></span>
+    </div>
+    <div class="flex justify-center items-center mt-4">
+        <span class="text-[#64748B] text-[14px]">or Login as a Admin (This message Showing in only Prototype )</span>
+    </div>
+    <div class="flex flex-col justify-center items-center mt-8 gap-8">
+        <mat-form-field appearance="outline" class="mat-form-field w-full">
+            <mat-label>User name</mat-label>
+            <input matInput value="Abdulla al Rahuman" />
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="mat-form-field w-full">
+            <mat-label>Password</mat-label>
+            <input matInput type="password" value="Abdulla" />
+        </mat-form-field>
+    </div>
+    <div class="flex justify-between mt-4">
+        <span class="text-[#64748B] text-[14px]">Don’t have an account? <button type='button' (click)="openSignup()" class="font-bold">Sign Up</button></span>
+        <span class="text-[#64748B]">Forget Password</span>
+    </div>
+    <div class="flex items-center justify-center mt-10">
+        <button class="button-fill justify-center w-[50%] h-10">Login</button>
+    </div>
+    <div class="flex items-center justify-center mt-4">
+       <span class="text-[#64748B] text-[14px]">or Login with</span>
+    </div>
+    <div class="flex items-center justify-center mt-4">
+        <button class="button-google justify-center w-[50%] h-10">
+            <img src="/assets/icons/gmail-icon.png" alt="icon" class="w-4 h-4">
+            Continue With Google</button>
+    </div>
+</div>

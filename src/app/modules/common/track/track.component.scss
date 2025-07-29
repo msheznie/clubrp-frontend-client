@@ -1,0 +1,26 @@
+table {
+    border-collapse: separate;
+    border-spacing: 0 10px;
+  }
+  
+  tr {
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  
+
+  
+  .table-actions {
+    display: flex;
+    mat-icon {
+        font-size: 16px;
+        color: #64748B;
+        height: 14px !important;
+      }
+      .table-actions-inner{
+        background-color: white;
+        border-radius: 8px;
+      }
+  }
+
+  

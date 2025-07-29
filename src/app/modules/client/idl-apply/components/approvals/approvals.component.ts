@@ -5,6 +5,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { BasicInformationComponent } from "../basic-information/basic-information.component";
 
 @Component({
   selector: 'app-approvals',
@@ -12,17 +13,16 @@ import { MatInputModule } from '@angular/material/input';
   styleUrls: ['./approvals.component.scss'],
     standalone: true,
     imports: [
-      MatButtonModule,
-      MatExpansionModule,
-      MatIconModule,
-      MatFormFieldModule,
-      MatInputModule,
-      CommonModule
-    ],
+    MatButtonModule,
+    MatExpansionModule,
+    MatIconModule,
+    MatFormFieldModule,
+    MatInputModule,
+    CommonModule,
+    BasicInformationComponent
+],
 })
 export class ApprovalsComponent {
-  isFirstDivVisible = true;
-
   documents = [
     { label: 'Basic Information', status: 'Approved', icon: 'assets/icons/basic-info.png' },
     { label: 'Particular Of Vehicle', status: 'Approved', icon: 'assets/icons/vehicle.png' },
@@ -46,9 +46,5 @@ export class ApprovalsComponent {
       default:
         return 'bg-gray-100 text-gray-600';
     }
-  }
-
-  toggleDivs() {
-    this.isFirstDivVisible = !this.isFirstDivVisible;
   }
 }

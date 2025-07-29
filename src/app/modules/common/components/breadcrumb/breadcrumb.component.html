@@ -1,0 +1,31 @@
+<nav class="text-sm text-gray-500 flex items-center space-x-1">
+    <ng-container *ngFor="let breadcrumb of breadcrumbs; let last = last">
+
+      <ng-container *ngIf="!last">
+        <span class="hidden md:flex items-center">
+          <ng-container *ngIf="breadcrumb.link">
+            <a
+              [routerLink]="breadcrumb.link"
+              class="hover:underline text-xs"
+            >
+              {{ breadcrumb.label }}
+            </a>
+          </ng-container>
+          <ng-container *ngIf="!breadcrumb.link">
+            {{ breadcrumb.label }}
+          </ng-container>
+          <span class="mx-1">›</span>
+        </span>
+      </ng-container>
+  
+
+      <ng-container *ngIf="last">
+        <span class="font-semibold text-gray-800 text-base">
+          {{ breadcrumb.label }}
+        </span>
+      </ng-container>
+    </ng-container>
+  </nav>
+
+  
+  

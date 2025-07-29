@@ -21,7 +21,7 @@
         margin-bottom: 0;
     }
     .card{
-        background: rgba(255, 255, 255, 0.5);
+        background-image: linear-gradient(to bottom, #d7dde4 , #FFFFFF);
         padding: 2rem;
         border-radius: 30px;
         width: 38%;
@@ -54,15 +54,6 @@
     .card p.applied{
         padding-bottom: 0;
         margin-bottom: 0;
-    }
-    .card button {
-        background: #444444;
-        color: #fff;
-        padding: 10px 20px;
-        border: none;
-        border-radius: 20px;
-        cursor: pointer;
-        margin-top: 10px;
     }
   }
   
