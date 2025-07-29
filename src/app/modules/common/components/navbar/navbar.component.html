@@ -1,0 +1,44 @@
+<header class="p-[15px_30px]">
+    <div class="navbar">
+        <div class="logo">
+          <img src="../../../assets/img/logo.png" class="w-[100px]" alt="" />
+        </div>
+        <div class="right-side flex items-center">
+          <nav class="mr-9">
+            <ul>
+              <li><a href="#">Home</a></li>
+              <li><a href="#">About Us</a></li>
+              <li><a href="#">Contact Us</a></li>
+            </ul>
+          </nav>
+          <div>
+            <button type="button" class="sign-in flex items-center" (click)="openSignin()">
+              <span class="btn-image w-[28px]">
+                <img src="../../../assets/img/btn-image.png" alt="" />
+              </span>
+              <span class="btn-text mx-2">Sign In</span>
+            </button>
+          </div>
+          <!-- USED ONCE THE USER IS SIGNED IN  -->
+          <!-- <div>
+            <button class="sign-in flex items-center" [matMenuTriggerFor]="menu">
+              <span class="btn-image w-[28px]">
+                <img src="../../../assets/img/btn-image.png" alt="" />
+              </span>
+              <span class="btn-text mx-2">Hi Abdullah</span>
+            </button>
+            <mat-menu #menu="matMenu">
+              <button mat-menu-item>
+                <span>Settings</span>
+              </button>
+              <button mat-menu-item>
+                <span>Track My Application</span>
+              </button>
+              <button mat-menu-item>
+                <span>Logout</span>
+              </button>
+            </mat-menu>
+          </div> -->
+        </div>
+    </div>
+</header>

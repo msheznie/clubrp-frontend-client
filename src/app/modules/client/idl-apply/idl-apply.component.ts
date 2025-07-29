@@ -10,25 +10,17 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {AsyncPipe} from '@angular/common';
 import { MaterialModules } from '../../../material';
 import { NavbarComponent } from "../../common/components/navbar/navbar.component";
-import { TermsAndConditionsComponent } from "./terms-and-conditions/terms-and-conditions.component";
-import { BasicInformationComponent } from "./basic-information/basic-information.component";
-import { ParticularOfVehicleComponent } from "./particular-of-vehicle/particular-of-vehicle.component";
-import { OwnerAddressSultanateOfOmanComponent } from "./owner-address-sultanate-of-oman/owner-address-sultanate-of-oman.component";
-import { OwnerAddressHomeCountryComponent } from "./owner-address-home-country/owner-address-home-country.component";
+import { PrerequisitesComponent } from "./components/prerequisites/prerequisites.component";
+import { BasicInformationComponent } from "./components/basic-information/basic-information.component";
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { TermsAndConditionComponent } from "./terms-and-condition/terms-and-condition.component";
-import { ApprovalsComponent } from "./approvals/approvals.component";
-import { FeeAndChargersComponent } from "./fee-and-chargers/fee-and-chargers.component";
-import { AttachmentsComponent } from "./attachments/attachments.component";
-import { ReferenceSultanateOmanComponent } from "./reference-sultanate-oman/reference-sultanate-oman.component";
-import { ReferencesYourHomeCountryComponent } from "./references-your-home-country/references-your-home-country.component";
-import { MatIconModule } from '@angular/material/icon';
-import { BreadcrumbComponent } from "../../common/components/breadcrumb/breadcrumb.component";
+import { TermsAndConditionComponent } from "./components/terms-and-condition/terms-and-condition.component";
+import { ApprovalsComponent } from "./components/approvals/approvals.component";
+import { FeeAndChargersComponent } from "./components/fee-and-chargers/fee-and-chargers.component";
 @Component({
   standalone: true,
-  selector: 'app-vtp-apply',
-  templateUrl: './vtp-apply.component.html',
-  styleUrls: ['./vtp-apply.component.scss'],
+  selector: 'app-idl-apply',
+  templateUrl: './idl-apply.component.html',
+  styleUrls: ['./idl-apply.component.scss'],
   imports: [
     MatStepperModule,
     FormsModule,
@@ -39,22 +31,14 @@ import { BreadcrumbComponent } from "../../common/components/breadcrumb/breadcru
     AsyncPipe,
     MaterialModules,
     NavbarComponent,
-    TermsAndConditionsComponent,
+    PrerequisitesComponent,
     BasicInformationComponent,
-    ParticularOfVehicleComponent,
-    OwnerAddressSultanateOfOmanComponent,
-    OwnerAddressHomeCountryComponent,
     TermsAndConditionComponent,
     ApprovalsComponent,
     FeeAndChargersComponent,
-    AttachmentsComponent,
-    ReferenceSultanateOmanComponent,
-    ReferencesYourHomeCountryComponent,
-    MatIconModule,
-    BreadcrumbComponent,
 ],
 })
-export class VtpApplyComponent {
+export class IdlApplyComponent {
   private _formBuilder = inject(FormBuilder);
 
   firstFormGroup = this._formBuilder.group({
@@ -74,11 +58,6 @@ export class VtpApplyComponent {
   });
   isLinear = false;
 
-  breadcrumbs = [
-    { label: 'Oman Automobile Association', link: '/association' },
-    { label: 'Vehicle Transportation Permit', link: '/vehicle-transport' },
-    { label: 'Apply for VTP' }
-  ];
 
   url: string = 'https://www.figma.com/proto/q8AVbFD5QtnThuxROt9rZl/OAA---Oman-Automobile-Association?node-id=232-1183&t=YB1uGcm86pmjbI7T-1&scaling=contain&content-scaling=fixed&page-id=0%3A1';
   urlSafe: SafeResourceUrl | undefined;

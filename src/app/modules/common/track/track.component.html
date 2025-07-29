@@ -1,0 +1,56 @@
+<app-navbar></app-navbar>
+<div class="flex justify-between items-center mx-4 md:mx-14">
+    <app-breadcrumb [breadcrumbs]="breadcrumbs"></app-breadcrumb>
+    <div>
+        <button class="button-outline">
+            <mat-icon>cancel</mat-icon>
+            <span class="button-text">Cancel</span>
+            </button>
+    </div>
+</div>
+
+<div class="mx-4 md:mx-14 mt-4 overflow-scroll">
+<table class="w-full text-sm text-left rounded-md" >
+    <thead class="bg-white text-gray-600">
+      <tr>
+        <th class="px-6 py-3 font-medium">Application ID</th>
+        <th class="px-6 py-3 font-medium">Applicant Name</th>
+        <th class="px-6 py-3 font-medium">Licence Type</th>
+        <th class="px-6 py-3 font-medium">Created Date & Time</th>
+        <th class="px-6 py-3 font-medium">Status</th>
+        <th class="px-6 py-3 font-medium">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        class="bg-[#FBFBFD] border-b border-gray-200 hover:bg-gray-50"
+        *ngFor="let application of applications"
+      >
+        <td class="px-6 py-4">{{ application.id }}</td>
+        <td class="px-6 py-4">{{ application.name }}</td>
+        <td class="px-6 py-4">{{ application.licenceType }}</td>
+        <td class="px-6 py-4">{{ application.createdAt }}</td>
+        <td class="px-6 py-4">
+          <span
+            class="status-badge"
+            [ngClass]="{
+              'in-review': application.status === 'In Review',
+              'approved': application.status === 'Approved'
+            }"
+          >
+            {{ application.status }}
+          </span>
+        </td>
+        <td class="px-6 py-4 text-center space-x-2 table-actions">
+          <button mat-icon-button class="table-actions-inner" [routerLink]="'/track-view'">
+            <mat-icon>visibility</mat-icon>
+          </button>
+          <button mat-icon-button *ngIf="application.status === 'Approved'" class="table-actions-inner">
+            <mat-icon>local_printshop</mat-icon>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  
+</div>

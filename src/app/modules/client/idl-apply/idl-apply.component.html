@@ -1,32 +1,11 @@
 <app-navbar></app-navbar>
-<div class="flex justify-between items-center mx-4 md:mx-14">
-  <app-breadcrumb [breadcrumbs]="breadcrumbs"></app-breadcrumb>
-  <div class="flex gap-4">
-      <button class="button-outline">
-          <mat-icon>cancel</mat-icon>
-          <span class="button-text">Cancel</span>
-          </button>
-      <button class="button-outline">
-          <mat-icon>save</mat-icon>
-          <span class="button-text">Save as Draft</span>
-          </button>
-      <button class="button-fill">
-          <mat-icon>done</mat-icon>
-          <span class="button-text">Submit</span>
-          </button>
-      <button class="button-fill">
-          <mat-icon>attach_money</mat-icon>
-          <span class="button-text">Pay and Submit</span>
-          </button>
-  </div>
-</div>
-<div class="container mx-auto px-4 md:px-20 mt-4">
-  <mat-stepper
+<div class="container mx-auto px-20">
+    <mat-stepper
     class="example-stepper" labelPosition="bottom" #steppe>
-    <mat-step [stepControl]="firstFormGroup" label="Terms and Conditions">
+    <mat-step [stepControl]="firstFormGroup" label="Prerequisites">
         <form [formGroup]="firstFormGroup">
             <div class="container mx-auto">
-                <app-terms-and-conditions></app-terms-and-conditions>
+                <app-prerequisites></app-prerequisites>
               </div>
               <div class="flex justify-end">
                 <button mat-button matStepperNext>Next</button>
@@ -36,12 +15,6 @@
     <mat-step [stepControl]="secondFormGroup" label="Basic Information">
       <form [formGroup]="secondFormGroup">
         <app-basic-information></app-basic-information>
-        <app-particular-of-vehicle></app-particular-of-vehicle>
-        <app-owner-address-sultanate-of-oman></app-owner-address-sultanate-of-oman>
-        <app-owner-address-home-country></app-owner-address-home-country>
-        <app-reference-sultanate-oman></app-reference-sultanate-oman>
-        <app-references-your-home-country></app-references-your-home-country>
-        <app-attachments></app-attachments>
         <div class="flex justify-end gap-4">
           <button mat-button matStepperPrevious>Back</button>
           <button mat-button matStepperNext>Next</button>

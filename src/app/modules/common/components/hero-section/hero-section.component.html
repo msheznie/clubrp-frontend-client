@@ -1,5 +1,5 @@
 <section class="hero">
-    <div class="hero-content w-[75%]">
+    <div class="hero-content md:w-[75%]">
         <p class="welcome-text">Welcome to</p>
         <h1><strong>OMAN</strong> Automobile <br> Association</h1>
         <p class="welcome-desc">
@@ -17,11 +17,18 @@
             <p class="applied">
                 You already Applied to this Service. <span><strong>Track Update</strong></span> 
             </p>
+            <div class="flex gap-4">
+                <button [routerLink]="['/idl-apply']" routerLinkActive="router-link-active" class="primary-button">Apply Now</button>
+                <button [routerLink]="['/track']" routerLinkActive="router-link-active" class="secondary-button">Track</button>
+            </div>
         </div>
         <div class="card">
             <h3>Vehicle Travel Permit<br> (VTP)</h3>
             <p>Lorem ipsum is simply dummy text of the printing and typesetting industry.</p>
-            <button routerLink="/vtp-apply">Apply Now</button>
+            <div class="flex gap-4">
+                <button [routerLink]="['/vtp-apply']" routerLinkActive="router-link-active" class="primary-button">Apply Now</button>
+                <button [routerLink]="['/track']" routerLinkActive="router-link-active" class="secondary-button">Track</button>
+            </div>
         </div>
     </div>
 </section>
