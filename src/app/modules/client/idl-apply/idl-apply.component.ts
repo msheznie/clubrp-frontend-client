@@ -18,7 +18,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { TermsAndConditionComponent } from "./components/terms-and-condition/terms-and-condition.component";
 import { ApprovalsComponent } from "./components/approvals/approvals.component";
 import { FeeAndChargersComponent } from "./components/fee-and-chargers/fee-and-chargers.component";
-import { SignInComponent } from '../../common/sign-in/sign-in.component';
+import { SignInComponent } from '../../auth/sign-in/sign-in.component';
 @Component({
   standalone: true,
   selector: 'app-idl-apply',
