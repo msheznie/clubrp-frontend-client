@@ -1,15 +1,15 @@
 <div class="p-8">
-    <div class="flex justify-center items-center gap-2 mt-4">
+    <div class="flex justify-center items-center gap-2 md:mt-4">
         <img src="/assets/img/oaa-logo.png" class="" alt="oaa-logo" />
         <img src="/assets/img/fia-logo.png" class="" alt="oaa-logo" />
     </div>
     <div class="flex justify-center items-center mt-4">
-        <span class="text-[32px] text-[#202020]"><span class="text-[32px] text-[#E0272A]"> Create</span> an Account</span>
+        <span class="md:text-[32px] text-[20px] text-[#202020]"><span class=" text-[#E0272A]"> Create</span> an Account</span>
     </div>
-    <div class="flex justify-center items-center mt-4">
-        <span class="text-[#64748B] text-[14px]">Enter below details to create a new account</span>
+    <div class="flex justify-center items-center md:mt-4 mt-2 mb-4 md:mb-8">
+        <span class="text-[#64748B] md:text-[14px] text-[10px]">Enter below details to create a new account</span>
     </div>
-    <div class="mt-8 max-h-[19rem] overflow-y-scroll">
+    <div class="max-h-[20rem] overflow-y-scroll">
         <form id="signUpForm" [formGroup]="signUpForm" (ngSubmit)="onSubmit()" class="mt-2 flex flex-col gap-4">
             <mat-form-field appearance="outline" class="mat-form-field w-full">
                 <mat-label>Name</mat-label>
@@ -71,9 +71,9 @@
         </form>
     </div>
     <div class="flex justify-start mt-4">
-        <span class="text-[#64748B] text-[14px]">Have an account? <button type='button'  class="font-bold">Sign In</button></span>
+        <span class="text-[#64748B] md:text-[14px] text-[10px]">Have an account? <button type='button'  class="font-bold">Sign In</button></span>
     </div>
-    <div class="flex items-center justify-center mt-10">
+    <div class="flex items-center justify-center md:mt-10 mt-6">
         <button type="submit" form="signUpForm" class="button-fill justify-center w-[50%] h-10" [disabled]="signUpForm.disabled">Create</button>
     </div>
 </div>
