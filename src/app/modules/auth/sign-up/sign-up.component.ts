@@ -1,7 +1,8 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, inject, ViewEncapsulation } from '@angular/core';
 import { CommonModule, NgIf } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -10,6 +11,7 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators} from '@angular
 import { HttpClient } from '@angular/common/http';
 import { MaterialModules } from '../../../material';
 import { AuthService } from 'src/app/shared/services/auth.service';
+import { OtpVerifyComponent } from './otp-verify/otp-verify.component';
 
 @Component({
   selector: 'app-sign-up',
@@ -32,6 +34,7 @@ import { AuthService } from 'src/app/shared/services/auth.service';
 })
 export class SignUpComponent {
   signUpForm: FormGroup;
+  private dialog = inject(MatDialog);
 
   constructor(private fb: FormBuilder, private http: HttpClient, private authService: AuthService) {
     this.signUpForm = this.fb.group({
@@ -67,6 +70,7 @@ export class SignUpComponent {
       this.signUpForm.disable();
       this.authService.signup(this.signUpForm.value).subscribe({
         next: (response) => {
+          this.openOtpVerifyModel();
           console.log('Signup successful:', response);
         },
         error: (error) => {
@@ -87,6 +91,14 @@ export class SignUpComponent {
       const control = this.signUpForm.get(key);
       control?.markAsTouched();
     });
+  }
+
+  openOtpVerifyModel() {
+    const dialogRef = this.dialog.open(OtpVerifyComponent, {
+      height: 'auto',
+      width: '40em',
+      panelClass: 'default-preview-dialog',
+      });
   }
 
 }
