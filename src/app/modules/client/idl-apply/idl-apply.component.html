@@ -1,5 +1,18 @@
 <app-navbar></app-navbar>
-<div class="container mx-auto px-20">
+<div class="flex justify-between items-center mx-4 md:mx-14">
+  <app-breadcrumb [breadcrumbs]="breadcrumbs"></app-breadcrumb>
+  <div class="flex gap-4">
+      <button class="button-outline">
+          <mat-icon>cancel</mat-icon>
+          <span class="button-text">Cancel</span>
+          </button>
+      <button class="button-outline">
+          <mat-icon>save</mat-icon>
+          <span class="button-text">Save as Draft</span>
+      </button>
+  </div>
+</div>
+<div class="container mx-auto px-4 md:px-20 mt-4">
     <mat-stepper
     class="example-stepper" labelPosition="bottom" #steppe>
     <mat-step [stepControl]="firstFormGroup" label="Prerequisites">

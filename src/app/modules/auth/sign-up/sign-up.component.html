@@ -1,0 +1,73 @@
+<div class="p-8">
+    <div class="flex justify-center items-center gap-2 md:mt-4">
+        <img src="/assets/img/oaa-logo.png" class="" alt="oaa-logo" />
+        <img src="/assets/img/fia-logo.png" class="" alt="oaa-logo" />
+    </div>
+    <div class="flex justify-center items-center mt-4">
+        <span class="md:text-[32px] text-[20px] text-[#202020]"><span class=" text-[#E0272A]"> Create</span> an Account</span>
+    </div>
+    <div class="flex justify-center items-center md:mt-4 mt-2 mb-4 md:mb-8">
+        <span class="text-[#64748B] md:text-[14px] text-[10px]">Enter below details to create a new account</span>
+    </div>
+    <div class="max-h-[20rem] overflow-y-scroll">
+        <form id="signUpForm" [formGroup]="signUpForm" (ngSubmit)="onSubmit()" class="mt-2 flex flex-col gap-4">
+            <mat-form-field appearance="outline" class="mat-form-field w-full">
+                <mat-label>Name</mat-label>
+                <input id="name" matInput formControlName="name" />
+                <mat-error *ngIf="signUpForm.get('name')?.hasError('required') && signUpForm.get('name')?.touched">
+                    Name is required
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="mat-form-field w-full">
+                <mat-label>Email</mat-label>
+                <input id="email" matInput type="email" formControlName="email" />
+                <mat-error *ngIf="signUpForm.get('email')?.hasError('required') && signUpForm.get('email')?.touched">
+                    Email is required
+                </mat-error>
+                <mat-error *ngIf="signUpForm.get('email')?.hasError('email') && signUpForm.get('email')?.touched">
+                    Please enter a valid email address
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="mat-form-field w-full">
+                <mat-label>Phone</mat-label>
+                <input id="primary_mobile" matInput formControlName="primary_mobile" />
+                <mat-error *ngIf="signUpForm.get('primary_mobile')?.hasError('required') && signUpForm.get('primary_mobile')?.touched">
+                    Phone is required
+                </mat-error>
+                <mat-error *ngIf="signUpForm.get('primary_mobile')?.hasError('pattern') && signUpForm.get('primary_mobile')?.touched">
+                    Please enter a valid phone number
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="mat-form-field w-full">
+                <mat-label>Username</mat-label>
+                <input id="username" matInput formControlName="username" />
+                <mat-error *ngIf="signUpForm.get('username')?.hasError('required') && signUpForm.get('username')?.touched">
+                    Username is required
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="mat-form-field w-full">
+                <mat-label>Password</mat-label>
+                <input id="password" matInput type="password" formControlName="password" />
+                <mat-error *ngIf="getPasswordError()">
+                    {{ getPasswordError() }}
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="mat-form-field w-full">
+                <mat-label>Re-type Password</mat-label>
+                <input id="confirm_password" matInput type="password" formControlName="confirm_password" />
+                <mat-error *ngIf="signUpForm.get('confirm_password')?.hasError('required') && signUpForm.get('confirm_password')?.touched">
+                    Confirm password is required
+                </mat-error>
+                <mat-error *ngIf="signUpForm.hasError('passwordMismatch') && signUpForm.get('confirm_password')?.touched">
+                    Passwords do not match
+                </mat-error>
+            </mat-form-field>
+        </form>
+    </div>
+    <div class="flex justify-start mt-4">
+        <span class="text-[#64748B] md:text-[14px] text-[10px]">Have an account? <button type='button'  class="font-bold">Sign In</button></span>
+    </div>
+    <div class="flex items-center justify-center md:mt-10 mt-6">
+        <button type="submit" form="signUpForm" class="button-fill justify-center w-[50%] h-10" [disabled]="signUpForm.disabled">Create</button>
+    </div>
+</div>

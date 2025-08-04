@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ViewChild } from '@angular/core';
 import {FormBuilder, Validators, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {BreakpointObserver} from '@angular/cdk/layout';
 import {StepperOrientation, MatStepperModule} from '@angular/material/stepper';
@@ -9,7 +9,7 @@ import { MatDialog } from '@angular/material/dialog';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {AsyncPipe} from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { MaterialModules } from '../../../material';
 import { NavbarComponent } from "../../common/components/navbar/navbar.component";
 import { PrerequisitesComponent } from "./components/prerequisites/prerequisites.component";
@@ -18,7 +18,12 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { TermsAndConditionComponent } from "./components/terms-and-condition/terms-and-condition.component";
 import { ApprovalsComponent } from "./components/approvals/approvals.component";
 import { FeeAndChargersComponent } from "./components/fee-and-chargers/fee-and-chargers.component";
-import { SignInComponent } from '../../common/sign-in/sign-in.component';
+import { SignInComponent } from '../../auth/sign-in/sign-in.component';
+import { BreadcrumbComponent } from "../../common/components/breadcrumb/breadcrumb.component";
+import { MatIconModule } from '@angular/material/icon';
+import { MatStepper } from '@angular/material/stepper';
+import { FormGroup } from '@angular/forms';
+
 @Component({
   standalone: true,
   selector: 'app-idl-apply',
@@ -39,12 +44,15 @@ import { SignInComponent } from '../../common/sign-in/sign-in.component';
     TermsAndConditionComponent,
     ApprovalsComponent,
     FeeAndChargersComponent,
+    BreadcrumbComponent,
+    MatIconModule
 ],
 })
 export class IdlApplyComponent {
   private _formBuilder = inject(FormBuilder);
-  private router = inject(Router);
   private dialog = inject(MatDialog);
+
+  @ViewChild('steppe') stepper!: MatStepper;
 
   firstFormGroup = this._formBuilder.group({
     firstCtrl: ['', Validators.required],
@@ -63,14 +71,31 @@ export class IdlApplyComponent {
   });
   isLinear = false;
 
+  breadcrumbs = [
+    { label: 'Oman Automobile Association', link: '/association' },
+    { label: 'Vehicle Transportation Permit', link: '/vehicle-transport' },
+    { label: 'Apply for IDL' }
+  ];
 
   url: string = 'https://www.figma.com/proto/q8AVbFD5QtnThuxROt9rZl/OAA---Oman-Automobile-Association?node-id=232-1183&t=YB1uGcm86pmjbI7T-1&scaling=contain&content-scaling=fixed&page-id=0%3A1';
   urlSafe: SafeResourceUrl | undefined;
 
-  constructor(public sanitizer: DomSanitizer) {}
+  constructor(
+    public sanitizer: DomSanitizer,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit() {
     this.urlSafe = this.sanitizer.bypassSecurityTrustResourceUrl(this.url);
+
+    this.route.queryParams.subscribe(params => {
+      if (params['autoNext'] === 'true') {
+        setTimeout(() => {
+          this.moveToNextStep();
+        }, 100);
+      }
+    });
   }
 
   navigateToHome() {
@@ -83,5 +108,9 @@ export class IdlApplyComponent {
       width: '40em',
       panelClass: 'default-preview-dialog',
       });
+  }
+
+  moveToNextStep() {
+    this.stepper.next();
   }
 }
