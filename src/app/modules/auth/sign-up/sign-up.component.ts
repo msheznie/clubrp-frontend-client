@@ -13,6 +13,7 @@ import { MaterialModules } from '../../../material';
 import { AuthService } from 'src/app/shared/services/auth.service';
 import { OtpVerifyComponent } from './otp-verify/otp-verify.component';
 import { HelperService } from 'src/app/shared/services/helper.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-sign-up',
@@ -37,7 +38,7 @@ export class SignUpComponent {
   signUpForm: FormGroup;
   private dialog = inject(MatDialog);
   private _helperService = inject(HelperService);
-
+  private router = inject(Router);  
   constructor(private fb: FormBuilder, private http: HttpClient, private authService: AuthService) {
     this.signUpForm = this.fb.group({
       name: ['', [Validators.required]],
@@ -100,6 +101,13 @@ export class SignUpComponent {
       data: {
         email: this.signUpForm.value.email,
         otp: otp
+      }
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.router.navigate(['/idl-apply'], {
+          queryParams: { autoNext: 'true' }
+        });
       }
     });
   }
