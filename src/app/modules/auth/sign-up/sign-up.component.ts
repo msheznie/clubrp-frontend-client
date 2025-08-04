@@ -1,4 +1,4 @@
-import { Component, inject, ViewEncapsulation } from '@angular/core';
+import { Component, inject, ViewEncapsulation, OnDestroy } from '@angular/core';
 import { CommonModule, NgIf } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -14,6 +14,8 @@ import { AuthService } from 'src/app/shared/services/auth.service';
 import { OtpVerifyComponent } from './otp-verify/otp-verify.component';
 import { HelperService } from 'src/app/shared/services/helper.service';
 import { Router } from '@angular/router';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-sign-up',
@@ -34,11 +36,13 @@ import { Router } from '@angular/router';
     MaterialModules,
   ]
 })
-export class SignUpComponent {
+export class SignUpComponent implements OnDestroy {
   signUpForm: FormGroup;
   private dialog = inject(MatDialog);
   private _helperService = inject(HelperService);
-  private router = inject(Router);  
+  private router = inject(Router);
+  private destroy$ = new Subject<void>();
+  
   constructor(private fb: FormBuilder, private http: HttpClient, private authService: AuthService) {
     this.signUpForm = this.fb.group({
       name: ['', [Validators.required]],
@@ -52,6 +56,11 @@ export class SignUpComponent {
       ]],
       confirm_password: ['', [Validators.required]]
     }, { validators: this.passwordMatchValidator });
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   passwordMatchValidator(form: FormGroup) {
@@ -69,15 +78,17 @@ export class SignUpComponent {
   onSubmit() {
     if (this.signUpForm.valid) {
       this.signUpForm.disable();
-      this.authService.signup(this.signUpForm.value).subscribe({
-        next: (response) => {
-          this.openOtpVerifyModel(response.data?.otp);
-        },
-        error: (error) => {
-          this.signUpForm.enable();
-          this._helperService.openErrorSnackBar(error, '');
-        }
-      });
+      this.authService.signup(this.signUpForm.value)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: (response) => {
+            this.openOtpVerifyModel(response.data?.otp);
+          },
+          error: (error) => {
+            this.signUpForm.enable();
+            this._helperService.openErrorSnackBar(error, '');
+          }
+        });
     } else {
       this.markFormGroupTouched();
       return;
