@@ -69,24 +69,18 @@ export class AuthService {
   private initializeAuth(): void {
     const token = this.getToken();
     const user = this.getUserFromStorage();
-    
+
     if (token && user) {
       this.currentUserSubject.next(user);
       this.isAuthenticatedSubject.next(true);
     }
-  } 
+  }
 
   /**
    * User signup
    */
-  signup(signupData: SignupRequest): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.API_BASE_URL}/idl/sign-up`, signupData)
-      .pipe(
-        tap(response => {
-          this.handleAuthSuccess(response);
-        }),
-        catchError(this.handleError)
-      );
+  signup(signupData: SignupRequest): Observable<any> {
+    return this.http.post<any>(`${this.API_BASE_URL}/idl/sign-up`, signupData)
   }
 
   /**
@@ -121,7 +115,7 @@ export class AuthService {
    */
   refreshToken(): Observable<AuthResponse> {
     const refreshToken = localStorage.getItem(this.REFRESH_TOKEN_KEY);
-    
+
     if (!refreshToken) {
       return throwError(() => new Error('No refresh token available'));
     }
@@ -172,6 +166,13 @@ export class AuthService {
     });
   }
 
+  resendOtp(resendData: { email: string }): Observable<any> {
+    return this.http.post<any>(`${this.API_BASE_URL}/idl/resend-otp`, resendData)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
   /**
    * Check if token is expired
    */
@@ -211,7 +212,7 @@ export class AuthService {
         catchError(this.handleError)
       );
   }
- 
+
 
   /**
    * Handle successful authentication
@@ -242,7 +243,7 @@ export class AuthService {
   private getUserFromStorage(): User | null {
     const userStr = localStorage.getItem(this.USER_KEY);
     if (!userStr) return null;
-    
+
     try {
       return JSON.parse(userStr);
     } catch (error) {
@@ -256,7 +257,7 @@ export class AuthService {
    */
   private handleError(error: HttpErrorResponse): Observable<never> {
     let errorMessage = 'An error occurred';
-    
+
     if (error.error instanceof ErrorEvent) {
       // Client-side error
       errorMessage = error.error.message;
@@ -264,7 +265,7 @@ export class AuthService {
       // Server-side error
       errorMessage = error.error?.message || error.message || errorMessage;
     }
-    
+
     console.log('Auth Service Error:', error);
     return throwError(() => new Error(errorMessage));
   }

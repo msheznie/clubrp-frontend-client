@@ -1,6 +1,7 @@
 import { Component, inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ApiService } from 'src/app/shared/services/api.service';
+import { HelperService } from 'src/app/shared/services/helper.service';
 
 @Component({
   selector: 'app-prerequisites',
@@ -12,6 +13,7 @@ import { ApiService } from 'src/app/shared/services/api.service';
 })
 export class PrerequisitesComponent implements OnInit {
   private api = inject(ApiService);
+  private _helperService = inject(HelperService);
   prerequisites: any = {};
 
   ngOnInit() {
@@ -24,7 +26,8 @@ export class PrerequisitesComponent implements OnInit {
         this.prerequisites = response.data;
       },
       error: (error) => {
-        console.error('Error loading prerequisites:', error);
+        this._helperService.openErrorSnackBar(error, '');
+        console.log('Error loading prerequisites:', error);
       }
     });
   }

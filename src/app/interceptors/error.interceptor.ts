@@ -11,7 +11,16 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
         localStorage.removeItem('auth_token');
         router.navigate(['/login']);
       }
-      return throwError(() => error);
+
+      const wrappedError = {
+        ...error,
+        data: {
+          message: error.error?.message,
+          errors: error.error?.errors
+        }
+      };
+
+      return throwError(() => wrappedError);
     })
   );
 };

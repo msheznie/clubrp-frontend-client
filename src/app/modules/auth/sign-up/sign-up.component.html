@@ -48,14 +48,8 @@
             <mat-form-field appearance="outline" class="mat-form-field w-full">
                 <mat-label>Password</mat-label>
                 <input id="password" matInput type="password" formControlName="password" />
-                <mat-error *ngIf="signUpForm.get('password')?.hasError('required') && signUpForm.get('password')?.touched">
-                    Password is required
-                </mat-error>
-                <mat-error *ngIf="signUpForm.get('password')?.hasError('minlength') && signUpForm.get('password')?.touched">
-                    Password must be at least 8 characters
-                </mat-error>
-                <mat-error *ngIf="signUpForm.get('password')?.hasError('pattern') && signUpForm.get('password')?.touched">
-                    Password must contain uppercase, lowercase, number, and special character
+                <mat-error *ngIf="getPasswordError()">
+                    {{ getPasswordError() }}
                 </mat-error>
             </mat-form-field>
             <mat-form-field appearance="outline" class="mat-form-field w-full">

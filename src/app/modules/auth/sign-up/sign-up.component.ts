@@ -12,6 +12,7 @@ import { HttpClient } from '@angular/common/http';
 import { MaterialModules } from '../../../material';
 import { AuthService } from 'src/app/shared/services/auth.service';
 import { OtpVerifyComponent } from './otp-verify/otp-verify.component';
+import { HelperService } from 'src/app/shared/services/helper.service';
 
 @Component({
   selector: 'app-sign-up',
@@ -35,12 +36,12 @@ import { OtpVerifyComponent } from './otp-verify/otp-verify.component';
 export class SignUpComponent {
   signUpForm: FormGroup;
   private dialog = inject(MatDialog);
+  private _helperService = inject(HelperService);
 
   constructor(private fb: FormBuilder, private http: HttpClient, private authService: AuthService) {
     this.signUpForm = this.fb.group({
       name: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
-      user_type: ['1'],
       primary_mobile: ['', [Validators.required, Validators.pattern(/^\+[1-9]\d{1,14}$/)]],
       username: ['', [Validators.required]],
       password: ['', [
@@ -70,11 +71,11 @@ export class SignUpComponent {
       this.signUpForm.disable();
       this.authService.signup(this.signUpForm.value).subscribe({
         next: (response) => {
-          this.openOtpVerifyModel();
-          console.log('Signup successful:', response);
+          this.openOtpVerifyModel(response.data?.otp);
         },
         error: (error) => {
           this.signUpForm.enable();
+          this._helperService.openErrorSnackBar(error, '');
           console.log('Signup failed:', error);
         }
       });
@@ -93,12 +94,37 @@ export class SignUpComponent {
     });
   }
 
-  openOtpVerifyModel() {
+  openOtpVerifyModel(otp: any) {
+    this.dialog.closeAll();
     const dialogRef = this.dialog.open(OtpVerifyComponent, {
       height: 'auto',
       width: '40em',
       panelClass: 'default-preview-dialog',
-      });
+      data: {
+        email: this.signUpForm.value.email,
+        otp: otp
+      }
+    });
+  }
+
+  getPasswordError(): string {
+    const passwordControl = this.signUpForm.get('password');
+    
+    if (!passwordControl?.touched) return '';
+    
+    if (passwordControl.hasError('required')) {
+      return 'Password is required';
+    }
+    
+    if (passwordControl.hasError('minlength')) {
+      return 'Password must be at least 5 characters';
+    }
+    
+    if (passwordControl.hasError('pattern')) {
+      return 'Password must contain uppercase, lowercase, number, and special character';
+    }
+    
+    return '';
   }
 
 }
