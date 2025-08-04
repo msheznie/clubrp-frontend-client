@@ -27,7 +27,6 @@ export class PrerequisitesComponent implements OnInit {
       },
       error: (error) => {
         this._helperService.openErrorSnackBar(error, '');
-        console.log('Error loading prerequisites:', error);
       }
     });
   }

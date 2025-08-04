@@ -35,7 +35,6 @@ export class OtpVerifyComponent {
     private authService: AuthService,
     private _helperService: HelperService
   ) {
-    console.log('Received OTP data:', data);  
     this.email = data.email;
     this.otp = data.otp;
 
@@ -69,7 +68,6 @@ export class OtpVerifyComponent {
   }
 
   onSubmit() {
-    console.log('otpForm', this.otpForm.valid);
     if (this.otpForm.valid) {
       if(this.isExpire){
         this.otpForm.reset();
@@ -80,10 +78,7 @@ export class OtpVerifyComponent {
       
       const otpCode = Object.values(this.otpForm.value).join('');
       const otpCode2= Object.values(this.otp).join('');
-      console.log('otpCode', otpCode);
-      console.log('this.otp', this.otp);
       if(otpCode == otpCode2){
-        console.log('otpCode == otpCode2');
         this.dialogRef.close({ success: true, data: otpCode });
       }
       else{
@@ -101,7 +96,6 @@ export class OtpVerifyComponent {
       email: this.email
     }).subscribe({
       next: (response) => {
-        console.log('OTP resent successfully:', response);
         this.otp = response.data?.otp;
         this.isExpire=false;
         this.timeLeft=300;
@@ -110,7 +104,6 @@ export class OtpVerifyComponent {
         this._helperService.openMessageSnackBar('OTP resent successfully', '');
       },
       error: (error) => {
-        console.error('Failed to resend OTP:', error);
         this._helperService.openErrorSnackBar('Failed to resend OTP', '');
         this.isResending = false;
       }

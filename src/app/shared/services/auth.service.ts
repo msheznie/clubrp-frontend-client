@@ -266,7 +266,6 @@ export class AuthService {
       errorMessage = error.error?.message || error.message || errorMessage;
     }
 
-    console.log('Auth Service Error:', error);
     return throwError(() => new Error(errorMessage));
   }
 }

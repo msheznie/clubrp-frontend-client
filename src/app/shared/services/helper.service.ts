@@ -17,7 +17,6 @@ export class HelperService {
   }
 
   openMessageSnackBar(message: any, action: string) {
-    console.log('message', message);
     this.snackBar.open(message, action, {
       duration: 2000,
       horizontalPosition: 'end',

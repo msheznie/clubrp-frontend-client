@@ -67,7 +67,6 @@ export class SignUpComponent {
 
   onSubmit() {
     if (this.signUpForm.valid) {
-      console.log('Form submitted:', this.signUpForm.value);
       this.signUpForm.disable();
       this.authService.signup(this.signUpForm.value).subscribe({
         next: (response) => {
@@ -76,11 +75,9 @@ export class SignUpComponent {
         error: (error) => {
           this.signUpForm.enable();
           this._helperService.openErrorSnackBar(error, '');
-          console.log('Signup failed:', error);
         }
       });
     } else {
-      console.log('Form is invalid:', this.signUpForm.errors);
       this.markFormGroupTouched();
       return;
     }
