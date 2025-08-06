@@ -30,18 +30,15 @@ export interface AuthResponse {
 })
 export class AuthService {
 
+  private config = inject(AppConfigService);
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
   public isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
 
-  private config = inject(AppConfigService);
-  private baseUrl = this.config.baseUrl;
   private apiversion = '/api/v1';
   private subdomain = inject(HelperService).getSubDomain();
 
-  private readonly API_BASE_URL = `${this.baseUrl}/${this.subdomain}${this.apiversion}`;
   private readonly TOKEN_KEY = 'auth_token';
-  private readonly REFRESH_TOKEN_KEY = 'refresh_token';
-  private readonly USER_KEY = 'auth_user';
+  private readonly REFRESH_TOKEN_KEY = 'refresh_token'
 
   constructor(
     private http: HttpClient,
@@ -64,7 +61,7 @@ export class AuthService {
    * User signup
    */
   signup(signupData: SignupRequest): Observable<any> {
-    return this.http.post<any>(`${this.API_BASE_URL}/idl/sign-up`, signupData)
+    return this.http.post<any>(`${this.config.baseUrl}/${this.subdomain}${this.apiversion}/idl/sign-up`, signupData)
   }
 
   /**
@@ -81,7 +78,7 @@ export class AuthService {
       'is_idl': true
   };
 
-    return this.http.post<AuthResponse>(`${this.API_BASE_URL}/oauth/token`, params)
+    return this.http.post<AuthResponse>(`${this.config.baseUrl}/${this.subdomain}${this.apiversion}/oauth/token`, params)
       .pipe(
         tap(response => {
           this.handleAuthSuccess(response);
@@ -103,7 +100,6 @@ export class AuthService {
     // Clear local storage
     localStorage.removeItem(this.TOKEN_KEY);
     localStorage.removeItem(this.REFRESH_TOKEN_KEY);
-    localStorage.removeItem(this.USER_KEY);
 
     this.isAuthenticatedSubject.next(false);
   }
@@ -147,7 +143,7 @@ export class AuthService {
   }
 
   resendOtp(resendData: { email: string }): Observable<any> {
-    return this.http.post<any>(`${this.API_BASE_URL}/idl/resend-otp`, resendData)
+    return this.http.post<any>(`${this.config.baseUrl}/${this.subdomain}${this.apiversion}/idl/resend-otp`, resendData)
   }
 
   /**

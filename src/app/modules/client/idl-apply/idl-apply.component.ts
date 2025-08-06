@@ -33,6 +33,7 @@ import { MatStepper } from '@angular/material/stepper';
 import { FormGroup } from '@angular/forms';
 import { SignInComponent } from '../../auth/sign-in/sign-in.component';
 import { AuthService } from '../../../shared/services/auth.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   standalone: true,
@@ -40,6 +41,7 @@ import { AuthService } from '../../../shared/services/auth.service';
   templateUrl: './idl-apply.component.html',
   styleUrls: ['./idl-apply.component.scss'],
   imports: [
+    CommonModule,
     MatStepperModule,
     FormsModule,
     ReactiveFormsModule,
@@ -138,7 +140,6 @@ export class IdlApplyComponent {
   }
 
   isAuthenticated() {
-    console.log('isAuthenticated', this.authService.isAuthenticated())
     return this.authService.isAuthenticated();
   }
 }

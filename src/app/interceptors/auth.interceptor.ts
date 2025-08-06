@@ -1,13 +1,13 @@
 import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { catchError, throwError } from 'rxjs';
+import { AuthUtils } from '../shared/utils/auth.utils';
 import { AuthService } from 'src/app/shared/services/auth.service';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-  const authService = inject(AuthService);
   
   const token = localStorage.getItem('auth_token');
-  if (token && !authService.isTokenExpired()) {
+  if (token && !AuthUtils.isTokenExpired(token)) {
     let currentLanguage = localStorage.getItem('lang') ?? 'en';
     req = req.clone({
       setHeaders: { Authorization: `Bearer ${token}`, 'Accept-Language': currentLanguage }
@@ -20,7 +20,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
         if ( error instanceof HttpErrorResponse && error.status === 401 )
         {
             // Sign out
-            authService.logout();
+            AuthUtils.logout();
 
             // Reload the app
             location.reload();
