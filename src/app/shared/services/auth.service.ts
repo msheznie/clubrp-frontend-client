@@ -72,10 +72,10 @@ export class AuthService {
    */
   login(loginData: LoginRequest): Observable<AuthResponse> {
     const params: any = {
-      'grant_type': 'pass,word',
+      'grant_type': 'password',
       'client_id': this.config.getConfig().client_id,
       'client_secret': this.config.getConfig().client_secret,
-      'email': loginData.email,
+      'username': loginData.email,
       'password': loginData.password,
       'scope': '',
       'is_idl': true

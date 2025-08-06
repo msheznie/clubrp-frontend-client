@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -16,6 +16,7 @@ import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { FormsModule } from '@angular/forms';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { ApiService } from '../../../../../shared/services/api.service';
 
 
 @Component({
@@ -37,9 +38,11 @@ import { MatNativeDateModule } from '@angular/material/core';
     FormsModule, 
     MatDatepickerModule,
     MatNativeDateModule,
+    NgFor,
   ],
 })
-export class BasicInformationComponent {
+export class BasicInformationComponent implements OnInit{
+  private api = inject(ApiService);
   uploadedFiles: File[] = [];
   fileName: File[] = [];
   
@@ -55,6 +58,9 @@ export class BasicInformationComponent {
   });
 
   readonly announcer = inject(LiveAnnouncer);
+  
+  ngOnInit(): void {
+  }
 
   add(event: MatChipInputEvent): void {
     const value = (event.value || '').trim();

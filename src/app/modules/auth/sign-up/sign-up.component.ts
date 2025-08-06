@@ -153,4 +153,8 @@ export class SignUpComponent implements OnDestroy {
     });
   }
 
+  updateUsername() {
+    this.signUpForm.controls['username'].setValue(this.signUpForm.value.email);
+  }
+
 }

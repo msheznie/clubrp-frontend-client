@@ -20,7 +20,7 @@
             </mat-form-field>
             <mat-form-field appearance="outline" class="mat-form-field w-full">
                 <mat-label>Email</mat-label>
-                <input id="email" matInput type="email" formControlName="email" />
+                <input id="email" matInput type="email" formControlName="email" (change)="updateUsername()" />
                 <mat-error *ngIf="signUpForm.get('email')?.hasError('required') && signUpForm.get('email')?.touched">
                     Email is required
                 </mat-error>

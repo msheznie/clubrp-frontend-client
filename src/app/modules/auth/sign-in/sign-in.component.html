@@ -6,9 +6,6 @@
     <div class="flex justify-center items-center mt-4">
         <span class="md:text-[32px] text-[20px] text-[#202020]">Login to <span class=" text-[#E0272A]"> OAA</span></span>
     </div>
-    <div class="flex justify-center items-center md:mt-4 mt-2 text-center">
-        <span class="text-[#64748B] md:text-[14px] text-[10px]">or Login as a Admin (This message Showing in only Prototype )</span>
-    </div>
     <form id="loginForm" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
         <div class="flex flex-col justify-center items-center mt-8 gap-8">
             <mat-form-field appearance="outline" class="mat-form-field w-full">
@@ -29,7 +26,7 @@
         </div>
         <div class="flex flex-col md:flex-row md:justify-between mt-4 text-center md:text-start w-full">
             <span class="text-[#64748B] md:text-[14px] text-[10px]">Don't have an account? <button type='button' (click)="openSignup()" class="font-bold">Sign Up</button></span>
-            <span class="text-[#64748B] md:text-[14px] text-[10px]">Forget Password</span>
+            <span class="text-[#64748B] md:text-[14px] text-[10px]">Forgot Password</span>
         </div>
             
         <div class="flex items-center justify-center mt-10 w-full">
