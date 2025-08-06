@@ -83,7 +83,6 @@ export class AuthService {
 
     return this.http.post<AuthResponse>(`${this.API_BASE_URL}/oauth/token`, params)
       .pipe(
-        retry(1),
         tap(response => {
           this.handleAuthSuccess(response);
         }),
@@ -171,8 +170,7 @@ export class AuthService {
   /**
    * Handle successful authentication
    */
-  private handleAuthSuccess(response: AuthResponse): void {
-    // Save tokens and user data
+  public handleAuthSuccess(response: AuthResponse): void {
     this.setToken(response.access_token);
     if (response.refresh_token) {
       this.setRefreshToken(response.refresh_token);

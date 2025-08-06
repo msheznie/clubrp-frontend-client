@@ -116,9 +116,22 @@ export class SignUpComponent implements OnDestroy {
       }
     });
     dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        this.router.navigate(['/idl-apply'], {
-          queryParams: { autoNext: 'true' }
+      if (result?.success) {
+        console.log('success')
+        this.authService.login({
+          email: this.signUpForm.value.email,
+          password: this.signUpForm.value.password
+        })
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: (response) => {
+            console.log('response', this.authService.isAuthenticated())
+            this.router.navigate(['/idl-apply'], {
+              queryParams: { autoNext: 'true' }
+            });
+          },
+          error: (error) => {
+          }
         });
       }
     });

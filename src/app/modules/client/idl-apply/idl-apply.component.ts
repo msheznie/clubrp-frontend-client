@@ -16,7 +16,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { AsyncPipe } from '@angular/common';
+import { AsyncPipe, NgIf } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MaterialModules } from '../../../material';
 import { NavbarComponent } from '../../common/components/navbar/navbar.component';
@@ -32,6 +32,7 @@ import { BreadcrumbComponent } from '../../common/components/breadcrumb/breadcru
 import { MatStepper } from '@angular/material/stepper';
 import { FormGroup } from '@angular/forms';
 import { SignInComponent } from '../../auth/sign-in/sign-in.component';
+import { AuthService } from '../../../shared/services/auth.service';
 
 @Component({
   standalone: true,
@@ -46,6 +47,7 @@ import { SignInComponent } from '../../auth/sign-in/sign-in.component';
     MatInputModule,
     MatButtonModule,
     AsyncPipe,
+    NgIf,
     MaterialModules,
     NavbarComponent,
     PrerequisitesComponent,
@@ -95,7 +97,8 @@ export class IdlApplyComponent {
     public sanitizer: DomSanitizer,
     private router: Router,
     private route: ActivatedRoute,
-    private newDialog: MatDialog
+    private newDialog: MatDialog,
+    public authService: AuthService
   ) {}
 
   ngOnInit() {
@@ -132,5 +135,10 @@ export class IdlApplyComponent {
 
   moveToNextStep() {
     this.stepper.next();
+  }
+
+  isAuthenticated() {
+    console.log('isAuthenticated', this.authService.isAuthenticated())
+    return this.authService.isAuthenticated();
   }
 }
