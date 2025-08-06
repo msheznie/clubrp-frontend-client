@@ -24,6 +24,8 @@ import { ReferenceSultanateOmanComponent } from "./reference-sultanate-oman/refe
 import { ReferencesYourHomeCountryComponent } from "./references-your-home-country/references-your-home-country.component";
 import { MatIconModule } from '@angular/material/icon';
 import { BreadcrumbComponent } from "../../common/components/breadcrumb/breadcrumb.component";
+import { MatDialog } from '@angular/material/dialog';
+import { PaymentGatewayComponent } from '../idl-apply/components/payment-gateway/payment-gateway.component';
 @Component({
   standalone: true,
   selector: 'app-vtp-apply',
@@ -52,7 +54,7 @@ import { BreadcrumbComponent } from "../../common/components/breadcrumb/breadcru
     ReferencesYourHomeCountryComponent,
     MatIconModule,
     BreadcrumbComponent,
-],
+  ],
 })
 export class VtpApplyComponent {
   private _formBuilder = inject(FormBuilder);
@@ -77,15 +79,24 @@ export class VtpApplyComponent {
   breadcrumbs = [
     { label: 'Oman Automobile Association', link: '/association' },
     { label: 'Vehicle Transportation Permit', link: '/vehicle-transport' },
-    { label: 'Apply for VTP' }
+    { label: 'Apply for VTP' },
   ];
 
-  url: string = 'https://www.figma.com/proto/q8AVbFD5QtnThuxROt9rZl/OAA---Oman-Automobile-Association?node-id=232-1183&t=YB1uGcm86pmjbI7T-1&scaling=contain&content-scaling=fixed&page-id=0%3A1';
+  url: string =
+    'https://www.figma.com/proto/q8AVbFD5QtnThuxROt9rZl/OAA---Oman-Automobile-Association?node-id=232-1183&t=YB1uGcm86pmjbI7T-1&scaling=contain&content-scaling=fixed&page-id=0%3A1';
   urlSafe: SafeResourceUrl | undefined;
 
-  constructor(public sanitizer: DomSanitizer) {}
+  constructor(public sanitizer: DomSanitizer, private newDialog: MatDialog) {}
 
   ngOnInit() {
     this.urlSafe = this.sanitizer.bypassSecurityTrustResourceUrl(this.url);
+  }
+
+  paySubmit() {
+    const dialogRef = this.newDialog.open(PaymentGatewayComponent, {
+      height: 'auto',
+      width: '50em',
+      panelClass: 'default-preview-dialog',
+    });
   }
 }

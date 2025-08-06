@@ -1,5 +1,5 @@
 <section class="hero">
-    <div class="hero-content md:w-[75%]">
+    <div class="hero-content">
         <p class="welcome-text">Welcome to</p>
         <h1><strong>OMAN</strong> Automobile <br> Association</h1>
         <p class="welcome-desc">
@@ -12,20 +12,24 @@
     </div>
     <div class="cards">
         <div class="card">
+            <div class="grid gap-2">
             <h3>International Driving <br> License</h3>
             <p>Lorem ipsum is simply dummy text of the printing and typesetting industry.</p>
+            </div>
             <!-- <p class="applied">
                 You already Applied to this Service. <span><strong>Track Update</strong></span> 
             </p> -->
-            <div class="flex gap-4">
+            <div class="flex flex-col md:flex-row md:gap-4 w-full">
                 <button [routerLink]="['/idl-apply']" routerLinkActive="router-link-active" class="primary-button">Apply Now</button>
                 <button [routerLink]="['/track']" routerLinkActive="router-link-active" class="secondary-button">Track</button>
             </div>
         </div>
         <div class="card">
+            <div class="grid gap-2">
             <h3>Vehicle Travel Permit<br> (VTP)</h3>
             <p>Lorem ipsum is simply dummy text of the printing and typesetting industry.</p>
-            <div class="flex gap-4">
+            </div>
+            <div class="flex flex-col md:flex-row md:gap-4 w-full">
                 <button [routerLink]="['/vtp-apply']" routerLinkActive="router-link-active" class="primary-button">Apply Now</button>
                 <button [routerLink]="['/track']" routerLinkActive="router-link-active" class="secondary-button">Track</button>
             </div>

@@ -1,59 +1,144 @@
 .hero {
-    display: flex;
-    align-items: end;
-    justify-content: space-between;
-    width: 100%;
-    bottom: 0;
-    h1{
-        color: #353535;
-        font-size: 4rem;
-        line-height: 1.1;
-    }
-    .welcome-text{
-        color: #353535;
-        font-size: 1.7rem;
-        margin-bottom: 1.5rem;
-    }
-    .welcome-desc{
-        color: #353535;
-        margin-top: 1.8rem;
-        line-height: 1.6;
-        margin-bottom: 0;
-    }
-    .card{
-        background-image: linear-gradient(to bottom, #d7dde4 , #FFFFFF);
-        padding: 2rem;
-        border-radius: 30px;
-        width: 38%;
-        text-align: left;
-        -webkit-backdrop-filter: blur(10px);
-        backdrop-filter: blur(2px);
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.11), 0 6px 6px rgba(0, 0, 0, 0.06);
-        display: flex ;
-        justify-content: space-between;
-        flex-flow: wrap;
-    }
-    .cards {
-        display: flex;
-        justify-content: end;
-        gap: 20px;
-        margin-top: 40px;
-    }
-    .card h3 {
-        font-size: 1.5rem;
-        color: #3D3F3E;
-        font-weight: 500;
-        line-height: 1.2;
-    }
-    .card p {
-        color: #3D3F3E;
-        span{
-            color: #E0272A;
-        }
-    }
-    .card p.applied{
-        padding-bottom: 0;
-        margin-bottom: 0;
+  text-align: left;
+  padding: 50px 60px;
+  position: absolute;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  width: 100%;
+  bottom: 0;
+  flex-wrap: wrap;
+  gap: 2rem;
+
+  h1 {
+    color: var(--color-text-primary);
+    font-size: 4rem;
+    line-height: 1.1;
+  }
+
+  .welcome-text {
+    color: var(--color-text-primary);
+    font-size: 1.7rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .welcome-desc {
+    color: var(--color-text-primary);
+    margin-top: 1.8rem;
+    line-height: 1.6;
+    margin-bottom: 0;
+  }
+
+  .hero-content {
+    width: 45%;
+
+    @media (max-width: 768px) {
+      width: 100%;
+      text-align: center;
+
+      h1 {
+        font-size: 2rem;
+      }
+
+      .welcome-text {
+        font-size: 1.2rem;
+      }
+
+      .welcome-desc {
+        font-size: 0.95rem;
+      }
     }
   }
-  
+
+  .cards {
+    display: flex;
+    justify-content: flex-end;
+    gap: 20px;
+    margin-top: 40px;
+    width: 50%;
+
+    @media (max-width: 768px) {
+      width: 100%;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      margin-top: 2rem;
+    }
+
+    .card {
+      background-image: linear-gradient(to bottom, #d7dde4, var(--color-secondary));
+      padding: 2rem;
+      border-radius: 30px;
+      width: 100%;
+      max-width: 450px;
+      text-align: left;
+      backdrop-filter: blur(2px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.11), 0 6px 6px rgba(0, 0, 0, 0.06);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 0.5rem;
+
+      h3 {
+        font-size: 1.5rem;
+        color: var(--color-text-primary);
+        font-weight: 500;
+        line-height: 1.2;
+        margin: 0px !important;
+
+        @media (max-width: 768px) {
+          font-size: 1.2rem;
+          text-align: center;
+        }
+      }
+
+      p {
+        color: var(--color-text-secondary);
+        font-size: 14px;
+
+        span {
+          color: var(--color-text-error);
+        }
+
+        &.applied {
+          padding-bottom: 0;
+          margin-bottom: 0;
+        }
+      }
+
+      .primary-button,
+      .secondary-button {
+        padding: 10px 20px;
+        border-radius: 20px;
+        margin-top: 10px;
+        font-size: 0.95rem;
+        width: 100%;
+      }
+
+      .primary-button {
+        background: var(--color-button-fill);
+        color: var(--color-secondary);
+        border: none;
+      }
+
+      .secondary-button {
+        background: transparent;
+        color: var(--color-button-fill);
+        border: 1px solid var(--color-button-fill);
+      }
+
+      @media (max-width: 768px) {
+        align-items: center;
+        text-align: center;
+        gap: 0;
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    padding: 30px 20px;
+    align-items: center;
+    position: static;
+  }
+}

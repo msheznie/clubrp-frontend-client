@@ -8,14 +8,14 @@
     font-weight: 400;
 }
 ::ng-deep .mat-expansion-indicator::after {
-    border-color: #000 !important;
+    border-color: var(--color-border-secondary) !important;
 }
 .button-google{
     display: flex;
     align-items: center;
     gap: 6px;
-    background: #e9e9e9;
-    color: #444444;
+    background: var(--color-button-fill-secondary);
+    color: var(--color-primary);
     padding: 5px 15px;
     border: none;
     border-radius: 20px;

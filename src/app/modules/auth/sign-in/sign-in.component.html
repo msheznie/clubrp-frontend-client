@@ -4,7 +4,7 @@
         <img src="/assets/img/fia-logo.png" class="" alt="oaa-logo" />
     </div>
     <div class="flex justify-center items-center mt-4">
-        <span class="md:text-[32px] text-[20px] text-[#202020]">Login to <span class=" text-[#E0272A]"> OAA</span></span>
+        <span class="text-[32px] text-[var(--color-text-primary)]">Login to <span class="text-[32px] text-[var(--color-text-error)]"> OAA</span></span>
     </div>
     <form id="loginForm" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
         <div class="flex flex-col justify-center items-center mt-8 gap-8">
@@ -15,7 +15,7 @@
                     Email is required
                 </mat-error>
             </mat-form-field>
-            
+
             <mat-form-field appearance="outline" class="mat-form-field w-full">
                 <mat-label>Password</mat-label>
                 <input id="password" matInput type="password" formControlName="password"/>
@@ -24,20 +24,20 @@
                 </mat-error>
             </mat-form-field>
         </div>
-        <div class="flex flex-col md:flex-row md:justify-between mt-4 text-center md:text-start w-full">
-            <span class="text-[#64748B] md:text-[14px] text-[10px]">Don't have an account? <button type='button' (click)="openSignup()" class="font-bold">Sign Up</button></span>
-            <span class="text-[#64748B] md:text-[14px] text-[10px]">Forgot Password</span>
+        <div class="flex justify-between mt-4">
+            <span class="text-[var(--color-text-secondary)] text-[14px]">Don't have an account? <button type='button' (click)="openSignup()" class="font-bold">Sign Up</button></span>
+            <span class="text-[var(--color-text-secondary)]">Forgot Password</span>
         </div>
-            
+
         <div class="flex items-center justify-center mt-10 w-full">
             <button type="submit" class="button-fill justify-center w-[50%] h-10" [disabled]="loginForm.invalid || submitted">
                 Login
             </button>
         </div>
     </form>
-    
+
     <div class="flex items-center justify-center mt-4">
-       <span class="text-[#64748B] md:text-[14px] text-[10px]">or Login with</span>
+       <span class="text-[var(--color-text-secondary)] text-[14px]">or Login with</span>
     </div>
     <div class="flex items-center justify-center mt-4">
         <button class="button-google justify-center w-[85%] md:w-[50%] h-10" (click)="loginWithGoogle()">

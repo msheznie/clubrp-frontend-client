@@ -1,5 +1,5 @@
 <app-navbar></app-navbar>
-<div class="flex justify-between items-center mx-4 md:mx-14">
+<div class="flex justify-between items-center mt-6 mx-4 md:mx-14">
   <app-breadcrumb [breadcrumbs]="breadcrumbs"></app-breadcrumb>
   <div class="flex gap-4">
       <button class="button-outline">
@@ -9,7 +9,15 @@
       <button class="button-outline">
           <mat-icon>save</mat-icon>
           <span class="button-text">Save as Draft</span>
-      </button>
+          </button>
+      <button class="button-fill">
+          <mat-icon>done</mat-icon>
+          <span class="button-text">Submit</span>
+          </button>
+      <button class="button-fill" (click)="paySubmit()">
+          <mat-icon>attach_money</mat-icon>
+          <span class="button-text">Pay and Submit</span>
+          </button>
   </div>
 </div>
 <div class="container mx-auto px-4 md:px-20 mt-4">
@@ -21,8 +29,14 @@
                 <app-prerequisites></app-prerequisites>
               </div>
               <div class="flex justify-end gap-4">
-                <button (click)="navigateToHome()" mat-button matStepperPrevious class="idl-grey-btn">Cancel</button>
-                <button (click)="navigateToLoginPage()" mat-button>Apply</button>
+                <button class="button-fill-secondary" (click)="navigateToHome()">
+                  <mat-icon>cancel</mat-icon>
+                  <span class="button-text">Cancel</span>
+                </button>
+                <button class="button-fill" (click)="navigateToLoginPage()">
+                  <span class="button-text">Apply</span>
+                  <mat-icon>arrow_forward</mat-icon>
+                </button>
               </div>
         </form>
     </mat-step>
@@ -30,8 +44,14 @@
       <form [formGroup]="secondFormGroup">
         <app-basic-information></app-basic-information>
         <div class="flex justify-end gap-4">
-          <button mat-button matStepperPrevious>Back</button>
-          <button mat-button matStepperNext>Next</button>
+          <button class="button-fill-secondary" matStepperPrevious>
+            <mat-icon>arrow_back</mat-icon>
+            <span class="button-text">Back</span>
+          </button>
+          <button class="button-fill" matStepperNext>
+            <span class="button-text">Next</span>
+            <mat-icon>arrow_forward</mat-icon>
+          </button>
         </div>
       </form>
     </mat-step>
@@ -39,8 +59,14 @@
       <form [formGroup]="threeFormGroup">
         <app-terms-and-condition></app-terms-and-condition>
         <div class="flex justify-end gap-4">
-          <button mat-button matStepperPrevious>Back</button>
-          <button mat-button matStepperNext>Next</button>
+          <button class="button-fill-secondary" matStepperPrevious>
+            <mat-icon>arrow_back</mat-icon>
+            <span class="button-text">Back</span>
+          </button>
+          <button class="button-fill" matStepperNext>
+            <span class="button-text">Next</span>
+            <mat-icon>arrow_forward</mat-icon>
+          </button>
         </div>
       </form>
     </mat-step>
@@ -48,8 +74,14 @@
       <form [formGroup]="foreFormGroup">
         <app-approvals></app-approvals>
         <div class="flex justify-end gap-4">
-          <button mat-button matStepperPrevious>Back</button>
-          <button mat-button matStepperNext>Next</button>
+          <button class="button-fill-secondary" matStepperPrevious>
+            <mat-icon>arrow_back</mat-icon>
+            <span class="button-text">Back</span>
+          </button>
+          <button class="button-fill" matStepperNext>
+            <span class="button-text">Next</span>
+            <mat-icon>arrow_forward</mat-icon>
+          </button>
         </div>
       </form>
     </mat-step>
@@ -57,8 +89,14 @@
       <form [formGroup]="fiveFormGroup">
        <app-fee-and-chargers></app-fee-and-chargers>
        <div class="flex justify-end gap-4">
-        <button mat-button matStepperPrevious>Back</button>
-        <button mat-button matStepperNext>Pay</button>
+          <button class="button-fill-secondary" matStepperPrevious>
+            <mat-icon>arrow_back</mat-icon>
+            <span class="button-text">Back</span>
+          </button>
+        <button class="button-fill" (click)="paySubmit()">
+          <mat-icon>attach_money</mat-icon>
+          <span class="button-text">Pay</span>
+        </button>
       </div>
 </form>
     </mat-step>

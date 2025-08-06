@@ -1,28 +1,37 @@
 import { Component, inject, ViewChild } from '@angular/core';
-import {FormBuilder, Validators, FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {BreakpointObserver} from '@angular/cdk/layout';
-import {StepperOrientation, MatStepperModule} from '@angular/material/stepper';
-import {Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
-import {MatButtonModule} from '@angular/material/button';
+import {
+  FormBuilder,
+  Validators,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
+import { BreakpointObserver } from '@angular/cdk/layout';
+import {
+  StepperOrientation,
+  MatStepperModule,
+} from '@angular/material/stepper';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
-import {MatInputModule} from '@angular/material/input';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {AsyncPipe} from '@angular/common';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { AsyncPipe } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MaterialModules } from '../../../material';
-import { NavbarComponent } from "../../common/components/navbar/navbar.component";
-import { PrerequisitesComponent } from "./components/prerequisites/prerequisites.component";
-import { BasicInformationComponent } from "./components/basic-information/basic-information.component";
+import { NavbarComponent } from '../../common/components/navbar/navbar.component';
+import { PrerequisitesComponent } from './components/prerequisites/prerequisites.component';
+import { BasicInformationComponent } from './components/basic-information/basic-information.component';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { TermsAndConditionComponent } from "./components/terms-and-condition/terms-and-condition.component";
-import { ApprovalsComponent } from "./components/approvals/approvals.component";
-import { FeeAndChargersComponent } from "./components/fee-and-chargers/fee-and-chargers.component";
-import { SignInComponent } from '../../auth/sign-in/sign-in.component';
-import { BreadcrumbComponent } from "../../common/components/breadcrumb/breadcrumb.component";
+import { TermsAndConditionComponent } from './components/terms-and-condition/terms-and-condition.component';
+import { ApprovalsComponent } from './components/approvals/approvals.component';
+import { FeeAndChargersComponent } from './components/fee-and-chargers/fee-and-chargers.component';
 import { MatIconModule } from '@angular/material/icon';
+import { PaymentGatewayComponent } from './components/payment-gateway/payment-gateway.component';
+import { BreadcrumbComponent } from '../../common/components/breadcrumb/breadcrumb.component';
 import { MatStepper } from '@angular/material/stepper';
 import { FormGroup } from '@angular/forms';
+import { SignInComponent } from '../../auth/sign-in/sign-in.component';
 
 @Component({
   standalone: true,
@@ -44,9 +53,10 @@ import { FormGroup } from '@angular/forms';
     TermsAndConditionComponent,
     ApprovalsComponent,
     FeeAndChargersComponent,
+    PaymentGatewayComponent,
     BreadcrumbComponent,
-    MatIconModule
-],
+    MatIconModule,
+  ],
 })
 export class IdlApplyComponent {
   private _formBuilder = inject(FormBuilder);
@@ -73,23 +83,25 @@ export class IdlApplyComponent {
 
   breadcrumbs = [
     { label: 'Oman Automobile Association', link: '/association' },
-    { label: 'Vehicle Transportation Permit', link: '/vehicle-transport' },
-    { label: 'Apply for IDL' }
+    { label: 'International Driving License', link: '/vehicle-transport' },
+    { label: 'Apply for IDL' },
   ];
 
-  url: string = 'https://www.figma.com/proto/q8AVbFD5QtnThuxROt9rZl/OAA---Oman-Automobile-Association?node-id=232-1183&t=YB1uGcm86pmjbI7T-1&scaling=contain&content-scaling=fixed&page-id=0%3A1';
+  url: string =
+    'https://www.figma.com/proto/q8AVbFD5QtnThuxROt9rZl/OAA---Oman-Automobile-Association?node-id=232-1183&t=YB1uGcm86pmjbI7T-1&scaling=contain&content-scaling=fixed&page-id=0%3A1';
   urlSafe: SafeResourceUrl | undefined;
 
   constructor(
     public sanitizer: DomSanitizer,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private newDialog: MatDialog
   ) {}
 
   ngOnInit() {
     this.urlSafe = this.sanitizer.bypassSecurityTrustResourceUrl(this.url);
 
-    this.route.queryParams.subscribe(params => {
+    this.route.queryParams.subscribe((params) => {
       if (params['autoNext'] === 'true') {
         setTimeout(() => {
           this.moveToNextStep();
@@ -107,7 +119,15 @@ export class IdlApplyComponent {
       height: 'auto',
       width: '40em',
       panelClass: 'default-preview-dialog',
-      });
+    });
+  }
+
+  paySubmit() {
+    const dialogRef = this.newDialog.open(PaymentGatewayComponent, {
+      height: 'auto',
+      width: '50em',
+      panelClass: 'default-preview-dialog',
+    });
   }
 
   moveToNextStep() {
