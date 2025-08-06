@@ -65,7 +65,7 @@
         </form>
     </div>
     <div class="flex justify-start mt-4">
-        <span class="text-[#64748B] md:text-[14px] text-[10px]">Have an account? <button type='button'  class="font-bold">Sign In</button></span>
+        <span class="text-[#64748B] md:text-[14px] text-[10px]">Have an account? <button type='button' (click)="openSignIn()" class="font-bold">Sign In</button></span>
     </div>
     <div class="flex items-center justify-center md:mt-10 mt-6">
         <button type="submit" form="signUpForm" class="button-fill justify-center w-[50%] h-10" [disabled]="signUpForm.disabled">Create</button>

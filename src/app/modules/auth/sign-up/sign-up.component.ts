@@ -16,6 +16,7 @@ import { HelperService } from 'src/app/shared/services/helper.service';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { SignInComponent } from '../sign-in/sign-in.component';
 
 @Component({
   selector: 'app-sign-up',
@@ -141,6 +142,15 @@ export class SignUpComponent implements OnDestroy {
     }
     
     return '';
+  }
+
+  openSignIn() {
+    this.dialog.closeAll();
+    const dialogRef = this.dialog.open(SignInComponent, {
+      height: 'auto',
+      width: '40em',
+      panelClass: 'default-preview-dialog',
+    });
   }
 
 }

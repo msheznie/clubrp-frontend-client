@@ -1,19 +1,9 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
-import { Router } from '@angular/router';
+import { catchError, finalize, map, retry, tap } from 'rxjs/operators';
 import { AppConfigService } from './app-config.service';
 import { HelperService } from './helper.service';
-
-export interface User {
-  id?: string;
-  name: string;
-  email: string;
-  phone?: string;
-  username: string;
-  active_status?: boolean;
-}
 
 export interface LoginRequest {
   email: string;
@@ -30,18 +20,15 @@ export interface SignupRequest {
 }
 
 export interface AuthResponse {
-  user: User;
-  token: string;
-  refreshToken?: string;
-  expiresIn?: number;
+  access_token: string;
+  refresh_token?: string;
+  expires_in?: number;
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private currentUserSubject = new BehaviorSubject<User | null>(null);
-  public currentUser$ = this.currentUserSubject.asObservable();
 
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
   public isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
@@ -58,7 +45,6 @@ export class AuthService {
 
   constructor(
     private http: HttpClient,
-    private router: Router
   ) {
     this.initializeAuth();
   }
@@ -68,10 +54,8 @@ export class AuthService {
    */
   private initializeAuth(): void {
     const token = this.getToken();
-    const user = this.getUserFromStorage();
 
-    if (token && user) {
-      this.currentUserSubject.next(user);
+    if (token) {
       this.isAuthenticatedSubject.next(true);
     }
   }
@@ -87,12 +71,29 @@ export class AuthService {
    * User login
    */
   login(loginData: LoginRequest): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.API_BASE_URL}/oauth/token`, loginData)
+    const params: any = {
+      'grant_type': 'pass,word',
+      'client_id': this.config.getConfig().client_id,
+      'client_secret': this.config.getConfig().client_secret,
+      'email': loginData.email,
+      'password': loginData.password,
+      'scope': '',
+      'is_idl': true
+  };
+
+    return this.http.post<AuthResponse>(`${this.API_BASE_URL}/oauth/token`, params)
       .pipe(
+        retry(1),
         tap(response => {
           this.handleAuthSuccess(response);
         }),
-        catchError(this.handleError)
+        catchError(error => {
+          this.handleError(error);
+          return throwError(() => error);
+        }),
+        finalize(() => {
+          this.isAuthenticatedSubject.next(false);
+        })
       );
   }
 
@@ -105,8 +106,6 @@ export class AuthService {
     localStorage.removeItem(this.REFRESH_TOKEN_KEY);
     localStorage.removeItem(this.USER_KEY);
 
-    // Clear current user and authentication state
-    this.currentUserSubject.next(null);
     this.isAuthenticatedSubject.next(false);
   }
 
@@ -142,35 +141,14 @@ export class AuthService {
   }
 
   /**
-   * Get current user
-   */
-  getCurrentUser(): User | null {
-    return this.currentUserSubject.value;
-  }
-
-  /**
    * Get authentication token
    */
   getToken(): string | null {
     return localStorage.getItem(this.TOKEN_KEY);
   }
 
-  /**
-   * Get HTTP headers with authentication token
-   */
-  getAuthHeaders(): HttpHeaders {
-    const token = this.getToken();
-    return new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
-    });
-  }
-
   resendOtp(resendData: { email: string }): Observable<any> {
     return this.http.post<any>(`${this.API_BASE_URL}/idl/resend-otp`, resendData)
-      .pipe(
-        catchError(this.handleError)
-      );
   }
 
   /**
@@ -189,83 +167,35 @@ export class AuthService {
     }
   }
 
-  /**
-   * Forgot password
-   */
-  forgotPassword(email: string): Observable<any> {
-    return this.http.post('auth/forgot-password', { email })
-      .pipe(
-        catchError(this.handleError)
-      );
-  }
-
-  /**
-   * Reset password
-   */
-  resetPassword(resetData: {
-    token: string;
-    newPassword: string;
-    confirmPassword: string;
-  }): Observable<any> {
-    return this.http.post('auth/reset-password', resetData)
-      .pipe(
-        catchError(this.handleError)
-      );
-  }
-
 
   /**
    * Handle successful authentication
    */
   private handleAuthSuccess(response: AuthResponse): void {
     // Save tokens and user data
-    localStorage.setItem(this.TOKEN_KEY, response.token);
-    if (response.refreshToken) {
-      localStorage.setItem(this.REFRESH_TOKEN_KEY, response.refreshToken);
+    this.setToken(response.access_token);
+    if (response.refresh_token) {
+      this.setRefreshToken(response.refresh_token);
     }
-    this.saveUserToStorage(response.user);
 
-    // Update current user and authentication state
-    this.currentUserSubject.next(response.user);
     this.isAuthenticatedSubject.next(true);
   }
 
-  /**
-   * Save user data to localStorage
-   */
-  private saveUserToStorage(user: User): void {
-    localStorage.setItem(this.USER_KEY, JSON.stringify(user));
+  private setToken(token: string): void {
+    localStorage.setItem(this.TOKEN_KEY, token);
   }
 
-  /**
-   * Get user data from localStorage
-   */
-  private getUserFromStorage(): User | null {
-    const userStr = localStorage.getItem(this.USER_KEY);
-    if (!userStr) return null;
-
-    try {
-      return JSON.parse(userStr);
-    } catch (error) {
-      localStorage.removeItem(this.USER_KEY);
-      return null;
-    }
+  private setRefreshToken(token: string): void {
+    localStorage.setItem(this.REFRESH_TOKEN_KEY, token);
   }
 
   /**
    * Handle HTTP errors
    */
-  private handleError(error: HttpErrorResponse): Observable<never> {
-    let errorMessage = 'An error occurred';
+  private handleError(error: any): void {
 
-    if (error.error instanceof ErrorEvent) {
-      // Client-side error
-      errorMessage = error.error.message;
-    } else {
-      // Server-side error
-      errorMessage = error.error?.message || error.message || errorMessage;
-    }
-
-    return throwError(() => new Error(errorMessage));
+    localStorage.removeItem(this.TOKEN_KEY);
+    localStorage.removeItem(this.REFRESH_TOKEN_KEY);
+    this.isAuthenticatedSubject.next(false);
   }
 }
