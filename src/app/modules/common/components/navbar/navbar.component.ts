@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { SignInComponent } from 'src/app/modules/common/sign-in/sign-in.component';
+import { SignInComponent } from 'src/app/modules/auth/sign-in/sign-in.component';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 

@@ -402,7 +402,15 @@ nav ul li a {
   scrollbar-width: thin;
   scrollbar-color: rgba(100, 100, 100, 0.3) transparent;
 }
-/* MAT ICON  */
-// .mat-icon {
-//   color: var(--color-primary-icon);
-// }
+
+/* SNACK BAR  */
+.cdk-overlay-container .success-snack .mdc-snackbar__surface{
+  background: #6ecc6e !important;
+  color: white !important;
+}
+
+.cdk-overlay-container .error-snack .mdc-snackbar__surface {
+  background: #e64141 !important;
+  color: white !important;
+  white-space: pre-line !important;
+}

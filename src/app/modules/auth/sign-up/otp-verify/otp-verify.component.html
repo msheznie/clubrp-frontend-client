@@ -1,0 +1,72 @@
+<div class="p-8">
+  <div class="flex justify-center items-center gap-2 md:mt-4">
+    <img src="/assets/img/oaa-logo.png" class="" alt="oaa-logo" />
+    <img src="/assets/img/fia-logo.png" class="" alt="oaa-logo" />
+  </div>
+  <div class="flex justify-center items-center mt-4">
+    <span class="md:text-[32px] text-[20px] text-[#202020]">Verification</span>
+  </div>
+  <div class="flex justify-center items-center md:mt-4 mt-2">
+    <span class="text-[#64748B] md:text-[14px] text-[10px]"
+      >We sent you a code to verify your mobile number</span
+    >
+  </div>
+  <div>
+    <form id="otpForm" [formGroup]="otpForm" class="flex justify-center gap-2 sm:gap-3 md:gap-4 mt-6 flex-wrap" (ngSubmit)="onSubmit()">
+      <input
+        type="text"
+        maxlength="1"
+        formControlName="otp1"
+        class="w-12 h-12 sm:w-14 sm:h-14 text-center text-lg border rounded-lg border-gray-300 focus:outline-none focus:ring-2 focus:ring-black"
+        (input)="onOtpInput($event, 1)"
+      />
+      <input
+        type="text"
+        maxlength="1"
+        formControlName="otp2"
+        class="w-12 h-12 sm:w-14 sm:h-14 text-center text-lg border rounded-lg border-gray-300 focus:outline-none focus:ring-2 focus:ring-black"
+        (input)="onOtpInput($event, 2)"
+      />
+      <input
+        type="text"
+        maxlength="1"
+        formControlName="otp3"
+        class="w-12 h-12 sm:w-14 sm:h-14 text-center text-lg border rounded-lg border-gray-300 focus:outline-none focus:ring-2 focus:ring-black"
+        (input)="onOtpInput($event, 3)"
+      />
+      <input
+        type="text"
+        maxlength="1"
+        formControlName="otp4"
+        class="w-12 h-12 sm:w-14 sm:h-14 text-center text-lg border rounded-lg border-gray-300 focus:outline-none focus:ring-2 focus:ring-black"
+        (input)="onOtpInput($event, 4)"
+      />
+      <input
+        type="text"
+        maxlength="1"
+        formControlName="otp5"
+        class="w-12 h-12 sm:w-14 sm:h-14 text-center text-lg border rounded-lg border-gray-300 focus:outline-none focus:ring-2 focus:ring-black"
+        (input)="onOtpInput($event, 5)"
+      />
+      <input
+        type="text"
+        maxlength="1"
+        formControlName="otp6"
+        class="w-12 h-12 sm:w-14 sm:h-14 text-center text-lg border rounded-lg border-gray-300 focus:outline-none focus:ring-2 focus:ring-black"
+        (input)="onOtpInput($event, 6)"
+      />
+    </form>
+  </div>
+
+  <div class="flex items-center justify-center mt-10">
+    <button type="submit" form="otpForm" class="button-fill justify-center w-[60%] h-10" [disabled]="otpForm.invalid || submitted">
+      Continue
+    </button>
+  </div>
+  <div class="flex justify-center items-center mt-4">
+    <span class="text-[#64748B] md:text-[14px] text-[10px]"
+      >I don't receive a code
+      <button type="button" (click)="resendOtp()" class="text-[#202020] font-bold" [disabled]="isResending">Resend</button></span
+    >
+  </div>
+</div>
