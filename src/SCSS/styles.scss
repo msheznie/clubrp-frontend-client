@@ -405,12 +405,12 @@ nav ul li a {
 
 /* SNACK BAR  */
 .cdk-overlay-container .success-snack .mdc-snackbar__surface{
-  background: #6ecc6e !important;
-  color: white !important;
+  background: var(--color-toast-success-bg) !important;
+  color: var(--color-toast-text) !important;
 }
 
 .cdk-overlay-container .error-snack .mdc-snackbar__surface {
-  background: #e64141 !important;
-  color: white !important;
+  background: var(--color-toast-error-bg) !important;
+  color: var(--color-toast-text) !important;
   white-space: pre-line !important;
 }
