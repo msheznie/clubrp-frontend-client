@@ -1,5 +1,5 @@
 <app-navbar></app-navbar>
-<div class="flex justify-between items-center mx-4 md:mx-14">
+<div class="flex justify-between items-center mt-6 mx-4 md:mx-14">
     <app-breadcrumb [breadcrumbs]="breadcrumbs"></app-breadcrumb>
     <div>
         <button class="button-outline">
@@ -11,7 +11,7 @@
 
 <div class="mx-4 md:mx-14 mt-4 overflow-scroll">
 <table class="w-full text-sm text-left rounded-md" >
-    <thead class="bg-white text-gray-600">
+    <thead class="bg-[var(--color-table-header-bg)] text-[var(--color-text-secondary)]">
       <tr>
         <th class="px-6 py-3 font-medium">Application ID</th>
         <th class="px-6 py-3 font-medium">Applicant Name</th>
@@ -23,7 +23,7 @@
     </thead>
     <tbody>
       <tr
-        class="bg-[#FBFBFD] border-b border-gray-200 hover:bg-gray-50"
+        class="bg-[var(--color-table-row-bg)] !rounded-3xl hover:bg-[var(--color-table-row-hover-bg)]"
         *ngFor="let application of applications"
       >
         <td class="px-6 py-4">{{ application.id }}</td>

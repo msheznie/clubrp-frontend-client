@@ -19,13 +19,17 @@ import { TermsAndConditionComponent } from "./components/terms-and-condition/ter
 import { ApprovalsComponent } from "./components/approvals/approvals.component";
 import { FeeAndChargersComponent } from "./components/fee-and-chargers/fee-and-chargers.component";
 import { SignInComponent } from '../../common/sign-in/sign-in.component';
+import { MatIconModule } from '@angular/material/icon';
+import { BreadcrumbComponent } from '../../common/components/breadcrumb/breadcrumb.component';
+import { PaymentGatewayComponent } from './components/payment-gateway/payment-gateway.component';
 @Component({
   standalone: true,
   selector: 'app-idl-apply',
   templateUrl: './idl-apply.component.html',
   styleUrls: ['./idl-apply.component.scss'],
   imports: [
-    MatStepperModule,
+
+  MatStepperModule,
     FormsModule,
     ReactiveFormsModule,
     MatFormFieldModule,
@@ -39,6 +43,9 @@ import { SignInComponent } from '../../common/sign-in/sign-in.component';
     TermsAndConditionComponent,
     ApprovalsComponent,
     FeeAndChargersComponent,
+    MatIconModule,
+    BreadcrumbComponent,
+    PaymentGatewayComponent
 ],
 })
 export class IdlApplyComponent {
@@ -63,11 +70,17 @@ export class IdlApplyComponent {
   });
   isLinear = false;
 
+    breadcrumbs = [
+    { label: 'Oman Automobile Association', link: '/association' },
+    { label: 'International Driving License', link: '/vehicle-transport' },
+    { label: 'Apply for IDL' }
+  ];
+
 
   url: string = 'https://www.figma.com/proto/q8AVbFD5QtnThuxROt9rZl/OAA---Oman-Automobile-Association?node-id=232-1183&t=YB1uGcm86pmjbI7T-1&scaling=contain&content-scaling=fixed&page-id=0%3A1';
   urlSafe: SafeResourceUrl | undefined;
 
-  constructor(public sanitizer: DomSanitizer) {}
+  constructor(public sanitizer: DomSanitizer,private newDialog: MatDialog) {}
 
   ngOnInit() {
     this.urlSafe = this.sanitizer.bypassSecurityTrustResourceUrl(this.url);
@@ -81,6 +94,14 @@ export class IdlApplyComponent {
     const dialogRef = this.dialog.open(SignInComponent, {
       height: 'auto',
       width: '40em',
+      panelClass: 'default-preview-dialog',
+      });
+  }
+
+    paySubmit() {
+    const dialogRef = this.newDialog.open(PaymentGatewayComponent, {
+      height: 'auto',
+      width: '50em',
       panelClass: 'default-preview-dialog',
       });
   }

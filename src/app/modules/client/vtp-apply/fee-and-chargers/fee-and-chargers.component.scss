@@ -1,9 +1,8 @@
 :host {
     display: block;
-    font-family: 'Inter', sans-serif;
   
     mat-icon {
-      color: #4B5563;
+      color: var(--color-text-primary);
     }
   
     table {
@@ -11,7 +10,7 @@
       width: 100%;
   
       th, td {
-        border-bottom: 1px solid #E5E7EB;
+        border-bottom: 1px solid var(--color-border);
       }
     }
   
