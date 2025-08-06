@@ -1,19 +1,19 @@
-<div class="mb-6 w-full p-4 bg-white border border-gray-200 rounded-lg shadow-sm sm:p-8">
+<div class="mb-6 w-full p-4 bg-[var(--color-secondary)] border border-[var(--color-border)] rounded-lg shadow-sm sm:p-8">
     <!-- Header -->
     <!-- <div class="flex items-start space-x-4">
       <img src="../../../assets/img/icon-1.gif" alt="Review Icon" class="w-20 h-20">
       <div>
-        <h2 class="text-xl font-semibold text-gray-800">Wait, We Are Reviewing Your Documents. Stay Tuned With Us…</h2>
+        <h2 class="text-xl font-semibold text-[var(text-[var(--color-text-secondary)])]">Wait, We Are Reviewing Your Documents. Stay Tuned With Us…</h2>
         <p class="text-sm text-gray-500">If all your documents are in order, you can proceed with the payment process</p>
       </div>
     </div> -->
   
     <!-- Document Items -->
     <!-- <div class="space-y-3">
-      <div *ngFor="let doc of documents" class="flex items-center justify-between bg-gray-50 p-3 rounded-md shadow-sm">
+      <div *ngFor="let doc of documents" class="flex items-center justify-between bg-[var(--color-card-tertiary-bg)] p-3 rounded-md shadow-sm">
         <div class="flex items-center space-x-3">
           <img [src]="doc.icon" alt="icon" class="w-8 h-8">
-          <span class="text-gray-800">{{ doc.label }}</span>
+          <span class="text-[var(--color-text-secondary)]">{{ doc.label }}</span>
         </div>
         <div class="flex items-center space-x-2">
           <button *ngIf="doc.status === 'Rejected'" mat-stroked-button color="primary" class="text-xs">Submit Again</button>
@@ -25,7 +25,7 @@
     </div> -->
     <div *ngIf="isFirstDivVisible" class="flex gap-4 items-center">
       <button (click)="toggleDivs()" class="hidden md:block">
-        <div class="rounded-md p-2 flex flex-col items-center justify-center bg-[#F2F6FA] w-fit">
+        <div class="rounded-md p-2 flex flex-col items-center justify-center bg-[var(--color-card-secondary-bg)] w-fit">
           <img src="../../../assets/img/icon-1.gif" alt="Review Icon" class="h-20">
           <span class="status-badge in-review w-fit">
             In Review
@@ -33,10 +33,10 @@
         </div>
       </button>
       <div class="flex flex-col gap-4">
-        <span class="font-semibold text-[#3FA5FF] text-[24px]">TRC-N-0024</span>
+        <span class="font-semibold text-[var(--color-text-primary)] text-[24px]">TRC-N-0024</span>
         <div class="grid gap-1">
-          <span class="text-[#363636] text-[18px]">Wait, we are reviewing your documents. Stay tuned with us...</span>
-          <span class="text-[#363636] text-[14px]">If all your documents are in order, you can proceed with the payment
+          <span class="text-[var(--color-text-primary)] text-[18px]">Wait, we are reviewing your documents. Stay tuned with us...</span>
+          <span class="text-[var(--color-text-primary)] text-[14px]">If all your documents are in order, you can proceed with the payment
             process</span>
         </div>
       </div>
@@ -44,7 +44,7 @@
     <div *ngIf="!isFirstDivVisible" class="flex justify-between items-center">
       <div class="flex items-center gap-4 ">
         <button (click)="toggleDivs()" class="hidden md:block">
-          <div class="rounded-md p-2 flex flex-col items-center justify-center bg-[#F2F6FA] w-fit">
+          <div class="rounded-md p-2 flex flex-col items-center justify-center bg-[var(--color-card-secondary-bg)] w-fit">
             <img src="../../../assets/img/icon-1.gif" alt="Review Icon" class="h-20">
             <span class="status-badge approved w-fit">
               Approved
@@ -54,17 +54,17 @@
         <div class="flex flex-col gap-4">
           <span class="font-semibold text-[#3FA5FF] text-[24px]">TRC-N-0024</span>
           <div class="grid gap-1">
-            <span class="text-[#363636] text-[18px]">Your All Documents are good...!</span>
-            <span class="text-[#363636] text-[14px]">You can do the payment now</span>
+            <span class="text-[var(--color-text-primary)] text-[18px]">Your All Documents are good...!</span>
+            <span class="text-[var(--color-text-primary)] text-[14px]">You can do the payment now</span>
           </div>
         </div>
       </div>
-      <div class="flex gap-6 items-center bg-[#F2F6FA] py-2 px-4 rounded-3xl">
+      <div class="flex gap-6 items-center bg-[var(--color-card-secondary-bg)] py-2 px-4 rounded-3xl">
         <div class="flex items-center gap-2">
           <img src="/assets/icons/pdf.png" alt="icon" class="w-8 h-8">
           <div class="grid">
-            <span class="text-[#363636] text-[14px]">Bank Guarantee Form </span>
-            <span class="text-[#363636] text-[12px]">1.3 MB</span>
+            <span class="text-[var(--color-text-primary)] text-[14px]">Bank Guarantee Form </span>
+            <span class="text-[var(--color-text-primary)] text-[12px]">1.3 MB</span>
           </div>
         </div>
         <button class="flex justify-center items-center">
@@ -74,10 +74,10 @@
     </div>
     <!-- Document Items -->
     <div class="space-y-3 mt-8">
-      <div class="flex items-center justify-between bg-gray-50 p-3 rounded-md shadow-sm">
+      <div class="flex items-center justify-between bg-[var(--color-card-tertiary-bg)] p-3 rounded-md shadow-sm">
         <div class="flex items-center space-x-3">
           <img src="/assets/icons/basic-info.png" alt="icon" class="w-8 h-8">
-          <span class="text-gray-800 truncate">Basic Information</span>
+          <span class="text-[var(--color-text-secondary)] truncate">Basic Information</span>
         </div>
         <div class="flex items-center space-x-2">
           <!-- <button mat-stroked-button color="primary" class="text-xs">Submit Again</button> -->
@@ -86,10 +86,10 @@
           </span>
         </div>
       </div>
-      <div class="flex items-center justify-between bg-gray-50 p-3 rounded-md shadow-sm">
+      <div class="flex items-center justify-between bg-[var(--color-card-tertiary-bg)] p-3 rounded-md shadow-sm">
         <div class="flex items-center space-x-3">
           <img src="/assets/icons/driver-details.png" alt="icon" class="w-8 h-8">
-          <span class="text-gray-800">Driver Details</span>
+          <span class="text-[var(--color-text-secondary)]">Driver Details</span>
         </div>
         <div class="flex items-center space-x-2">
           <!-- <button mat-stroked-button color="primary" class="text-xs">Submit Again</button> -->
@@ -98,10 +98,10 @@
           </span>
         </div>
       </div>
-      <div class="flex items-center justify-between bg-gray-50 p-3 rounded-md shadow-sm">
+      <div class="flex items-center justify-between bg-[var(--color-card-tertiary-bg)] p-3 rounded-md shadow-sm">
         <div class="flex items-center space-x-3">
           <img src="/assets/icons/insurance.png" alt="icon" class="w-8 h-8">
-          <span class="text-gray-800">Particular of Vehicle</span>
+          <span class="text-[var(--color-text-secondary)]">Particular of Vehicle</span>
         </div>
         <div class="flex items-center space-x-2">
           <!-- <button mat-stroked-button color="primary" class="text-xs">Submit Again</button> -->
@@ -110,10 +110,10 @@
           </span>
         </div>
       </div>
-      <div class="flex items-center justify-between bg-gray-50 p-3 rounded-md shadow-sm">
+      <div class="flex items-center justify-between bg-[var(--color-card-tertiary-bg)] p-3 rounded-md shadow-sm">
         <div class="flex items-center space-x-3">
           <img src="/assets/icons/location.png" alt="icon" class="w-8 h-8">
-          <span class="text-gray-800">Owner’s address in Sultanate of Oman</span>
+          <span class="text-[var(--color-text-secondary)]">Owner’s address in Sultanate of Oman</span>
         </div>
         <div class="flex items-center space-x-2">
           <!-- <button mat-stroked-button color="primary" class="text-xs">Submit Again</button> -->
@@ -122,10 +122,10 @@
           </span>
         </div>
       </div>
-      <div class="flex items-center justify-between bg-gray-50 p-3 rounded-md shadow-sm">
+      <div class="flex items-center justify-between bg-[var(--color-card-tertiary-bg)] p-3 rounded-md shadow-sm">
         <div class="flex items-center space-x-3">
           <img src="/assets/icons/home.png" alt="icon" class="w-8 h-8">
-          <span class="text-gray-800">Owner’s address in His Home Country</span>
+          <span class="text-[var(--color-text-secondary)]">Owner’s address in His Home Country</span>
         </div>
         <div class="flex items-center space-x-2">
           <button class="submit-again">
@@ -135,10 +135,10 @@
           </span>
         </div>
       </div>
-      <div class="flex items-center justify-between bg-gray-50 p-3 rounded-md shadow-sm">
+      <div class="flex items-center justify-between bg-[var(--color-card-tertiary-bg)] p-3 rounded-md shadow-sm">
         <div class="flex items-center space-x-3">
           <img src="/assets/icons/reference.png" alt="icon" class="w-8 h-8">
-          <span class="text-gray-800">References In Sultanate of Oman</span>
+          <span class="text-[var(--color-text-secondary)]">References In Sultanate of Oman</span>
         </div>
         <div class="flex items-center space-x-2">
           <!-- <button mat-stroked-button color="primary" class="text-xs">Submit Again</button> -->
@@ -147,10 +147,10 @@
           </span>
         </div>
       </div>
-      <div class="flex items-center justify-between bg-gray-50 p-3 rounded-md shadow-sm">
+      <div class="flex items-center justify-between bg-[var(--color-card-tertiary-bg)] p-3 rounded-md shadow-sm">
         <div class="flex items-center space-x-3">
           <img src="/assets/icons/reference.png" alt="icon" class="w-8 h-8">
-          <span class="text-gray-800">References In your home country</span>
+          <span class="text-[var(--color-text-secondary)]">References In your home country</span>
         </div>
         <div class="flex items-center space-x-2">
           <!-- <button mat-stroked-button color="primary" class="text-xs">Submit Again</button> -->
@@ -159,19 +159,19 @@
           </span>
         </div>
       </div>
-      <div class="gird bg-gray-50 p-3 rounded-md shadow-sm">
+      <div class="gird bg-[var(--color-card-tertiary-bg)] p-3 rounded-md shadow-sm">
         <div class="flex items-center space-x-3">
           <img src="/assets/icons/attachment.png" alt="icon" class="w-8 h-8">
-          <span class="text-gray-800">Attachments</span>
+          <span class="text-[var(--color-text-secondary)]">Attachments</span>
         </div>
 
         <div class="space-y-2 mt-4">
-          <div class="flex items-center justify-between bg-white p-3 rounded-md shadow-sm">
+          <div class="flex items-center justify-between bg-[var(--color-secondary)] p-3 rounded-md shadow-sm">
             <div class="flex items-center space-x-3">
               <img src="/assets/icons/pdf.png" alt="icon" class="w-8 h-8">
               <div class="grid">
-                <span class="text-[14px] text-[#1E293B] font-semibold">Vehicle Registration</span>
-                <span class="text-[14px] text-[#64748B]">File Size should be between 2MB to 10MB</span>
+                <span class="text-[14px] text-[var(--color-text-primary)] font-semibold">Vehicle Registration</span>
+                <span class="text-[14px] text-[var(--color-text-secondary)]">File Size should be between 2MB to 10MB</span>
               </div>
             </div>
             <div class="flex items-center space-x-2">
@@ -181,12 +181,12 @@
               </span>
             </div>
           </div>
-          <div class="flex items-center justify-between bg-white p-3 rounded-md shadow-sm">
+          <div class="flex items-center justify-between bg-[var(--color-secondary)] p-3 rounded-md shadow-sm">
             <div class="flex items-center space-x-3">
               <img src="/assets/icons/pdf.png" alt="icon" class="w-8 h-8">
               <div class="grid">
-                <span class="text-[14px] text-[#1E293B] font-semibold">Bank Document</span>
-                <span class="text-[14px] text-[#64748B]">File Size should be between 2MB to 10MB</span>
+                <span class="text-[14px] text-[var(--color-text-primary)] font-semibold">Bank Document</span>
+                <span class="text-[14px] text-[var(--color-text-secondary)]">File Size should be between 2MB to 10MB</span>
               </div>
             </div>
             <div class="flex items-center space-x-2">
@@ -198,19 +198,19 @@
           </div>
         </div>
       </div>
-      <div class="gird bg-gray-50 p-3 rounded-md shadow-sm">
+      <div class="gird bg-[var(--color-card-tertiary-bg)] p-3 rounded-md shadow-sm">
         <div class="flex items-center space-x-3">
           <img src="/assets/icons/review.png" alt="icon" class="w-8 h-8">
-          <span class="text-gray-800">Review</span>
+          <span class="text-[var(--color-text-secondary)]">Review</span>
         </div>
 
         <div class="space-y-2 mt-4">
-          <div class="flex items-center justify-between bg-white p-3 rounded-md shadow-sm">
+          <div class="flex items-center justify-between bg-[var(--color-secondary)] p-3 rounded-md shadow-sm">
             <div class="flex items-center space-x-3">
               <img src="/assets/icons/profile-img.png" alt="icon" class="rounded-full w-10 h-10">
               <div class="grid">
-                <span class="text-[14px] text-[#1E293B] font-semibold">Abdulla Al Rahuman</span>
-                <span class="text-[14px] text-[#64748B]">Senior Director</span>
+                <span class="text-[14px] text-[var(--color-text-primary)] font-semibold">Abdulla Al Rahuman</span>
+                <span class="text-[14px] text-[var(--color-text-secondary)]">Senior Director</span>
               </div>
 
             </div>

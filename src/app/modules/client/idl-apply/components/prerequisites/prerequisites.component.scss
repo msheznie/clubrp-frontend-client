@@ -4,7 +4,7 @@ app-prerequisites {
 }
 
 .idl-header {
-  color: #363636;
+  color: var(--color-text-primary);
   font-weight: 500;
   font-size: 17px;
   margin-bottom: 5px;
@@ -23,10 +23,10 @@ app-prerequisites li {
 
 // Style for the content container
 app-prerequisites .content-container {
-  color: #485351;
+  color: var(--color-text-primary);
   
   h2 {
-    color: #363636 !important;
+    color: var(--color-text-primary) !important;
     font-weight: 500 !important;
     font-size: 16px !important;
     margin-bottom: 5px !important;
@@ -55,12 +55,12 @@ app-prerequisites .content-container {
   }
   
   a {
-    color: #2563eb !important;
+    color: var(--color-text-clickable) !important;
     text-decoration: underline !important;
     cursor: pointer !important;
     
     &:hover {
-      color: #1d4ed8 !important;
+      filter: brightness(85%) !important;
     }
   }
 }

@@ -36,15 +36,15 @@ export class ApprovalsComponent {
   statusClass(status: string): string {
     switch (status) {
       case 'Approved':
-        return 'bg-green-200 text-green-800';
+        return 'status-badge approved';
       case 'In-Review':
-        return 'bg-blue-200 text-blue-800';
+        return 'status-badge in-review';
       case 'Rejected':
-        return 'bg-red-200 text-red-800';
+        return 'status-badge rejected';
       case 'Pending Review':
-        return 'bg-gray-300 text-gray-700';
+        return 'status-badge pending-review';
       default:
-        return 'bg-gray-100 text-gray-600';
+        return 'status-badge pending-review';
     }
   }
 }

@@ -1,6 +1,6 @@
 <div class="mb-4">
   <div
-    class="mb-6 w-full p-4 bg-white border border-gray-200 rounded-lg shadow-sm sm:p-8 overflow-y-scroll max-h-[100vh]">
+    class="mb-6 w-full p-4 bg-[var(--color-secondary)] border border-[var(--color-border)] rounded-lg shadow-sm sm:p-8 overflow-y-scroll max-h-[100vh]">
     <div class="!pl-0">
       <mat-radio-group color="primary" class="custom-radio !ml-0">
         <mat-radio-button value="1">New License</mat-radio-button>
@@ -8,7 +8,7 @@
       </mat-radio-group>
     </div>
 
-    <h1 class="!text-[#363636] !mb-[5px] !font-[500] !text-[17px]">Basic Info</h1>
+    <h1 class="!text-[var(--color-text-primary)] !mb-[5px] !font-[500] !text-[17px]">Basic Info</h1>
     <div class="contant-section">
       <div class="grid md:grid-cols-3 sm:grid-cols-1 gap-4 mb-4">
         <mat-form-field appearance="outline" class="mat-form-field">
@@ -39,7 +39,7 @@
         </mat-form-field>
       </div>
 
-      <h1 class="!text-[#363636] !mb-[5px] !font-[500] !text-[17px]">Contact Info</h1>
+      <h1 class="!text-[var(--color-text-primary)] !mb-[5px] !font-[500] !text-[17px]">Contact Info</h1>
       <div class="grid md:grid-cols-3 sm:grid-cols-1 gap-4 mb-4">
         <mat-form-field appearance="outline" class="form-field w-full">
           <mat-label>Address</mat-label>
@@ -70,7 +70,7 @@
 
       </div>
 
-      <h1 class="!text-[#363636] !mb-[5px] !font-[500] !text-[17px]">Oman License Info</h1>
+      <h1 class="!text-[var(--color-text-primary)] !mb-[5px] !font-[500] !text-[17px]">Oman License Info</h1>
       <div class="grid md:grid-cols-3 sm:grid-cols-1 gap-4 mb-4">
         <mat-form-field appearance="outline" class="form-field">
           <mat-label>Omani Driving License No.</mat-label>
@@ -130,38 +130,38 @@
       </div>
 
       <div class="upload-file my-5 col-span-3">
-        <p class="text-red-500 text-sm flex justify-end items-center">NOT VALID IN JAPAN
+        <p class="text-[var(--color-text-error)] text-sm flex justify-end items-center">NOT VALID IN JAPAN
           <mat-icon class="ml-3">info_i</mat-icon>
         </p>
-        <div class="border-dashed border-2 border-gray-300 rounded-lg p-4">
+        <div class="border-dashed border-2 border-[var(--color-border)] rounded-lg p-4">
           <div class="text-center mb-4">
             <mat-icon>cloud_upload</mat-icon>
-            <p class="text-sm text-gray-500">File Size should be between 2MB to 10MB</p>
+            <p class="text-sm text-[var(--color-text-secondary)]">File Size should be between 2MB to 10MB</p>
             <button mat-button color="primary" (click)="fileInput.click()">Browse File</button>
             <input #fileInput type="file" multiple (change)="onFilesSelected($event)" class="hidden" />
           </div>
         </div>
         <div *ngFor="let file of uploadedFiles; let i = index"
-          class="flex items-center justify-between border-dashed border-2 border-gray-200 p-2 rounded-md my-2">
+          class="flex items-center justify-between border-dashed border-2 border-[var(--color-border)] p-2 rounded-md my-2">
           <div class="flex items-center gap-2">
             <img src="/assets/icons/pdf.png" class="w-8 h-8" alt="PDF" />
             <div>
               <p class="font-medium text-sm !mb-0">{{ file.name }}</p>
-              <p class="text-xs text-gray-500 !mb-0">File Size should be between 2MB to 10MB</p>
+              <p class="text-xs text-[var(--color-text-secondary)] !mb-0">File Size should be between 2MB to 10MB</p>
             </div>
           </div>
           <button mat-icon-button (click)="removeFile(i)">
-            <mat-icon class="text-[#0000008a]">cancel</mat-icon>
+            <mat-icon >cancel</mat-icon>
           </button>
         </div>
       </div>
 
-      <h1 class="!text-[#363636] !mb-[5px] !font-[500] !text-[17px]">Photo</h1>
+      <h1 class="!text-[var(--color-text-primary)] !mb-[5px] !font-[500] !text-[17px]">Photo</h1>
       <div class="grid grid-cols-1 gap-4 mb-4">
         <div class="flex items-center">
           <div class="m-2">
             <img src="/assets/img/placeholder-image.png" alt="PDF"
-              class="w-[150px] h-[180px] object-cover rounded-md border border-gray-200 min-w-[100px]" />
+              class="w-[150px] h-[180px] object-cover rounded-md border border-[var(--color-border)] min-w-[100px]" />
           </div>
 
           <div class="">
@@ -173,7 +173,7 @@
                 <mat-label>Upload a Photo</mat-label>
                 <input matInput [value]="getPhotoNames()" readonly (click)="fileInput2.click()" />
                 <button matSuffix mat-icon-button (click)="fileInput2.click()" aria-label="Upload">
-                  <mat-icon class="text-[#0000008a]">attach_file</mat-icon>
+                  <mat-icon >attach_file</mat-icon>
                 </button>
               </mat-form-field>
               <input #fileInput2 type="file" hidden (change)="uploadPhoto($event)" />

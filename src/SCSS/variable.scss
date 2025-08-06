@@ -1,0 +1,64 @@
+:root {
+//   MAIN COLOR
+ --color-primary: #444444;
+ --color-secondary: #ffffff;
+ --color-tertiary: #E2E8F0;
+ --color-bg: #ffffff;
+ --color-surface: #f5f5f5;
+
+//   TEXT COLOR
+ --color-text-primary: #353535;
+ --color-text-secondary: #485351;
+ --color-text-tertiary: #64748B;
+ --color-text-clickable: #0A97E6;
+ --color-text-white: #ffffff;
+ --color-text-black: #000000;
+ --color-text-error: #e0272a;
+ --color-text-success: #22c55e;
+ --color-text-warning: #f59e0b;
+ --color-text-info: #3b82f6;
+
+// ICON COLOR
+ --color-primary-icon: #485351;
+ --color-primary-icon-hover: #363f3e;
+
+//   BUTTON COLOR
+ --color-button-fill: #444444;
+ --color-button-fill-hover: #2f2f2f;
+ --color-button-fill-secondary: #E4E5E5;
+ --color-button-fill-secondary-hover: #dadada;
+
+//   BORDER COLOR
+ --color-border: #e5e7eb;
+ --color-border-secondary: #000;
+
+//   CHIP COLOR
+ --color-chip-bg: #8D8D8D;
+ --color-chip-text: #FFFFFF;
+ --color-chip-icon: #ABABAB;
+
+//   INPUT FIELD COLOR
+ --color-input-outlined: #CBD5E1;
+
+//   BADGE COLOR
+  --color-badge-bg-approve: #51AA60;
+  --color-badge-bg-pending-review: #A6A6A6;
+  --color-badge-bg-in-review: #6EBDEA;
+  --color-badge-bg-rejected: #C72222;
+  --color-badge-text: #ffffff;
+
+// CARD COLOR
+ --color-card-primary-bg: #ffffff;
+ --color-card-secondary-bg: #F2F6FA;
+ --color-card-tertiary-bg: #f9fafb;
+
+// TABLE V1 COLOR
+ --color-table-header-bg: #ffffff;
+ --color-table-row-bg: #F8F9FD;
+ --color-table-row-hover-bg: #eff2fd;
+
+//  TOAST COLOR
+ --color-toast-text: #ffffff;
+ --color-toast-success-bg: #6ecc6e;
+ --color-toast-error-bg: #e64141;
+}
