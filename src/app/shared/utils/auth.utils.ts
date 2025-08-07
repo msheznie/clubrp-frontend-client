@@ -1,5 +1,4 @@
 import { inject } from "@angular/core";
-import { AuthService } from "../services/auth.service";
 
 export class AuthUtils {
     static isTokenExpired(token: string): boolean {

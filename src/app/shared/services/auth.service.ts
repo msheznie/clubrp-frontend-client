@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
-import { catchError, finalize, map, retry, tap } from 'rxjs/operators';
+import { catchError, tap } from 'rxjs/operators';
 import { AppConfigService } from './app-config.service';
 import { HelperService } from './helper.service';
 
@@ -86,9 +86,6 @@ export class AuthService {
         catchError(error => {
           this.handleError(error);
           return throwError(() => error);
-        }),
-        finalize(() => {
-          this.isAuthenticatedSubject.next(false);
         })
       );
   }

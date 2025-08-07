@@ -124,6 +124,9 @@ export class IdlApplyComponent {
       height: 'auto',
       width: '40em',
       panelClass: 'default-preview-dialog',
+      data: {
+        type: 'idl'
+      }
     });
   }
 
@@ -140,6 +143,7 @@ export class IdlApplyComponent {
   }
 
   isAuthenticated() {
+    console.log(this.authService.isAuthenticated()) 
     return this.authService.isAuthenticated();
   }
 }
