@@ -105,6 +105,11 @@ export class OtpVerifyComponent implements OnDestroy {
 
   resendOtp() {
     this.isResending = true;
+
+    // Clear existing timer
+    if (this.timerInterval) {
+      clearInterval(this.timerInterval);
+    }
     
     this.authService.resendOtp({
       email: this.email
@@ -127,11 +132,16 @@ export class OtpVerifyComponent implements OnDestroy {
   }
 
   startTimer() {
+
+    if (this.timerInterval) {
+      clearInterval(this.timerInterval);
+    }
     this.timerInterval = setInterval(() => {
-      if (this.timeLeft > 1) {
+      if (this.timeLeft > 0) {
         this.timeLeft--;
       } else {
         this.isExpire=true
+        clearInterval(this.timerInterval);
       }
     }, 1000);
   }
