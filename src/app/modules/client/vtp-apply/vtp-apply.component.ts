@@ -10,7 +10,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {AsyncPipe} from '@angular/common';
 import { MaterialModules } from '../../../material';
 import { NavbarComponent } from "../../common/components/navbar/navbar.component";
-import { TermsAndConditionsComponent } from "./terms-and-conditions/terms-and-conditions.component";
+import { PrerequisitesComponent } from "./prerequisites/prerequisites.component";
 import { BasicInformationComponent } from "./basic-information/basic-information.component";
 import { ParticularOfVehicleComponent } from "./particular-of-vehicle/particular-of-vehicle.component";
 import { OwnerAddressSultanateOfOmanComponent } from "./owner-address-sultanate-of-oman/owner-address-sultanate-of-oman.component";
@@ -41,7 +41,7 @@ import { PaymentGatewayComponent } from '../idl-apply/components/payment-gateway
     AsyncPipe,
     MaterialModules,
     NavbarComponent,
-    TermsAndConditionsComponent,
+    PrerequisitesComponent,
     BasicInformationComponent,
     ParticularOfVehicleComponent,
     OwnerAddressSultanateOfOmanComponent,
