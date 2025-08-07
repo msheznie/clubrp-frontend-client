@@ -30,3 +30,7 @@
 .slide-up {
   animation: slideUp 0.2s ease-in forwards;
 }
+
+::ng-deep .mdc-notched-outline__notch {
+  border: none;
+}

@@ -142,8 +142,7 @@ export class IdlApplyComponent {
     this.stepper.next();
   }
 
-  isAuthenticated() {
-    console.log(this.authService.isAuthenticated()) 
+  isAuthenticated() { 
     return this.authService.isAuthenticated();
   }
 }

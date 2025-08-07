@@ -1,7 +1,7 @@
-import { Component, inject, ViewEncapsulation, OnDestroy } from '@angular/core';
+import { Component, Inject, inject, ViewEncapsulation, OnDestroy } from '@angular/core';
 import { CommonModule, NgIf } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatDialog } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -43,8 +43,14 @@ export class SignUpComponent implements OnDestroy {
   private _helperService = inject(HelperService);
   private router = inject(Router);
   private destroy$ = new Subject<void>();
+  type = '';
   
-  constructor(private fb: FormBuilder, private http: HttpClient, private authService: AuthService) {
+  constructor(@Inject(MAT_DIALOG_DATA) public data: any,
+   private fb: FormBuilder, 
+   private http: HttpClient, 
+   private authService: AuthService
+  ) {
+    this.type = data.type;
     this.signUpForm = this.fb.group({
       name: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
@@ -117,7 +123,6 @@ export class SignUpComponent implements OnDestroy {
     });
     dialogRef.afterClosed().subscribe((result) => {
       if (result?.success) {
-        console.log('success')
         this.authService.login({
           email: this.signUpForm.value.email,
           password: this.signUpForm.value.password
@@ -125,10 +130,11 @@ export class SignUpComponent implements OnDestroy {
         .pipe(takeUntil(this.destroy$))
         .subscribe({
           next: (response) => {
-            console.log('response', this.authService.isAuthenticated())
-            this.router.navigate(['/idl-apply'], {
-              queryParams: { autoNext: 'true' }
-            });
+            if (this.type == 'idl') {
+              this.router.navigate(['/idl-apply'], {
+                queryParams: { autoNext: 'true' }
+              });
+            }
           },
           error: (error) => {
           }

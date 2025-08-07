@@ -18,6 +18,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   isMobileMenuOpen = false;
   isAuthenticated = false;
   isUserMenuOpen = false;
+  userName = '';
   private authSubscription?: Subscription;
 
   constructor(
@@ -28,9 +29,15 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.isAuthenticated = this.authService.isAuthenticated();
+    this.userName = this.authService.getUserName();
     this.authSubscription = this.authService.isAuthenticated$.subscribe(
       (isAuth) => {
         this.isAuthenticated = isAuth;
+      }
+    );
+    this.authSubscription = this.authService.userName$.subscribe(
+      (userName) => {
+        this.userName = userName;
       }
     );
   }
@@ -46,17 +53,18 @@ export class NavbarComponent implements OnInit, OnDestroy {
       height: 'auto',
       width: '40em',
       panelClass: 'default-preview-dialog',
+      data: {
+        type: 'public'
+      }
     });
   }
 
   toggleMobileMenu() {
     this.isMobileMenuOpen = !this.isMobileMenuOpen;
-    console.log('Toggle clicked. Now open:', this.isMobileMenuOpen);
   }
 
   toggleUserMenu() {
     this.isUserMenuOpen = !this.isUserMenuOpen;
-    console.log('User menu toggled. Now open:', this.isUserMenuOpen);
   }
 
   logout() {

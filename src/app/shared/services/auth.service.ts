@@ -23,6 +23,7 @@ export interface AuthResponse {
   access_token: string;
   refresh_token?: string;
   expires_in?: number;
+  username?: string;
 }
 
 @Injectable({
@@ -33,6 +34,9 @@ export class AuthService {
   private config = inject(AppConfigService);
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
   public isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
+
+  private userNameSubject = new BehaviorSubject<string>('');
+  public userName$ = this.userNameSubject.asObservable();
 
   private apiversion = '/api/v1';
   private subdomain = inject(HelperService).getSubDomain();
@@ -54,6 +58,7 @@ export class AuthService {
 
     if (token) {
       this.isAuthenticatedSubject.next(true);
+      this.userNameSubject.next(this.getUserName());
     }
   }
 
@@ -99,6 +104,7 @@ export class AuthService {
     localStorage.removeItem(this.REFRESH_TOKEN_KEY);
 
     this.isAuthenticatedSubject.next(false);
+    this.userNameSubject.next('');
   }
 
   /**
@@ -130,6 +136,10 @@ export class AuthService {
    */
   isAuthenticated(): boolean {
     return this.isAuthenticatedSubject.value;
+  }
+
+  getUserName(): string {
+    return this.userNameSubject.value;
   }
 
   /**
@@ -170,6 +180,7 @@ export class AuthService {
     }
 
     this.isAuthenticatedSubject.next(true);
+    this.userNameSubject.next(response.username || '');
   }
 
   private setToken(token: string): void {
@@ -188,5 +199,6 @@ export class AuthService {
     localStorage.removeItem(this.TOKEN_KEY);
     localStorage.removeItem(this.REFRESH_TOKEN_KEY);
     this.isAuthenticatedSubject.next(false);
+    this.userNameSubject.next('');
   }
 }

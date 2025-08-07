@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy } from '@angular/core';
+import { Component, Inject, inject, OnDestroy } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -34,12 +34,17 @@ import { CommonModule } from '@angular/common';
 export class SignInComponent implements OnDestroy {
   loginForm: FormGroup;
   submitted = false;
+  type = '';
   private dialog = inject(MatDialog);
   private _helperService = inject(HelperService);
   private router = inject(Router);
   private destroy$ = new Subject<void>();
 
-  constructor(private fb: FormBuilder, private http: HttpClient, private authService: AuthService) {
+  constructor(@Inject(MAT_DIALOG_DATA) public data: any,
+    private fb: FormBuilder, 
+    private http: HttpClient, 
+    private authService: AuthService) {
+    this.type = data.type;
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required]]
@@ -61,9 +66,11 @@ export class SignInComponent implements OnDestroy {
         .subscribe({
           next: (response) => {
             this.dialog.closeAll();
-            this.router.navigate(['/idl-apply'], {
-              queryParams: { autoNext: 'true' }
-            });
+            if (this.type == 'idl') {
+              this.router.navigate(['/idl-apply'], {
+                queryParams: { autoNext: 'true' }
+              });
+            }
           },
           error: (error) => {
             this.submitted = false;
@@ -94,6 +101,9 @@ export class SignInComponent implements OnDestroy {
       height: 'auto',
       width: '40em',
       panelClass: 'default-preview-dialog',
+      data: {
+        type: this.type
+      }
     });
   }
 }
