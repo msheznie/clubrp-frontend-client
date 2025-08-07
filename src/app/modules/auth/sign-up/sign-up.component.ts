@@ -134,6 +134,10 @@ export class SignUpComponent implements OnDestroy {
               this.router.navigate(['/idl-apply'], {
                 queryParams: { autoNext: 'true' }
               });
+            } else if (this.type == 'vtp') {
+              this.router.navigate(['/vtp-apply'], {
+                queryParams: { autoNext: 'true' }
+              });
             }
           },
           error: (error) => {
@@ -169,6 +173,9 @@ export class SignUpComponent implements OnDestroy {
       height: 'auto',
       width: '40em',
       panelClass: 'default-preview-dialog',
+      data: {
+        type: this.type
+      }
     });
   }
 

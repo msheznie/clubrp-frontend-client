@@ -16,6 +16,12 @@ app-prerequisites {
     margin-left: 20px !important;
     margin-bottom: 1rem !important;
   }
+
+  app-prerequisites ol {
+    list-style-type: decimal !important;
+    margin-left: 20px !important;
+    margin-bottom: 1rem !important;
+  }
   
   app-prerequisites li {
     line-height: 1.2 !important;

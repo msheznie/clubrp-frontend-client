@@ -70,6 +70,10 @@ export class SignInComponent implements OnDestroy {
               this.router.navigate(['/idl-apply'], {
                 queryParams: { autoNext: 'true' }
               });
+            } else if (this.type == 'vtp') {
+              this.router.navigate(['/vtp-apply'], {
+                queryParams: { autoNext: 'true' }
+              });
             }
           },
           error: (error) => {

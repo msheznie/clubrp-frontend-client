@@ -22,18 +22,28 @@
 </div>
 <div class="container mx-auto px-4 md:px-20 mt-4">
   <mat-stepper
-    class="example-stepper" labelPosition="bottom" #steppe>
+    class="example-stepper" labelPosition="bottom" #steppe [ngClass]="{'locked-steps': !isAuthenticated()}">
     <mat-step [stepControl]="firstFormGroup" label="Prerequisites">
         <form [formGroup]="firstFormGroup">
             <div class="container mx-auto">
                 <app-prerequisites></app-prerequisites>
               </div>
               <div class="flex justify-end gap-4">
-                <button class="button-fill-secondary">
+                <button class="button-fill-secondary" (click)="navigateToHome()">
                   <mat-icon>cancel</mat-icon>
                   <span class="button-text">Cancel</span>
                 </button>
-                <button class="button-fill" matStepperNext>
+                <button 
+                  *ngIf="isAuthenticated()"
+                  class="button-fill" 
+                  matStepperNext>
+                  <span class="button-text">Apply</span>
+                  <mat-icon>arrow_forward</mat-icon>
+                </button>
+                <button 
+                  *ngIf="!isAuthenticated()"
+                  class="button-fill" 
+                  (click)="navigateToLoginPage()">
                   <span class="button-text">Apply</span>
                   <mat-icon>arrow_forward</mat-icon>
                 </button>
