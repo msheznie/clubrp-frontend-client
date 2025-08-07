@@ -124,7 +124,7 @@ export class SignUpComponent implements OnDestroy {
     dialogRef.afterClosed().subscribe((result) => {
       if (result?.success) {
         this.authService.login({
-          email: this.signUpForm.value.email,
+          username: this.signUpForm.value.username,
           password: this.signUpForm.value.password
         })
         .pipe(takeUntil(this.destroy$))
@@ -141,6 +141,7 @@ export class SignUpComponent implements OnDestroy {
             }
           },
           error: (error) => {
+            this._helperService.openErrorSnackBar(error, '');
           }
         });
       }
