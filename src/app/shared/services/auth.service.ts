@@ -6,7 +6,7 @@ import { AppConfigService } from './app-config.service';
 import { HelperService } from './helper.service';
 
 export interface LoginRequest {
-  email: string;
+  username: string;
   password: string;
 }
 
@@ -77,7 +77,7 @@ export class AuthService {
       'grant_type': 'password',
       'client_id': this.config.getConfig().client_id,
       'client_secret': this.config.getConfig().client_secret,
-      'username': loginData.email,
+      'username': loginData.username,
       'password': loginData.password,
       'scope': '',
       'is_idl': true

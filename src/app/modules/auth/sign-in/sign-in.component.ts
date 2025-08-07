@@ -46,7 +46,7 @@ export class SignInComponent implements OnDestroy {
     private authService: AuthService) {
     this.type = data.type;
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
+      username: ['', [Validators.required]],
       password: ['', [Validators.required]]
     });
   }

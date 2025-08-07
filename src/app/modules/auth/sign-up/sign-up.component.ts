@@ -53,7 +53,7 @@ export class SignUpComponent implements OnDestroy {
     this.type = data.type;
     this.signUpForm = this.fb.group({
       name: ['', [Validators.required]],
-      email: ['', [Validators.required, Validators.email]],
+      email: ['', [Validators.required, Validators.email, Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)]],
       primary_mobile: ['', [Validators.required, Validators.pattern(/^\+[1-9]\d{1,14}$/)]],
       username: ['', [Validators.required]],
       password: ['', [
@@ -124,7 +124,7 @@ export class SignUpComponent implements OnDestroy {
     dialogRef.afterClosed().subscribe((result) => {
       if (result?.success) {
         this.authService.login({
-          email: this.signUpForm.value.email,
+          username: this.signUpForm.value.username,
           password: this.signUpForm.value.password
         })
         .pipe(takeUntil(this.destroy$))
@@ -141,10 +141,25 @@ export class SignUpComponent implements OnDestroy {
             }
           },
           error: (error) => {
+            this._helperService.openErrorSnackBar(error, '');
           }
         });
       }
     });
+  }
+
+  getEmailErrorMessage(): string {
+    const emailControl = this.signUpForm.get('email');
+    
+    if (emailControl?.hasError('required')) {
+      return 'Email is required';
+    }
+    
+    if (emailControl?.hasError('email') || emailControl?.hasError('pattern')) {
+      return 'Please enter a valid email address';
+    }
+    
+    return '';
   }
 
   getPasswordError(): string {
