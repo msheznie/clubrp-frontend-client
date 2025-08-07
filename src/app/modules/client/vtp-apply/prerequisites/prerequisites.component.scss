@@ -1,0 +1,72 @@
+// Global styles for the prerequisites component
+app-prerequisites {
+    display: block;
+  }
+  
+  .idl-header {
+    color: var(--color-text-primary);
+    font-weight: 500;
+    font-size: 17px;
+    margin-bottom: 5px;
+  }
+  
+  // Ensure proper styling for lists
+  app-prerequisites ul {
+    list-style-type: disc !important;
+    margin-left: 20px !important;
+    margin-bottom: 1rem !important;
+  }
+
+  app-prerequisites ol {
+    list-style-type: decimal !important;
+    margin-left: 20px !important;
+    margin-bottom: 1rem !important;
+  }
+  
+  app-prerequisites li {
+    line-height: 1.2 !important;
+  }
+  
+  // Style for the content container
+  app-prerequisites .content-container {
+    color: var(--color-text-primary);
+    
+    h2 {
+      color: var(--color-text-primary) !important;
+      font-weight: 500 !important;
+      font-size: 16px !important;
+      margin-bottom: 5px !important;
+      margin-top: 0.5rem !important;
+    }
+    
+    p {
+      line-height: 1.2 !important;
+    }
+    
+    // Remove spacing from paragraphs with br tags
+    p:has(br) {
+      margin: 0 !important;
+      height: 0 !important;
+      overflow: hidden !important;
+    }
+    
+    // Reduce spacing between sections
+    ul + h2 {
+      margin-top: 0.5rem !important;
+    }
+    
+    // Remove margin from paragraphs that come after lists
+    ul + p {
+      margin-top: 0.5rem !important;
+    }
+    
+    a {
+      color: var(--color-text-clickable) !important;
+      text-decoration: underline !important;
+      cursor: pointer !important;
+      
+      &:hover {
+        filter: brightness(85%) !important;
+      }
+    }
+  }

@@ -5,13 +5,7 @@ import {
   FormsModule,
   ReactiveFormsModule,
 } from '@angular/forms';
-import { BreakpointObserver } from '@angular/cdk/layout';
-import {
-  StepperOrientation,
-  MatStepperModule,
-} from '@angular/material/stepper';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { MatStepperModule } from '@angular/material/stepper';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatInputModule } from '@angular/material/input';
@@ -30,7 +24,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { PaymentGatewayComponent } from './components/payment-gateway/payment-gateway.component';
 import { BreadcrumbComponent } from '../../common/components/breadcrumb/breadcrumb.component';
 import { MatStepper } from '@angular/material/stepper';
-import { FormGroup } from '@angular/forms';
 import { SignInComponent } from '../../auth/sign-in/sign-in.component';
 import { AuthService } from '../../../shared/services/auth.service';
 import { CommonModule } from '@angular/common';
