@@ -1,10 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, Inject, ViewEncapsulation } from '@angular/core';
+import { Component, Inject, ViewEncapsulation, OnDestroy } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { AuthService } from 'src/app/shared/services/auth.service';
 import { HelperService } from 'src/app/shared/services/helper.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-otp-verify',
@@ -18,7 +20,7 @@ import { HelperService } from 'src/app/shared/services/helper.service';
     MatButtonModule,
   ],
 })
-export class OtpVerifyComponent {
+export class OtpVerifyComponent implements OnDestroy {
 
   otpForm: FormGroup;
   submitted = false;
@@ -27,6 +29,8 @@ export class OtpVerifyComponent {
   otp: any = '';
   isExpire: boolean = false;
   timeLeft: number = 300;
+  private destroy$ = new Subject<void>();
+  private timerInterval: any;
   
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -50,6 +54,16 @@ export class OtpVerifyComponent {
     this.isExpire=false;
     this.timeLeft=300;
     this.startTimer();
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+    
+    // Clear the timer interval
+    if (this.timerInterval) {
+      clearInterval(this.timerInterval);
+    }
   }
 
   onOtpInput(event: any, fieldIndex: number) {
@@ -94,7 +108,9 @@ export class OtpVerifyComponent {
     
     this.authService.resendOtp({
       email: this.email
-    }).subscribe({
+    })
+    .pipe(takeUntil(this.destroy$))
+    .subscribe({
       next: (response) => {
         this.otp = response.data?.otp;
         this.isExpire=false;
@@ -111,7 +127,7 @@ export class OtpVerifyComponent {
   }
 
   startTimer() {
-    setInterval(() => {
+    this.timerInterval = setInterval(() => {
       if (this.timeLeft > 1) {
         this.timeLeft--;
       } else {

@@ -16,7 +16,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { AsyncPipe } from '@angular/common';
+import { AsyncPipe, NgIf } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MaterialModules } from '../../../material';
 import { NavbarComponent } from '../../common/components/navbar/navbar.component';
@@ -32,6 +32,8 @@ import { BreadcrumbComponent } from '../../common/components/breadcrumb/breadcru
 import { MatStepper } from '@angular/material/stepper';
 import { FormGroup } from '@angular/forms';
 import { SignInComponent } from '../../auth/sign-in/sign-in.component';
+import { AuthService } from '../../../shared/services/auth.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   standalone: true,
@@ -39,6 +41,7 @@ import { SignInComponent } from '../../auth/sign-in/sign-in.component';
   templateUrl: './idl-apply.component.html',
   styleUrls: ['./idl-apply.component.scss'],
   imports: [
+    CommonModule,
     MatStepperModule,
     FormsModule,
     ReactiveFormsModule,
@@ -46,6 +49,7 @@ import { SignInComponent } from '../../auth/sign-in/sign-in.component';
     MatInputModule,
     MatButtonModule,
     AsyncPipe,
+    NgIf,
     MaterialModules,
     NavbarComponent,
     PrerequisitesComponent,
@@ -95,7 +99,8 @@ export class IdlApplyComponent {
     public sanitizer: DomSanitizer,
     private router: Router,
     private route: ActivatedRoute,
-    private newDialog: MatDialog
+    private newDialog: MatDialog,
+    public authService: AuthService
   ) {}
 
   ngOnInit() {
@@ -119,6 +124,9 @@ export class IdlApplyComponent {
       height: 'auto',
       width: '40em',
       panelClass: 'default-preview-dialog',
+      data: {
+        type: 'idl'
+      }
     });
   }
 
@@ -132,5 +140,9 @@ export class IdlApplyComponent {
 
   moveToNextStep() {
     this.stepper.next();
+  }
+
+  isAuthenticated() { 
+    return this.authService.isAuthenticated();
   }
 }

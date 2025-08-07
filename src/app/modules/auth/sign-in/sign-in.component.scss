@@ -10,9 +10,6 @@
 ::ng-deep .mat-expansion-indicator::after {
     border-color: var(--color-border-secondary) !important;
 }
-::ng-deep .mdc-notched-outline__notch{
-    border: none;
-}
 .button-google{
     display: flex;
     align-items: center;

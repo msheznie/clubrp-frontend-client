@@ -16,6 +16,13 @@ export function appInitializerFactory(appConfig: AppConfigService) {
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
+    AppConfigService,
+    {
+      provide: APP_INITIALIZER,
+      useFactory: appInitializerFactory,
+      deps: [AppConfigService],
+      multi: true
+    },
     provideHttpClient(
       withFetch(),
       withInterceptors([
@@ -24,13 +31,6 @@ export const appConfig: ApplicationConfig = {
         loadingInterceptor
       ])
     ),
-    provideAnimations(),
-    AppConfigService,
-    {
-      provide: APP_INITIALIZER,
-      useFactory: appInitializerFactory,
-      deps: [AppConfigService],
-      multi: true
-    }
+    provideAnimations()
   ]
 };

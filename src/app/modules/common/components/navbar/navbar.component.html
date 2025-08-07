@@ -16,7 +16,44 @@
         </ul>
       </nav>
 
-      <button type="button" class="sign-in flex items-center py-1.5 px-3 rounded-full text-sm" (click)="openSignin()">
+      <div *ngIf="isAuthenticated" class="relative">
+        <button 
+          type="button" 
+          class="user-menu flex items-center py-1.5 px-3 rounded-full text-sm hover:bg-white/10 transition-colors"
+          (click)="toggleUserMenu()"
+        >
+          <span class="btn-image w-[24px]">
+            <img src="../../../assets/img/btn-image.png" alt="Icon" />
+          </span>
+          <span class="text-[var(--color-text-primary)] ml-2">Hi {{ userName }}</span>
+        </button>
+
+        <!-- User Dropdown Menu -->
+        <div 
+          *ngIf="isUserMenuOpen" 
+          class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 z-50 border border-gray-200"
+        >
+          <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">
+            Settings
+          </a>
+          <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">
+            Track My Application
+          </a>
+          <button 
+            (click)="logout()" 
+            class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+          >
+            Logout
+          </button>
+        </div>
+      </div>
+
+      <button 
+        *ngIf="!isAuthenticated"
+        type="button" 
+        class="sign-in flex items-center py-1.5 px-3 rounded-full text-sm" 
+        (click)="openSignin()"
+      >
         <span class="btn-image w-[24px]">
           <img src="../../../assets/img/btn-image.png" alt="Icon" />
         </span>
@@ -24,6 +61,7 @@
       </button>
     </div>
   </div>
+
 
   <!-- Mobile Navbar -->
   <div class="flex justify-between items-center md:hidden">
@@ -49,8 +87,30 @@
     <!-- Divider -->
     <div class="border-t my-4"></div>
 
+    <div *ngIf="isAuthenticated" class="space-y-2">
+      <div class="flex items-center mb-4">
+        <div class="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center mr-3">
+          <img src="../../../assets/img/profile-img.png" alt="Profile" class="w-8 h-8 rounded-full" />
+        </div>
+        <span class="text-[var(--color-text-primary)]">Hi {{ userName }}</span>
+      </div>
+      
+      <a href="#" class="block py-2 text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]">
+        Settings
+      </a>
+      <a href="#" class="block py-2 text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]">
+        Track My Application
+      </a>
+      <button 
+        (click)="logout()" 
+        class="block w-full text-left py-2 text-red-600 hover:text-red-700"
+      >
+        Logout
+      </button>
+    </div>
+
   <!-- Mobile Sign In Button -->
-   <div class="flex justify-center items-center">
+   <div *ngIf="!isAuthenticated" class="flex justify-center items-center">
   <button
     type="button"
     class="flex items-center justify-center gap-2 bg-[var(--color-button-fill-secondary)] text-[var(--color-text-primary)] py-2 px-4 rounded-full text-sm"
