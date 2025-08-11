@@ -19,7 +19,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   isAuthenticated = false;
   isUserMenuOpen = false;
   userName = '';
-  private authSubscription?: Subscription;
+  private subscriptions: Subscription[] = [];
 
   constructor(
     private dialog: MatDialog,
@@ -30,22 +30,26 @@ export class NavbarComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.isAuthenticated = this.authService.isAuthenticated();
     this.userName = this.authService.getUserName();
-    this.authSubscription = this.authService.isAuthenticated$.subscribe(
+    const authSubscription = this.authService.isAuthenticated$.subscribe(
       (isAuth) => {
         this.isAuthenticated = isAuth;
       }
     );
-    this.authSubscription = this.authService.userName$.subscribe(
+    const userNameSubscription = this.authService.userName$.subscribe(
       (userName) => {
         this.userName = userName;
       }
     );
+    this.subscriptions.push(authSubscription, userNameSubscription);
   }
 
   ngOnDestroy() {
-    if (this.authSubscription) {
-      this.authSubscription.unsubscribe();
-    }
+    this.subscriptions.forEach(subscription => {
+      if (subscription) {
+        subscription.unsubscribe();
+      }
+    });
+    this.subscriptions = [];
   }
 
   openSignin() {

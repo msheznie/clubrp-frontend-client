@@ -55,10 +55,11 @@ export class AuthService {
    */
   private initializeAuth(): void {
     const token = this.getToken();
+    const username = localStorage.getItem('username'); 
 
     if (token) {
       this.isAuthenticatedSubject.next(true);
-      this.userNameSubject.next(this.getUserName());
+      this.userNameSubject.next(username || '');
     }
   }
 
@@ -102,6 +103,7 @@ export class AuthService {
     // Clear local storage
     localStorage.removeItem(this.TOKEN_KEY);
     localStorage.removeItem(this.REFRESH_TOKEN_KEY);
+    localStorage.removeItem('username');
 
     this.isAuthenticatedSubject.next(false);
     this.userNameSubject.next('');
@@ -139,7 +141,7 @@ export class AuthService {
   }
 
   getUserName(): string {
-    return this.userNameSubject.value;
+    return localStorage.getItem('username') || '';
   }
 
   /**
@@ -179,6 +181,10 @@ export class AuthService {
       this.setRefreshToken(response.refresh_token);
     }
 
+    if (response.username) {
+      localStorage.setItem('username', response.username);
+    }
+
     this.isAuthenticatedSubject.next(true);
     this.userNameSubject.next(response.username || '');
   }
@@ -198,6 +204,7 @@ export class AuthService {
 
     localStorage.removeItem(this.TOKEN_KEY);
     localStorage.removeItem(this.REFRESH_TOKEN_KEY);
+    localStorage.removeItem('username');
     this.isAuthenticatedSubject.next(false);
     this.userNameSubject.next('');
   }
