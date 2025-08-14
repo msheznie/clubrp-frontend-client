@@ -10,7 +10,7 @@
           <mat-icon>save</mat-icon>
           <span class="button-text">Save as Draft</span>
           </button>
-      <button class="button-fill">
+      <button class="button-fill" (click)="submitForm()">
           <mat-icon>done</mat-icon>
           <span class="button-text">Submit</span>
           </button>
@@ -52,7 +52,7 @@
     </mat-step>
     <mat-step [stepControl]="secondFormGroup" label="Basic Information">
       <form [formGroup]="secondFormGroup">
-        <app-basic-information></app-basic-information>
+        <app-basic-information [formGroup]="secondFormGroup"></app-basic-information>
         <div class="flex justify-end gap-4">
           <button class="button-fill-secondary" matStepperPrevious>
             <mat-icon>arrow_back</mat-icon>
@@ -82,7 +82,7 @@
     </mat-step>
     <mat-step [stepControl]="foreFormGroup" label="Waiting for Approvals">
       <form [formGroup]="foreFormGroup">
-        <app-approvals></app-approvals>
+        <app-approvals [formGroup]="secondFormGroup"></app-approvals>
         <div class="flex justify-end gap-4">
           <button class="button-fill-secondary" matStepperPrevious>
             <mat-icon>arrow_back</mat-icon>
@@ -108,7 +108,7 @@
           <span class="button-text">Pay</span>
         </button>
       </div>
-</form>
+      </form>
     </mat-step>
     <!-- <mat-step>
       <ng-template matStepLabel>Done</ng-template>

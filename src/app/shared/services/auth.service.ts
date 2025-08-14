@@ -24,6 +24,7 @@ export interface AuthResponse {
   refresh_token?: string;
   expires_in?: number;
   username?: string;
+  user_id?: string;
 }
 
 @Injectable({
@@ -104,6 +105,7 @@ export class AuthService {
     localStorage.removeItem(this.TOKEN_KEY);
     localStorage.removeItem(this.REFRESH_TOKEN_KEY);
     localStorage.removeItem('username');
+    localStorage.removeItem('user_id');
 
     this.isAuthenticatedSubject.next(false);
     this.userNameSubject.next('');
@@ -142,6 +144,10 @@ export class AuthService {
 
   getUserName(): string {
     return localStorage.getItem('username') || '';
+  }
+
+  getUserId(): string | null {
+    return localStorage.getItem('user_id');
   }
 
   /**
@@ -183,6 +189,7 @@ export class AuthService {
 
     if (response.username) {
       localStorage.setItem('username', response.username);
+      localStorage.setItem('user_id', response.user_id || '');
     }
 
     this.isAuthenticatedSubject.next(true);
@@ -205,6 +212,7 @@ export class AuthService {
     localStorage.removeItem(this.TOKEN_KEY);
     localStorage.removeItem(this.REFRESH_TOKEN_KEY);
     localStorage.removeItem('username');
+    localStorage.removeItem('user_id');
     this.isAuthenticatedSubject.next(false);
     this.userNameSubject.next('');
   }

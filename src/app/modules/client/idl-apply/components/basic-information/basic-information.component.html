@@ -1,8 +1,8 @@
-<div class="mb-4">
+<div class="mb-4" [formGroup]="formGroup">
   <div
     class="mb-6 w-full p-4 bg-[var(--color-secondary)] border border-[var(--color-border)] rounded-lg shadow-sm sm:p-8 overflow-y-scroll max-h-[100vh]">
     <div class="!pl-0">
-      <mat-radio-group color="primary" class="custom-radio !ml-0">
+      <mat-radio-group formControlName="licenseType" color="primary" class="custom-radio !ml-0">
         <mat-radio-button value="1">New License</mat-radio-button>
         <mat-radio-button value="2">Re-New License</mat-radio-button>
       </mat-radio-group>
@@ -13,27 +13,27 @@
       <div class="grid md:grid-cols-3 sm:grid-cols-1 gap-4 mb-4">
         <mat-form-field appearance="outline" class="mat-form-field">
           <mat-label>First Name</mat-label>
-          <input matInput />
+          <input matInput formControlName="firstName" />
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="form-field">
           <mat-label>Last Name</mat-label>
-          <input matInput />
+          <input matInput formControlName="lastName" />
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="form-field">
           <mat-label>First Name / Other Name(s)</mat-label>
-          <input matInput />
+          <input matInput formControlName="otherName" />
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="form-field">
           <mat-label>Nationality</mat-label>
-          <input matInput />
+          <input matInput formControlName="nationality" />
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="form-field">
           <mat-label>Date of Birth</mat-label>
-          <input matInput placeholder="MM/DD/YYYY" [matDatepicker]="picker" readonly="true" />
+          <input matInput placeholder="MM/DD/YYYY" [matDatepicker]="picker" readonly="true" formControlName="dateOfBirth" />
           <mat-datepicker-toggle matIconSuffix [for]="picker" />
           <mat-datepicker #picker />
         </mat-form-field>
@@ -43,29 +43,29 @@
       <div class="grid md:grid-cols-3 sm:grid-cols-1 gap-4 mb-4">
         <mat-form-field appearance="outline" class="form-field w-full">
           <mat-label>Address</mat-label>
-          <input matInput />
+          <input matInput formControlName="address" />
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="form-field">
           <mat-label>Postal Code</mat-label>
-          <input matInput />
+          <input matInput formControlName="postalCode" />
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="form-field">
           <mat-label>P.O Box (Not Mandatory)</mat-label>
-          <input matInput />
+          <input matInput formControlName="poBox" />
         </mat-form-field>
 
 
         <mat-form-field appearance="outline" class="form-field">
           <mat-label>E-Mail</mat-label>
-          <input matInput type="email" />
+          <input matInput type="email" formControlName="email" />
         </mat-form-field>
 
 
         <mat-form-field appearance="outline" class="form-field">
           <mat-label>GSM</mat-label>
-          <input matInput />
+          <input matInput formControlName="gsm" />
         </mat-form-field>
 
       </div>
@@ -74,31 +74,31 @@
       <div class="grid md:grid-cols-3 sm:grid-cols-1 gap-4 mb-4">
         <mat-form-field appearance="outline" class="form-field">
           <mat-label>Omani Driving License No.</mat-label>
-          <input matInput />
+          <input matInput formControlName="omaniLicenseNo" />
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="form-field">
           <mat-label>First Issue Date</mat-label>
-          <input matInput placeholder="MM/DD/YYYY" [matDatepicker]="picker1" readonly="true" />
+          <input matInput placeholder="MM/DD/YYYY" [matDatepicker]="picker1" readonly="true" formControlName="firstIssueDate" />
           <mat-datepicker-toggle matIconSuffix [for]="picker1" />
           <mat-datepicker #picker1 />
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="form-field">
           <mat-label>Expiry Date</mat-label>
-          <input matInput placeholder="MM/DD/YYYY" [matDatepicker]="picker2" readonly="true" />
+          <input matInput placeholder="MM/DD/YYYY" [matDatepicker]="picker2" readonly="true" formControlName="expiryDate" />
           <mat-datepicker-toggle matIconSuffix [for]="picker2" />
           <mat-datepicker #picker2 />
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="form-field">
           <mat-label>Licenses Eligibility</mat-label>
-          <input matInput type="text" />
+          <input matInput type="text" formControlName="licenseEligibility" />
         </mat-form-field>
 
         <mat-form-field appearance="outline">
           <mat-label>Type of License</mat-label>
-          <mat-select>
+          <mat-select formControlName="licenseTypeCategory">
             <mat-option value="1">Motor Cycle</mat-option>
             <mat-option value="2">Motor Cycle</mat-option>
           </mat-select>
@@ -117,9 +117,9 @@
               </button>
             </mat-chip-row>
           </mat-chip-grid>
-          <input name="currentFruit" placeholder="New Fruit..." #fruitInput [(ngModel)]="currentFruit"
-            [matChipInputFor]="chipGrid" [matAutocomplete]="auto" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-            (matChipInputTokenEnd)="add($event)" />
+          <input name="currentFruit" placeholder="New Fruit..." #fruitInput 
+             [matChipInputFor]="chipGrid" [matAutocomplete]="auto" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+             (matChipInputTokenEnd)="add($event)" (input)="onChipInputChange($event)" />
 
           <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event); fruitInput.value = ''">
             <mat-option *ngFor="let fruit of filteredFruits()" [value]="fruit">

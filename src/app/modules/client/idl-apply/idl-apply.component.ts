@@ -27,6 +27,8 @@ import { MatStepper } from '@angular/material/stepper';
 import { SignInComponent } from '../../auth/sign-in/sign-in.component';
 import { AuthService } from '../../../shared/services/auth.service';
 import { CommonModule } from '@angular/common';
+import { IdlService } from '../../../shared/services/idl.service';
+import { HelperService } from '../../../shared/services/helper.service';
 
 @Component({
   standalone: true,
@@ -58,6 +60,8 @@ import { CommonModule } from '@angular/common';
 export class IdlApplyComponent {
   private _formBuilder = inject(FormBuilder);
   private dialog = inject(MatDialog);
+  private idlService = inject(IdlService);
+  private _helperService = inject(HelperService);
 
   @ViewChild('steppe') stepper!: MatStepper;
 
@@ -65,7 +69,25 @@ export class IdlApplyComponent {
     firstCtrl: ['', Validators.required],
   });
   secondFormGroup = this._formBuilder.group({
-    secondCtrl: ['', Validators.required],
+    licenseType: ['', Validators.required],
+    firstName: ['', Validators.required],
+    lastName: ['', Validators.required],
+    otherName: [''],
+    nationality: ['', Validators.required],
+    dateOfBirth: ['', Validators.required],
+    address: ['', Validators.required],
+    postalCode: ['', Validators.required],
+    poBox: [''],
+    email: ['', [Validators.required, Validators.email]],
+    gsm: ['', Validators.required],
+    omaniLicenseNo: ['', Validators.required],
+    firstIssueDate: ['', Validators.required],
+    expiryDate: ['', Validators.required],
+    licenseEligibility: ['', Validators.required],
+    licenseTypeCategory: ['', Validators.required],
+    countriesToVisit: [[]],
+    documents: [[]],
+    photo: [null]
   });
   threeFormGroup = this._formBuilder.group({
     secondCtrl: ['', Validators.required],
@@ -120,6 +142,37 @@ export class IdlApplyComponent {
       data: {
         type: 'idl'
       }
+    });
+  }
+
+  submitForm() {
+    if (this.secondFormGroup.valid) {
+      const formData = this.getApplicationFormData();
+      this.idlService.submitIdlApplication(formData).subscribe({
+        next: (response: any) => {
+          this._helperService.openMessageSnackBar('Application submitted successfully!', '');
+        },
+        error: (error: any) => {
+          this._helperService.openErrorMessageSnackBar(error, '');
+        }
+      });
+    } else {
+      this.markApplicationFormTouched();
+      this._helperService.openErrorSnackBar('Please fill in all required fields correctly.', '');
+    }
+  }
+
+  getApplicationFormData() {
+    return {
+      data: this.secondFormGroup.value,
+      userId: this.authService.getUserId()
+    };
+  }
+
+  markApplicationFormTouched() {
+    Object.keys(this.secondFormGroup.controls).forEach(key => {
+      const control = this.secondFormGroup.get(key);
+      control?.markAsTouched();
     });
   }
 
