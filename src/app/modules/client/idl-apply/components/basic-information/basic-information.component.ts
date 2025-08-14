@@ -16,8 +16,8 @@ import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { FormsModule, ReactiveFormsModule, FormGroup } from '@angular/forms';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
-import { ApiService } from '../../../../../shared/services/api.service';
 import { CommonModule } from '@angular/common';
+import { IdlService } from '../../../../../shared/services/idl.service';
 
 @Component({
   selector: 'app-basic-information',
@@ -45,37 +45,48 @@ import { CommonModule } from '@angular/common';
 })
 export class BasicInformationComponent implements OnInit{
   @Input() formGroup!: FormGroup;
+  private idlService = inject(IdlService);
 
-  private api = inject(ApiService);
   uploadedFiles: File[] = [];
   fileName: File[] = [];
-  
+  licenseMasters: any[] = [];
+  selectedCountries: any[] = [];
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
-  currentFruit = signal('');
-  readonly fruits = signal(['Lemon']);
-  readonly allFruits: string[] = ['Apple', 'Lemon', 'Lime', 'Orange', 'Strawberry'];
-  readonly filteredFruits = computed(() => {
-    const currentFruit = this.currentFruit().toLowerCase();
-    return currentFruit
-      ? this.allFruits.filter(fruit => fruit.toLowerCase().includes(currentFruit))
-      : this.allFruits.slice();
-  });
-
+  currentCountry = signal('');
+  allCountries: string[] = [];
+  filteredCountries: any;
   readonly announcer = inject(LiveAnnouncer);
   
   ngOnInit(): void {
+    this.getLicenseMasterValues();
+    this.getCountryList();
+
+    // Initialize selected countries from form if they exist
+    if (this.formGroup && this.formGroup.get('countriesToVisit')?.value) {
+      const existingCountries = this.formGroup.get('countriesToVisit')?.value;
+      if (Array.isArray(existingCountries)) {
+        this.selectedCountries = existingCountries.map(country => ({ name: country }));
+      }
+    }
+
+    this.filteredCountries = computed(() => {
+      const currentCountry = this.currentCountry().toLowerCase();
+      return currentCountry
+        ? this.allCountries.filter(country => country.toLowerCase().includes(currentCountry))
+        : this.allCountries.slice();
+    });
   }
 
   add(event: MatChipInputEvent): void {
     const value = (event.value || '').trim();
 
-    // Add our fruit
-    if (value) {
-      this.fruits.update(fruits => [...fruits, value]);
+    // Add country if it's not empty and not already selected
+    if (value && !this.selectedCountries.find(country => country.name === value)) {
+      this.selectedCountries.push({ name: value });
     }
 
     // Clear the input value
-    this.currentFruit.set('');
+    this.currentCountry.set('');
     
     // Clear the input element
     if (event.input) {
@@ -85,27 +96,22 @@ export class BasicInformationComponent implements OnInit{
     // Update form control
     if (this.formGroup) {
       this.formGroup.patchValue({
-        countriesToVisit: this.fruits()
+        countriesToVisit: this.selectedCountries.map(country => country.name)
       });
     }
   }
 
-  remove(fruit: string): void {
-    this.fruits.update(fruits => {
-      const index = fruits.indexOf(fruit);
-      if (index < 0) {
-        return fruits;
-      }
-
-      fruits.splice(index, 1);
-      this.announcer.announce(`Removed ${fruit}`);
-      return [...fruits];
-    });
+  remove(country: any): void {
+    const index = this.selectedCountries.indexOf(country);
+    if (index >= 0) {
+      this.selectedCountries.splice(index, 1);
+      this.announcer.announce(`Removed ${country.name}`);
+    }
     
     // Update form control
     if (this.formGroup) {
       this.formGroup.patchValue({
-        countriesToVisit: this.fruits()
+        countriesToVisit: this.selectedCountries.map(country => country.name)
       });
     }
   }
@@ -114,23 +120,25 @@ export class BasicInformationComponent implements OnInit{
     return index;
   }
 
-
   selected(event: MatAutocompleteSelectedEvent): void {
-    this.fruits.update(fruits => [...fruits, event.option.viewValue]);
-    this.currentFruit.set('');
+    const selectedCountry = event.option.viewValue;
+    if (!this.selectedCountries.find(country => country.name === selectedCountry)) {
+      this.selectedCountries.push({ name: selectedCountry });
+    }
+    this.currentCountry.set('');
     event.option.deselect();
     
     // Update form control
     if (this.formGroup) {
       this.formGroup.patchValue({
-        countriesToVisit: this.fruits()
+        countriesToVisit: this.selectedCountries.map(country => country.name)
       });
     }
   }
 
   // Handle input value changes for chip input
   onChipInputChange(event: any): void {
-    this.currentFruit.set(event.target.value);
+    this.currentCountry.set(event.target.value);
   }
 
   onFilesSelected(event: Event): void {
@@ -177,5 +185,18 @@ export class BasicInformationComponent implements OnInit{
       }
     }
   }
-  
+
+  getLicenseMasterValues() {
+    this.idlService.getLicenseMasters().subscribe((response: any) => {
+      this.licenseMasters = response.data;
+    });
+  }
+
+  getCountryList() {
+    this.idlService.getCountryList().subscribe((response: any) => {
+      this.allCountries = response.data.map((country: any) => {
+        return country.name;
+      });
+    });
+  }
 }

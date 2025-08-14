@@ -98,9 +98,10 @@
 
         <mat-form-field appearance="outline">
           <mat-label>Type of License</mat-label>
-          <mat-select formControlName="licenseTypeCategory">
-            <mat-option value="1">Motor Cycle</mat-option>
-            <mat-option value="2">Motor Cycle</mat-option>
+          <mat-select formControlName="licenseTypeCategory" >
+            <mat-option *ngFor="let licenseMaster of licenseMasters" [value]="licenseMaster.id">
+              {{ licenseMaster.license_type }}
+            </mat-option>
           </mat-select>
         </mat-form-field>
       </div>
@@ -108,22 +109,22 @@
 
         <mat-form-field appearance="outline" class="example-chip-list col-span-3 form-field">
           <mat-label>Countries to be visit</mat-label>
-          <mat-chip-grid #chipGrid aria-label="Fruit selection">
-            <mat-chip-row *ngFor="let fruit of fruits(); let i = index; trackBy: trackByIndex"
-              (removed)="remove(fruit)">
-              {{ fruit }}
-              <button matChipRemove [attr.aria-label]="'remove ' + fruit">
+          <mat-chip-grid #chipGrid aria-label="Country selection">
+            <mat-chip-row *ngFor="let country of selectedCountries; let i = index; trackBy: trackByIndex"
+              (removed)="remove(country)">
+              {{ country.name }}
+              <button matChipRemove [attr.aria-label]="'remove ' + country.name">
                 <mat-icon>cancel</mat-icon>
               </button>
             </mat-chip-row>
           </mat-chip-grid>
-          <input name="currentFruit" placeholder="New Fruit..." #fruitInput 
+          <input name="currentCountry" placeholder="New Country..." #countryInput 
              [matChipInputFor]="chipGrid" [matAutocomplete]="auto" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
              (matChipInputTokenEnd)="add($event)" (input)="onChipInputChange($event)" />
 
-          <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event); fruitInput.value = ''">
-            <mat-option *ngFor="let fruit of filteredFruits()" [value]="fruit">
-              {{ fruit }}
+          <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event); countryInput.value = ''">
+            <mat-option *ngFor="let country of filteredCountries()" [value]="country">
+              {{ country }}
             </mat-option>
           </mat-autocomplete>
         </mat-form-field>

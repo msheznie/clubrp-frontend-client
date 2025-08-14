@@ -69,7 +69,7 @@ export class IdlApplyComponent {
     firstCtrl: ['', Validators.required],
   });
   secondFormGroup = this._formBuilder.group({
-    licenseType: ['', Validators.required],
+    licenseType: ['1', Validators.required],
     firstName: ['', Validators.required],
     lastName: ['', Validators.required],
     otherName: [''],
