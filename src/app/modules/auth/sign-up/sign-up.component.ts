@@ -54,7 +54,7 @@ export class SignUpComponent implements OnDestroy {
     this.signUpForm = this.fb.group({
       name: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email, Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)]],
-      primary_mobile: ['', [Validators.required, Validators.pattern(/^\+[1-9]\d{1,14}$/)]],
+      primary_mobile: ['', [Validators.required, Validators.pattern(/^\+[1-9]\d{7,14}$/)]],
       username: ['', [Validators.required]],
       password: ['', [
         Validators.required, 

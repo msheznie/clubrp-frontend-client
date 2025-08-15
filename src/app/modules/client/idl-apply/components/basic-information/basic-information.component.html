@@ -12,14 +12,20 @@
     <div class="contant-section">
       <div class="grid md:grid-cols-3 sm:grid-cols-1 gap-4 mb-4">
         <mat-form-field appearance="outline" class="mat-form-field">
-          <mat-label>First Name</mat-label>
-          <input matInput formControlName="firstName" />
-        </mat-form-field>
+           <mat-label>First Name</mat-label>
+           <input matInput formControlName="firstName" />
+           <mat-error *ngIf="hasError('firstName', 'required')">
+             First Name is required
+           </mat-error>
+         </mat-form-field>
 
         <mat-form-field appearance="outline" class="form-field">
-          <mat-label>Last Name</mat-label>
-          <input matInput formControlName="lastName" />
-        </mat-form-field>
+           <mat-label>Last Name</mat-label>
+           <input matInput formControlName="lastName" />
+           <mat-error *ngIf="hasError('lastName', 'required')">
+             Last Name is required
+           </mat-error>
+         </mat-form-field>
 
         <mat-form-field appearance="outline" class="form-field">
           <mat-label>First Name / Other Name(s)</mat-label>
@@ -29,6 +35,9 @@
         <mat-form-field appearance="outline" class="form-field">
           <mat-label>Nationality</mat-label>
           <input matInput formControlName="nationality" />
+          <mat-error *ngIf="hasError('nationality', 'required')">
+            Nationality is required
+          </mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="form-field">
@@ -36,6 +45,9 @@
           <input matInput placeholder="MM/DD/YYYY" [matDatepicker]="picker" readonly="true" formControlName="dateOfBirth" />
           <mat-datepicker-toggle matIconSuffix [for]="picker" />
           <mat-datepicker #picker />
+          <mat-error *ngIf="hasError('dateOfBirth', 'required')">
+            Date of Birth is required
+          </mat-error>
         </mat-form-field>
       </div>
 
@@ -44,11 +56,17 @@
         <mat-form-field appearance="outline" class="form-field w-full">
           <mat-label>Address</mat-label>
           <input matInput formControlName="address" />
+          <mat-error *ngIf="hasError('address', 'required')">
+            Address is required
+          </mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="form-field">
           <mat-label>Postal Code</mat-label>
           <input matInput formControlName="postalCode" />
+          <mat-error *ngIf="hasError('postalCode', 'required')">
+            Postal Code is required
+          </mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="form-field">
@@ -58,15 +76,24 @@
 
 
         <mat-form-field appearance="outline" class="form-field">
-          <mat-label>E-Mail</mat-label>
-          <input matInput type="email" formControlName="email" />
-        </mat-form-field>
+           <mat-label>E-Mail</mat-label>
+           <input matInput type="email" formControlName="email" />
+           <mat-error *ngIf="getEmailErrorMessage()">
+            {{ getEmailErrorMessage() }}
+          </mat-error>
+         </mat-form-field>
 
 
         <mat-form-field appearance="outline" class="form-field">
-          <mat-label>GSM</mat-label>
-          <input matInput formControlName="gsm" />
-        </mat-form-field>
+           <mat-label>GSM</mat-label>
+           <input matInput formControlName="gsm" />
+           <mat-error *ngIf="hasError('gsm', 'required')">
+             GSM is required
+           </mat-error>
+           <mat-error *ngIf="hasError('gsm', 'pattern')">
+               Please enter a valid GSM
+           </mat-error>
+         </mat-form-field>
 
       </div>
 
@@ -75,6 +102,9 @@
         <mat-form-field appearance="outline" class="form-field">
           <mat-label>Omani Driving License No.</mat-label>
           <input matInput formControlName="omaniLicenseNo" />
+          <mat-error *ngIf="hasError('omaniLicenseNo', 'required')">
+            Omani Driving License No. is required
+          </mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="form-field">
@@ -82,6 +112,9 @@
           <input matInput placeholder="MM/DD/YYYY" [matDatepicker]="picker1" readonly="true" formControlName="firstIssueDate" />
           <mat-datepicker-toggle matIconSuffix [for]="picker1" />
           <mat-datepicker #picker1 />
+          <mat-error *ngIf="hasError('firstIssueDate', 'required')">
+            First Issue Date is required
+          </mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="form-field">
@@ -89,11 +122,17 @@
           <input matInput placeholder="MM/DD/YYYY" [matDatepicker]="picker2" readonly="true" formControlName="expiryDate" />
           <mat-datepicker-toggle matIconSuffix [for]="picker2" />
           <mat-datepicker #picker2 />
+          <mat-error *ngIf="hasError('expiryDate', 'required')">
+            Expiry Date is required
+          </mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="form-field">
           <mat-label>Licenses Eligibility</mat-label>
           <input matInput type="text" formControlName="licenseEligibility" />
+          <mat-error *ngIf="hasError('licenseEligibility', 'required')">
+            License Eligibility is required
+          </mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline">
@@ -103,6 +142,9 @@
               {{ licenseMaster.license_type }}
             </mat-option>
           </mat-select>
+          <mat-error *ngIf="hasError('licenseTypeCategory', 'required')">
+            Type of License is required
+          </mat-error>
         </mat-form-field>
       </div>
       <div class="grid md:grid-cols-1 sm:grid-cols-1 gap-4 mb-4">

@@ -199,4 +199,23 @@ export class BasicInformationComponent implements OnInit{
       });
     });
   }
+
+  hasError(controlName: string, errorType: string): boolean {
+    const control = this.formGroup?.get(controlName);
+    return control ? control.hasError(errorType) && (control.touched || control.dirty) : false;
+  }
+
+  getEmailErrorMessage(): string {
+    const emailControl = this.formGroup.get('email');
+    
+    if (emailControl?.hasError('required')) {
+      return 'Email is required';
+    }
+    
+    if (emailControl?.hasError('email') || emailControl?.hasError('pattern')) {
+      return 'Please enter a valid email address';
+    }
+    
+    return '';
+  }
 }
