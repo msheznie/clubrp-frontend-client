@@ -85,7 +85,7 @@ export class IdlApplyComponent {
     expiryDate: ['', Validators.required],
     licenseEligibility: ['', Validators.required],
     licenseTypeCategory: ['', Validators.required],
-    countriesToVisit: [[], [Validators.required, Validators.minLength(1)]],
+    countriesToVisit: [[] as string[]],
     documents: [[]],
     photo: [null]
   });
@@ -148,6 +148,10 @@ export class IdlApplyComponent {
   submitForm() {
     if (this.secondFormGroup.valid) {
       const formData = this.getApplicationFormData();
+      if(!formData.data.countriesToVisit || formData.data.countriesToVisit.length === 0) {
+        this._helperService.openErrorSnackBar('Please select at least one country to visit.', '');
+        return;
+      }
       this.idlService.submitIdlApplication(formData).subscribe({
         next: (response: any) => {
           this._helperService.openMessageSnackBar('Application submitted successfully!', '');

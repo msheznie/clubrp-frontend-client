@@ -190,7 +190,7 @@ export class BasicInformationComponent implements OnInit{
   getIdlFormData() {
     this.idlService.getIdlFormData().subscribe((response: any) => {
       this.licenseMasters = response.data.licenseMasters;
-      this.documentList = response.data.documentList;
+      this.documentList = response.data.documentList.details;
       const countries = response.data.countryList.map((country: any) => {
         return country.name;
       });

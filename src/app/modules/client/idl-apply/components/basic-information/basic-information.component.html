@@ -149,7 +149,7 @@
       </div>
       <div class="grid md:grid-cols-1 sm:grid-cols-1 gap-4 mb-4">
 
-        <mat-form-field appearance="outline" class="example-chip-list col-span-3 form-field">
+        <mat-form-field appearance="outline" class="countrySet example-chip-list col-span-3 form-field">
           <mat-label>Countries to be visit</mat-label>
           <mat-chip-grid #chipGrid aria-label="Country selection">
             <mat-chip-row *ngFor="let country of selectedCountries; let i = index; trackBy: trackByIndex"
@@ -160,7 +160,7 @@
               </button>
             </mat-chip-row>
           </mat-chip-grid>
-          <input name="currentCountry" placeholder="New Country..." #countryInput 
+          <input name="currentCountry" placeholder="New Country..." #countryInput formControlName="countriesToVisit"
              [matChipInputFor]="chipGrid" [matAutocomplete]="auto" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
              (matChipInputTokenEnd)="add($event)" (input)="onChipInputChange($event)" />
 
@@ -176,6 +176,17 @@
         <p class="text-[var(--color-text-error)] text-sm flex justify-end items-center">NOT VALID IN JAPAN
           <mat-icon class="ml-3">info_i</mat-icon>
         </p>
+
+        <p class="text-[var(--color-text-primary)] !mb-[5px] !font-[500] !text-[15px]">Required Documents</p>
+         <div class="mb-4">
+           <ul class="list-disc list-inside space-y-2">
+             <li *ngFor="let document of documentList" class="text-[var(--color-text-primary)] !mb-[5px] !text-[14px]">
+               <span>{{ document.display_name }}</span> 
+               <span> - ({{ document.is_mandatory == 1 ? 'Mandatory' : 'Optional' }})</span>
+             </li>
+           </ul>
+         </div>
+
         <div class="border-dashed border-2 border-[var(--color-border)] rounded-lg p-4">
           <div class="text-center mb-4">
             <mat-icon>cloud_upload</mat-icon>
