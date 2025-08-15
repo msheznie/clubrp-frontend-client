@@ -85,7 +85,7 @@ export class IdlApplyComponent {
     expiryDate: ['', Validators.required],
     licenseEligibility: ['', Validators.required],
     licenseTypeCategory: ['', Validators.required],
-    countriesToVisit: [[]],
+    countriesToVisit: [[], [Validators.required, Validators.minLength(1)]],
     documents: [[]],
     photo: [null]
   });

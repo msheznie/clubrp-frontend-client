@@ -31,12 +31,8 @@ export class IdlService {
     return this.http.post<any>(`${this.baseUrl}/${this.subdomain}${this.apiversion}/idl/submit-application`, submitData);
   }
 
-  getLicenseMasters(): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}/${this.subdomain}${this.apiversion}/idl/get-license-masters`);
-  }
-
-  getCountryList(): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}/${this.subdomain}${this.apiversion}/idl/get-country-list`);
+  getIdlFormData(): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/${this.subdomain}${this.apiversion}/idl/get-idl-form-data`);
   }
 
 }

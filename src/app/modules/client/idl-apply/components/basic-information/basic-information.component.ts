@@ -50,16 +50,16 @@ export class BasicInformationComponent implements OnInit{
   uploadedFiles: File[] = [];
   fileName: File[] = [];
   licenseMasters: any[] = [];
+  documentList: any[] = [];
   selectedCountries: any[] = [];
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
   currentCountry = signal('');
-  allCountries: string[] = [];
+  allCountries = signal<string[]>([]);
   filteredCountries: any;
   readonly announcer = inject(LiveAnnouncer);
   
   ngOnInit(): void {
-    this.getLicenseMasterValues();
-    this.getCountryList();
+    this.getIdlFormData();
 
     // Initialize selected countries from form if they exist
     if (this.formGroup && this.formGroup.get('countriesToVisit')?.value) {
@@ -71,9 +71,10 @@ export class BasicInformationComponent implements OnInit{
 
     this.filteredCountries = computed(() => {
       const currentCountry = this.currentCountry().toLowerCase();
+      const countries = this.allCountries();
       return currentCountry
-        ? this.allCountries.filter(country => country.toLowerCase().includes(currentCountry))
-        : this.allCountries.slice();
+        ? countries.filter(country => country.toLowerCase().includes(currentCountry))
+        : countries.slice();
     });
   }
 
@@ -186,17 +187,14 @@ export class BasicInformationComponent implements OnInit{
     }
   }
 
-  getLicenseMasterValues() {
-    this.idlService.getLicenseMasters().subscribe((response: any) => {
-      this.licenseMasters = response.data;
-    });
-  }
-
-  getCountryList() {
-    this.idlService.getCountryList().subscribe((response: any) => {
-      this.allCountries = response.data.map((country: any) => {
+  getIdlFormData() {
+    this.idlService.getIdlFormData().subscribe((response: any) => {
+      this.licenseMasters = response.data.licenseMasters;
+      this.documentList = response.data.documentList;
+      const countries = response.data.countryList.map((country: any) => {
         return country.name;
       });
+      this.allCountries.set(countries);
     });
   }
 
