@@ -2,7 +2,7 @@
   <div
     class="mb-6 w-full p-4 bg-[var(--color-secondary)] border border-[var(--color-border)] rounded-lg shadow-sm sm:p-8 overflow-y-scroll max-h-[100vh]">
     <div class="!pl-0">
-      <mat-radio-group formControlName="licenseType" color="primary" class="custom-radio !ml-0">
+      <mat-radio-group formControlName="license_type" color="primary" class="custom-radio !ml-0">
         <mat-radio-button value="1">New License</mat-radio-button>
         <mat-radio-button value="2">Re-New License</mat-radio-button>
       </mat-radio-group>
@@ -13,23 +13,23 @@
       <div class="grid md:grid-cols-3 sm:grid-cols-1 gap-4 mb-4">
         <mat-form-field appearance="outline" class="mat-form-field">
            <mat-label>First Name</mat-label>
-           <input matInput formControlName="firstName" />
-           <mat-error *ngIf="hasError('firstName', 'required')">
+           <input matInput formControlName="first_name" />
+           <mat-error *ngIf="hasError('first_name', 'required')">
              First Name is required
            </mat-error>
          </mat-form-field>
 
         <mat-form-field appearance="outline" class="form-field">
            <mat-label>Last Name</mat-label>
-           <input matInput formControlName="lastName" />
-           <mat-error *ngIf="hasError('lastName', 'required')">
+           <input matInput formControlName="last_name" />
+           <mat-error *ngIf="hasError('last_name', 'required')">
              Last Name is required
            </mat-error>
          </mat-form-field>
 
         <mat-form-field appearance="outline" class="form-field">
           <mat-label>First Name / Other Name(s)</mat-label>
-          <input matInput formControlName="otherName" />
+          <input matInput formControlName="other_name" />
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="form-field">
@@ -42,10 +42,10 @@
 
         <mat-form-field appearance="outline" class="form-field">
           <mat-label>Date of Birth</mat-label>
-          <input matInput placeholder="MM/DD/YYYY" [matDatepicker]="picker" readonly="true" formControlName="dateOfBirth" />
+          <input matInput placeholder="MM/DD/YYYY" [matDatepicker]="picker" readonly="true" formControlName="date_of_birth" />
           <mat-datepicker-toggle matIconSuffix [for]="picker" />
           <mat-datepicker #picker />
-          <mat-error *ngIf="hasError('dateOfBirth', 'required')">
+          <mat-error *ngIf="hasError('date_of_birth', 'required')">
             Date of Birth is required
           </mat-error>
         </mat-form-field>
@@ -63,15 +63,15 @@
 
         <mat-form-field appearance="outline" class="form-field">
           <mat-label>Postal Code</mat-label>
-          <input matInput formControlName="postalCode" />
-          <mat-error *ngIf="hasError('postalCode', 'required')">
+          <input matInput formControlName="postal_code" />
+          <mat-error *ngIf="hasError('postal_code', 'required')">
             Postal Code is required
           </mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="form-field">
           <mat-label>P.O Box (Not Mandatory)</mat-label>
-          <input matInput formControlName="poBox" />
+          <input matInput formControlName="po_box" />
         </mat-form-field>
 
 
@@ -101,48 +101,48 @@
       <div class="grid md:grid-cols-3 sm:grid-cols-1 gap-4 mb-4">
         <mat-form-field appearance="outline" class="form-field">
           <mat-label>Omani Driving License No.</mat-label>
-          <input matInput formControlName="omaniLicenseNo" />
-          <mat-error *ngIf="hasError('omaniLicenseNo', 'required')">
+          <input matInput formControlName="oman_license_number" />
+          <mat-error *ngIf="hasError('oman_license_number', 'required')">
             Omani Driving License No. is required
           </mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="form-field">
           <mat-label>First Issue Date</mat-label>
-          <input matInput placeholder="MM/DD/YYYY" [matDatepicker]="picker1" readonly="true" formControlName="firstIssueDate" />
+          <input matInput placeholder="MM/DD/YYYY" [matDatepicker]="picker1" readonly="true" formControlName="first_issue_date" />
           <mat-datepicker-toggle matIconSuffix [for]="picker1" />
           <mat-datepicker #picker1 />
-          <mat-error *ngIf="hasError('firstIssueDate', 'required')">
+          <mat-error *ngIf="hasError('first_issue_date', 'required')">
             First Issue Date is required
           </mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="form-field">
           <mat-label>Expiry Date</mat-label>
-          <input matInput placeholder="MM/DD/YYYY" [matDatepicker]="picker2" readonly="true" formControlName="expiryDate" />
+          <input matInput placeholder="MM/DD/YYYY" [matDatepicker]="picker2" readonly="true" formControlName="expiry_date" />
           <mat-datepicker-toggle matIconSuffix [for]="picker2" />
           <mat-datepicker #picker2 />
-          <mat-error *ngIf="hasError('expiryDate', 'required')">
+          <mat-error *ngIf="hasError('expiry_date', 'required')">
             Expiry Date is required
           </mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="form-field">
           <mat-label>Licenses Eligibility</mat-label>
-          <input matInput type="text" formControlName="licenseEligibility" />
-          <mat-error *ngIf="hasError('licenseEligibility', 'required')">
+          <input matInput type="text" formControlName="license_eligibility" />
+          <mat-error *ngIf="hasError('license_eligibility', 'required')">
             License Eligibility is required
           </mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline">
           <mat-label>Type of License</mat-label>
-          <mat-select formControlName="licenseTypeCategory" >
+          <mat-select formControlName="license_type_id" >
             <mat-option *ngFor="let licenseMaster of licenseMasters" [value]="licenseMaster.id">
               {{ licenseMaster.license_type }}
             </mat-option>
           </mat-select>
-          <mat-error *ngIf="hasError('licenseTypeCategory', 'required')">
+          <mat-error *ngIf="hasError('license_type_id', 'required')">
             Type of License is required
           </mat-error>
         </mat-form-field>
@@ -160,7 +160,7 @@
               </button>
             </mat-chip-row>
           </mat-chip-grid>
-          <input name="currentCountry" placeholder="New Country..." #countryInput formControlName="countriesToVisit"
+          <input name="currentCountry" placeholder="New Country..." #countryInput formControlName="countries_to_visit"
              [matChipInputFor]="chipGrid" [matAutocomplete]="auto" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
              (matChipInputTokenEnd)="add($event)" (input)="onChipInputChange($event)" />
 

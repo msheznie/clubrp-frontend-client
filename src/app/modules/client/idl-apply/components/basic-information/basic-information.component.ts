@@ -62,8 +62,8 @@ export class BasicInformationComponent implements OnInit{
     this.getIdlFormData();
 
     // Initialize selected countries from form if they exist
-    if (this.formGroup && this.formGroup.get('countriesToVisit')?.value) {
-      const existingCountries = this.formGroup.get('countriesToVisit')?.value;
+    if (this.formGroup && this.formGroup.get('countries_to_visit')?.value) {
+      const existingCountries = this.formGroup.get('countries_to_visit')?.value;
       if (Array.isArray(existingCountries)) {
         this.selectedCountries = existingCountries.map(country => ({ name: country }));
       }
@@ -97,7 +97,7 @@ export class BasicInformationComponent implements OnInit{
     // Update form control
     if (this.formGroup) {
       this.formGroup.patchValue({
-        countriesToVisit: this.selectedCountries.map(country => country.name)
+        countries_to_visit: this.selectedCountries.map(country => country.name)
       });
     }
   }
@@ -112,7 +112,7 @@ export class BasicInformationComponent implements OnInit{
     // Update form control
     if (this.formGroup) {
       this.formGroup.patchValue({
-        countriesToVisit: this.selectedCountries.map(country => country.name)
+        countries_to_visit: this.selectedCountries.map(country => country.name)
       });
     }
   }
@@ -132,7 +132,7 @@ export class BasicInformationComponent implements OnInit{
     // Update form control
     if (this.formGroup) {
       this.formGroup.patchValue({
-        countriesToVisit: this.selectedCountries.map(country => country.name)
+        countries_to_visit: this.selectedCountries.map(country => country.name)
       });
     }
   }

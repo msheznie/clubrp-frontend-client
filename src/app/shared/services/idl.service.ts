@@ -13,22 +13,8 @@ export class IdlService {
   private subdomain = inject(HelperService).getSubDomain();
 
   submitIdlApplication(formData: any): Observable<any> {
-    const submitData = new FormData();
 
-    submitData.append('formData', JSON.stringify(formData.data));
-    submitData.append('userId', formData.userId);
-
-    if (formData.data.documents && formData.data.documents.length > 0) {
-      formData.data.documents.forEach((file: File, index: number) => {
-        submitData.append(`document_${index}`, file);
-      });
-    }
-
-    if (formData.data.photo) {
-      submitData.append('photo', formData.data.photo);
-    }
-
-    return this.http.post<any>(`${this.baseUrl}/${this.subdomain}${this.apiversion}/idl/submit-application`, submitData);
+    return this.http.post<any>(`${this.baseUrl}/${this.subdomain}${this.apiversion}/idl/submit-application`, formData.data);
   }
 
   getIdlFormData(): Observable<any> {

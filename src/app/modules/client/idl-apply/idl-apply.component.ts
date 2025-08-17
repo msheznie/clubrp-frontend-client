@@ -69,23 +69,23 @@ export class IdlApplyComponent {
     firstCtrl: ['', Validators.required],
   });
   secondFormGroup = this._formBuilder.group({
-    licenseType: ['1', Validators.required],
-    firstName: ['', Validators.required],
-    lastName: ['', Validators.required],
-    otherName: [''],
+    license_type: ['1', Validators.required],
+    first_name: ['', Validators.required],
+    last_name: ['', Validators.required],
+    other_name: [''],
     nationality: ['', Validators.required],
-    dateOfBirth: ['', Validators.required],
+    date_of_birth: ['', Validators.required],
     address: ['', Validators.required],
-    postalCode: ['', Validators.required],
-    poBox: [''],
+    postal_code: ['', Validators.required],
+    po_box: [''],
     email: ['', [Validators.required, Validators.email, Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)]],
     gsm: ['', [Validators.required, Validators.pattern(/^\+[1-9]\d{7,14}$/)]],
-    omaniLicenseNo: ['', Validators.required],
-    firstIssueDate: ['', Validators.required],
-    expiryDate: ['', Validators.required],
-    licenseEligibility: ['', Validators.required],
-    licenseTypeCategory: ['', Validators.required],
-    countriesToVisit: [[] as string[]],
+    oman_license_number: ['', Validators.required],
+    first_issue_date: ['', Validators.required],
+    expiry_date: ['', Validators.required],
+    license_eligibility: ['', Validators.required],
+    license_type_id: ['', Validators.required],
+    countries_to_visit: [[] as string[]],
     documents: [[]],
     photo: [null]
   });
@@ -148,7 +148,7 @@ export class IdlApplyComponent {
   submitForm() {
     if (this.secondFormGroup.valid) {
       const formData = this.getApplicationFormData();
-      if(!formData.data.countriesToVisit || formData.data.countriesToVisit.length === 0) {
+      if(!formData.data.countries_to_visit || formData.data.countries_to_visit.length === 0) {
         this._helperService.openErrorSnackBar('Please select at least one country to visit.', '');
         return;
       }
