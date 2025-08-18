@@ -67,13 +67,14 @@
     </mat-step>
     <mat-step [stepControl]="threeFormGroup" label="Terms & Conditions">
       <form [formGroup]="threeFormGroup">
-        <app-terms-and-condition></app-terms-and-condition>
+        <app-terms-and-condition [formGroup]="threeFormGroup"></app-terms-and-condition>
         <div class="flex justify-end gap-4">
           <button class="button-fill-secondary" matStepperPrevious>
             <mat-icon>arrow_back</mat-icon>
             <span class="button-text">Back</span>
           </button>
-          <button class="button-fill" (click)="submitForm('submit')">
+          <button class="button-fill" (click)="submitForm('submit')" 
+            [disabled]="!checkFormValidity()">
             <mat-icon>done</mat-icon>
             <span class="button-text">Submit</span>
           </button>

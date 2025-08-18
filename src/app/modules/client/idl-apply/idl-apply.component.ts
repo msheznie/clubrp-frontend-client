@@ -91,7 +91,7 @@ export class IdlApplyComponent {
     status: [0]
   });
   threeFormGroup = this._formBuilder.group({
-    secondCtrl: ['', Validators.required],
+    terms_and_conditions: [false, Validators.requiredTrue],
   });
   foreFormGroup = this._formBuilder.group({
     secondCtrl: ['', Validators.required],
@@ -145,6 +145,14 @@ export class IdlApplyComponent {
         type: 'idl'
       }
     });
+  }
+
+  checkFormValidity () {
+    if (this.isPhotoRequired) {
+      return this.secondFormGroup.valid && this.threeFormGroup.valid && this.secondFormGroup.get('photo')?.value && (this.secondFormGroup.get('countries_to_visit')?.value as string[])?.length > 0;
+    } else {
+      return this.secondFormGroup.valid && this.threeFormGroup.valid && (this.secondFormGroup.get('countries_to_visit')?.value as string[])?.length > 0;
+    }
   }
 
   submitForm(type: string) {

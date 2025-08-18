@@ -22,8 +22,8 @@
       <li>I also agree that the Oman Automobile Association has the right to obtain any amounts from the bank guarantee account owned on the cars benefiting from the customs CPD such as tax or customs amounts and other amounts as a result of my failure to comply with the procedures and instructions included in the book.</li>
     </ul>
   
-    <div class="flex items-center mt-6">
-      <mat-checkbox color="primary">
+    <div class="flex items-center mt-6" [formGroup]="formGroup">
+      <mat-checkbox color="primary" formControlName="terms_and_conditions">
         I have read and accept all the above terms and conditions.
       </mat-checkbox>
     </div>

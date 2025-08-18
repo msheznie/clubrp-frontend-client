@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -6,6 +6,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import { FormsModule, ReactiveFormsModule, FormGroup } from '@angular/forms';
+
 @Component({
   selector: 'app-terms-and-condition',
   templateUrl: './terms-and-condition.component.html',
@@ -18,9 +20,11 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
       MatFormFieldModule,
       MatInputModule,
       MatSelectModule,
-      MatCheckboxModule
+      MatCheckboxModule,
+      ReactiveFormsModule 
     ],
 })
 export class TermsAndConditionComponent {
+  @Input() formGroup!: FormGroup;
   accepted = false;
 }
