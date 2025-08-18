@@ -55,6 +55,7 @@ export class BasicInformationComponent implements OnInit{
   licenseMasters: any[] = [];
   documentList: any[] = [];
   selectedCountries: any[] = [];
+  photoPreviewUrl: string | null = null;
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
   currentCountry = signal('');
   allCountries = signal<string[]>([]);
@@ -91,6 +92,9 @@ export class BasicInformationComponent implements OnInit{
         ? countries.filter(country => country.toLowerCase().includes(currentCountry))
         : countries.slice();
     });
+
+    const existingPhoto = this.formGroup.get('photo')?.value;
+    this.photoPreviewUrl = existingPhoto?.attachment || null;
   }
 
   add(event: MatChipInputEvent): void {
@@ -223,7 +227,6 @@ export class BasicInformationComponent implements OnInit{
   
   uploadPhoto(event: any): void {
     const input = event.target.files[0];
-    console.log(input)
     if (input) {
       const reader = new FileReader();
       const file = input;
@@ -237,7 +240,6 @@ export class BasicInformationComponent implements OnInit{
         this._helperService.openErrorSnackBar(file.name + ' ' + 'File type not supported', '');
       }
       if (size <= 2 && this.imageAllowedTypes.includes(type)) {
-        console.log(input)
         input['document_type'] = 'ATTACHMENT'
         input['file_type'] = type
         input['file_size'] = file.size
@@ -248,17 +250,15 @@ export class BasicInformationComponent implements OnInit{
         input['attachment_type'] = 3
 
         reader.onload = (event: any) => {
-          input['attachment'] = event.target.result;
+          const dataUrl = event.target.result as string;
+          this.photoPreviewUrl = dataUrl;  
+          input['attachment'] = dataUrl;
+          this.formGroup.patchValue({ photo: input });
         };
   
         reader.readAsDataURL(file);
-        if (this.formGroup) {
-          this.formGroup.patchValue({
-            photo: input,
-          });
-        }
       }
-    }  
+    }
   }
 
   getIdlFormData() {
