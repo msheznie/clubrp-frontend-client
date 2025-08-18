@@ -87,7 +87,8 @@ export class IdlApplyComponent {
     license_type_id: ['', Validators.required],
     countries_to_visit: [[] as string[]],
     documents: [[]],
-    photo: [null]
+    photo: [null],
+    status: [0]
   });
   threeFormGroup = this._formBuilder.group({
     secondCtrl: ['', Validators.required],
@@ -99,6 +100,7 @@ export class IdlApplyComponent {
     secondCtrl: ['', Validators.required],
   });
   isLinear = false;
+  isPhotoRequired: boolean = false;
 
   breadcrumbs = [
     { label: 'Oman Automobile Association', link: '/association' },
@@ -145,12 +147,19 @@ export class IdlApplyComponent {
     });
   }
 
-  submitForm() {
+  submitForm(type: string) {
     if (this.secondFormGroup.valid) {
-      const formData = this.getApplicationFormData();
-      if(!formData.data.countries_to_visit || formData.data.countries_to_visit.length === 0) {
+      const formData = this.secondFormGroup.value;
+      if (this.isPhotoRequired && !formData.photo) {
+        this._helperService.openErrorSnackBar('Please upload a photo.', '');
+        return;
+      }
+      if(!formData.countries_to_visit || formData.countries_to_visit.length === 0) {
         this._helperService.openErrorSnackBar('Please select at least one country to visit.', '');
         return;
+      }
+      if (type == 'submit') {
+        formData.status = 1;
       }
       this.idlService.submitIdlApplication(formData).subscribe({
         next: (response: any) => {
@@ -166,11 +175,8 @@ export class IdlApplyComponent {
     }
   }
 
-  getApplicationFormData() {
-    return {
-      data: this.secondFormGroup.value,
-      userId: this.authService.getUserId()
-    };
+  onPhotoRequiredChange(isPhotoRequired: boolean) {
+    this.isPhotoRequired = isPhotoRequired;
   }
 
   markApplicationFormTouched() {

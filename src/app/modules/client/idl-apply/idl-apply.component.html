@@ -2,22 +2,22 @@
 <div class="flex justify-between items-center mt-6 mx-4 md:mx-14">
   <app-breadcrumb [breadcrumbs]="breadcrumbs"></app-breadcrumb>
   <div class="flex gap-4">
-      <button class="button-outline">
+      <button class="button-outline" (click)="navigateToHome()">
           <mat-icon>cancel</mat-icon>
           <span class="button-text">Cancel</span>
           </button>
-      <button class="button-outline">
+      <button class="button-outline" (click)="submitForm('draft')">
           <mat-icon>save</mat-icon>
           <span class="button-text">Save as Draft</span>
           </button>
-      <button class="button-fill" (click)="submitForm()">
+      <!-- <button class="button-fill" (click)="submitForm()">
           <mat-icon>done</mat-icon>
           <span class="button-text">Submit</span>
           </button>
       <button class="button-fill" (click)="paySubmit()">
           <mat-icon>attach_money</mat-icon>
           <span class="button-text">Pay and Submit</span>
-          </button>
+          </button> -->
   </div>
 </div>
 <div class="container mx-auto px-4 md:px-20 mt-4">
@@ -52,7 +52,7 @@
     </mat-step>
     <mat-step [stepControl]="secondFormGroup" label="Basic Information">
       <form [formGroup]="secondFormGroup">
-        <app-basic-information [formGroup]="secondFormGroup"></app-basic-information>
+        <app-basic-information [formGroup]="secondFormGroup" (photoRequiredChange)="onPhotoRequiredChange($event)"></app-basic-information>
         <div class="flex justify-end gap-4">
           <button class="button-fill-secondary" matStepperPrevious>
             <mat-icon>arrow_back</mat-icon>
@@ -73,9 +73,9 @@
             <mat-icon>arrow_back</mat-icon>
             <span class="button-text">Back</span>
           </button>
-          <button class="button-fill" matStepperNext>
-            <span class="button-text">Next</span>
-            <mat-icon>arrow_forward</mat-icon>
+          <button class="button-fill" (click)="submitForm('submit')">
+            <mat-icon>done</mat-icon>
+            <span class="button-text">Submit</span>
           </button>
         </div>
       </form>

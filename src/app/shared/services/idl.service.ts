@@ -13,8 +13,7 @@ export class IdlService {
   private subdomain = inject(HelperService).getSubDomain();
 
   submitIdlApplication(formData: any): Observable<any> {
-
-    return this.http.post<any>(`${this.baseUrl}/${this.subdomain}${this.apiversion}/idl/submit-application`, formData.data);
+    return this.http.post<any>(`${this.baseUrl}/${this.subdomain}${this.apiversion}/idl/submit-application`, formData);
   }
 
   getIdlFormData(): Observable<any> {

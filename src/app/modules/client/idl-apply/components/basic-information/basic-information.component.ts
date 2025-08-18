@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnInit, signal, Input } from '@angular/core';
+import { Component, computed, inject, OnInit, signal, Input, Output, EventEmitter } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -18,6 +18,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { CommonModule } from '@angular/common';
 import { IdlService } from '../../../../../shared/services/idl.service';
+import { HelperService } from '../../../../../shared/services/helper.service';
 
 @Component({
   selector: 'app-basic-information',
@@ -45,6 +46,8 @@ import { IdlService } from '../../../../../shared/services/idl.service';
 })
 export class BasicInformationComponent implements OnInit{
   @Input() formGroup!: FormGroup;
+  @Output() photoRequiredChange = new EventEmitter<boolean>();
+  private _helperService = inject(HelperService);
   private idlService = inject(IdlService);
 
   uploadedFiles: File[] = [];
@@ -56,6 +59,18 @@ export class BasicInformationComponent implements OnInit{
   currentCountry = signal('');
   allCountries = signal<string[]>([]);
   filteredCountries: any;
+  selectedFiles?: any = [];
+  isPhotoRequired: boolean = false;
+  initialUpdatedFiles: any = [];
+  imageNonAllowedTypes: string[] = ['ace', 'ade', 'adp', 'ani', 'app', 'asp', 'aspx', 'asx', 'bas', 'bat', 'cla', 'cer', 'chm', 'cmd', 'cnt', 'com',
+    'cpl', 'crt', 'csh', 'class', 'der', 'docm', 'exe', 'fxp', 'gadget', 'hlp', 'hpj', 'hta', 'htc', 'inf', 'ins', 'isp', 'its', 'jar',
+    'js', 'jse', 'ksh', 'lnk', 'mad', 'maf', 'mag', 'mam', 'maq', 'mar', 'mas', 'mat', 'mau', 'mav', 'maw', 'mda', 'mdb', 'mde', 'mdt',
+    'mdw', 'mdz', 'mht', 'mhtml', 'msc', 'msh', 'msh1', 'msh1xml', 'msh2', 'msh2xml', 'mshxml', 'msi', 'msp', 'mst', 'ops', 'osd',
+    'ocx', 'pl', 'pcd', 'pif', 'plg', 'prf', 'prg', 'ps1', 'ps1xml', 'ps2', 'ps2xml', 'psc1', 'psc2', 'pst', 'reg', 'scf', 'scr',
+    'sct', 'shb', 'shs', 'tmp', 'url', 'vb', 'vbe', 'vbp', 'vbs', 'vsmacros', 'vss', 'vst', 'vsw', 'ws', 'wsc', 'wsf', 'wsh', 'xml',
+    'xbap', 'xnk', 'php'];
+  
+  imageAllowedTypes: string[] = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'tiff', 'ico', 'webp'];
   readonly announcer = inject(LiveAnnouncer);
   
   ngOnInit(): void {
@@ -142,55 +157,120 @@ export class BasicInformationComponent implements OnInit{
     this.currentCountry.set(event.target.value);
   }
 
-  onFilesSelected(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    if (input.files) {
-      const filesArray = Array.from(input.files);
-      this.uploadedFiles.push(...filesArray);
-      
-      // Update form control
-      if (this.formGroup) {
-        this.formGroup.patchValue({
-          documents: this.uploadedFiles
-        });
+  onFilesSelected(event: any): void {
+    this.initialUpdatedFiles = event.target.files;
+    var filteredFiles: any = []
+
+    if (this.initialUpdatedFiles && this.initialUpdatedFiles[0]) {
+      for (let i = 0; i < this.initialUpdatedFiles.length; ++i) {
+        const reader = new FileReader();
+        const file = this.initialUpdatedFiles[i];
+        const parts = file.name.split('.');
+        const size = file.size / 1000000;
+        const type = parts[parts.length - 1];
+
+        if (size > 10) {
+          this._helperService.openErrorSnackBar(file.name + ' ' + 'File size exceeded', '');
+        } else if (size < 2) {
+          this._helperService.openErrorSnackBar(file.name + ' ' + 'File size is too small', '');
+        } else if (this.imageNonAllowedTypes.includes(type)) {
+          this._helperService.openErrorSnackBar(file.name + ' ' + 'File type not supported', '');
+        }
+        if (size <= 10 && size >= 2 && !this.imageNonAllowedTypes.includes(type)) {
+          filteredFiles.push(this.initialUpdatedFiles[i])
+        }
+        this.initialUpdatedFiles[i]['document_type'] = 'ATTACHMENT'
+        this.initialUpdatedFiles[i]['file_type'] = type
+        this.initialUpdatedFiles[i]['file_size'] = file.size
+        this.initialUpdatedFiles[i]['file_name'] = file.name
+        this.initialUpdatedFiles[i]['modifiedDate'] = file.lastModified
+        this.initialUpdatedFiles[i]['expire_on'] = null
+        this.initialUpdatedFiles[i]['updated_at'] = new Date()
+        this.initialUpdatedFiles[i]['attachment_type'] = null
+        reader.onload = (event: any) => {
+          if (this.initialUpdatedFiles[i]) {
+            this.initialUpdatedFiles[i]['attachment'] = event.target.result;
+          }
+        };
+
+        reader.readAsDataURL(file);
       }
     }
-  }
 
-  removeFile(index: number): void {
-    this.uploadedFiles.splice(index, 1);
-    
-    // Update form control
+    this.initialUpdatedFiles = filteredFiles;
+    this.selectedFiles = Array.from(this.selectedFiles).concat(Array.from(this.initialUpdatedFiles));
+
     if (this.formGroup) {
       this.formGroup.patchValue({
-        documents: this.uploadedFiles
+        documents: this.selectedFiles
       });
     }
   }
 
-  getPhotoNames(): string {
-    return this.fileName.map(file => file.name).join(', ');
+  removeFile(index: number): void {
+    this.selectedFiles.splice(index, 1);
+
+    if (this.formGroup) {
+      this.formGroup.patchValue({
+        documents: this.selectedFiles
+      });
+    }
+  }
+
+  getPhotoName(): string {
+    return this.formGroup.get('photo')?.value?.file_name || '';
   }
   
-  uploadPhoto(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    if (input.files) {
-      const filesArray = Array.from(input.files);
-      this.fileName.push(...filesArray);
-      
-      // Update form control
-      if (this.formGroup) {
-        this.formGroup.patchValue({
-          photo: this.fileName[0] // Assuming single photo
-        });
+  uploadPhoto(event: any): void {
+    const input = event.target.files[0];
+    console.log(input)
+    if (input) {
+      const reader = new FileReader();
+      const file = input;
+      const parts = file.name.split('.');
+      const size = file.size / 1000000;
+      const type = parts[parts.length - 1];
+
+      if (size > 2) {
+        this._helperService.openErrorSnackBar(file.name + ' ' + 'File size exceeded', '');
+      } else if (!this.imageAllowedTypes.includes(type)) {
+        this._helperService.openErrorSnackBar(file.name + ' ' + 'File type not supported', '');
       }
-    }
+      if (size <= 2 && this.imageAllowedTypes.includes(type)) {
+        console.log(input)
+        input['document_type'] = 'ATTACHMENT'
+        input['file_type'] = type
+        input['file_size'] = file.size
+        input['file_name'] = file.name
+        input['modifiedDate'] = file.lastModified
+        input['expire_on'] = null
+        input['updated_at'] = new Date()
+        input['attachment_type'] = 3
+
+        reader.onload = (event: any) => {
+          input['attachment'] = event.target.result;
+        };
+  
+        reader.readAsDataURL(file);
+        this.selectedFiles = Array.from(this.selectedFiles).concat(Array.from(input));
+        if (this.formGroup) {
+          this.formGroup.patchValue({
+            photo: input,
+            documents: this.selectedFiles
+          });
+        }
+      }
+    }  
   }
 
   getIdlFormData() {
     this.idlService.getIdlFormData().subscribe((response: any) => {
       this.licenseMasters = response.data.licenseMasters;
-      this.documentList = response.data.documentList.details;
+      const documents = response.data.documentList.details;
+      const photoDocument = documents.find((document: any) => document.attachment_type == 3);
+      this.isPhotoRequired = photoDocument && photoDocument.is_mandatory == 1 ? true : false;
+      this.documentList = documents.filter((document: any) => document.attachment_type != 3);
+      this.photoRequiredChange.emit(this.isPhotoRequired);
       const countries = response.data.countryList.map((country: any) => {
         return country.name;
       });

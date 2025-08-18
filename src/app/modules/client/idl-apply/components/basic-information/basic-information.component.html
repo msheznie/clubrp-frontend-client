@@ -195,7 +195,7 @@
             <input #fileInput type="file" multiple (change)="onFilesSelected($event)" class="hidden" />
           </div>
         </div>
-        <div *ngFor="let file of uploadedFiles; let i = index"
+        <div *ngFor="let file of selectedFiles; let i = index"
           class="flex items-center justify-between border-dashed border-2 border-[var(--color-border)] p-2 rounded-md my-2">
           <div class="flex items-center gap-2">
             <img src="/assets/icons/pdf.png" class="w-8 h-8" alt="PDF" />
@@ -225,7 +225,7 @@
             <div>
               <mat-form-field appearance="outline" class="form-field">
                 <mat-label>Upload a Photo</mat-label>
-                <input matInput [value]="getPhotoNames()" readonly (click)="fileInput2.click()" />
+                <input matInput [value]="getPhotoName()" readonly (click)="fileInput2.click()" />
                 <button matSuffix mat-icon-button (click)="fileInput2.click()" aria-label="Upload">
                   <mat-icon >attach_file</mat-icon>
                 </button>
