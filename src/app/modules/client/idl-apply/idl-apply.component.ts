@@ -1,4 +1,4 @@
-import { Component, inject, ViewChild } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
   FormBuilder,
   Validators,
@@ -29,6 +29,7 @@ import { AuthService } from '../../../shared/services/auth.service';
 import { CommonModule } from '@angular/common';
 import { IdlService } from '../../../shared/services/idl.service';
 import { HelperService } from '../../../shared/services/helper.service';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   standalone: true,
@@ -57,7 +58,9 @@ import { HelperService } from '../../../shared/services/helper.service';
     MatIconModule,
   ],
 })
-export class IdlApplyComponent {
+export class IdlApplyComponent implements OnInit, OnDestroy {
+  private destroy$ = new Subject<void>();
+  private autoNextTimeoutId: number | null = null;
   private _formBuilder = inject(FormBuilder);
   private dialog = inject(MatDialog);
   private idlService = inject(IdlService);
@@ -123,13 +126,19 @@ export class IdlApplyComponent {
   ngOnInit() {
     this.urlSafe = this.sanitizer.bypassSecurityTrustResourceUrl(this.url);
 
-    this.route.queryParams.subscribe((params) => {
+    this.route.queryParams
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((params) => {
       if (params['autoNext'] === 'true') {
-        setTimeout(() => {
-          this.moveToNextStep();
-        }, 100);
+        this.autoNextTimeoutId = window.setTimeout(() => this.moveToNextStep(), 100);
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    if (this.autoNextTimeoutId !== null) clearTimeout(this.autoNextTimeoutId);
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   navigateToHome() {

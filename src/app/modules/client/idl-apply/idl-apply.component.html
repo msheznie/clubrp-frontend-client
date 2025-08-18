@@ -51,8 +51,9 @@
         </form>
     </mat-step>
     <mat-step [stepControl]="secondFormGroup" label="Basic Information" [editable]="true" [completed]="false">
+      <ng-template matStepContent>
       <form [formGroup]="secondFormGroup">
-        <app-basic-information [formGroup]="secondFormGroup" (photoRequiredChange)="onPhotoRequiredChange($event)"></app-basic-information>
+        <app-basic-information  *ngIf="isAuthenticated()" [formGroup]="secondFormGroup" (photoRequiredChange)="onPhotoRequiredChange($event)"></app-basic-information>
         <div class="flex justify-end gap-4">
           <button class="button-fill-secondary" matStepperPrevious>
             <mat-icon>arrow_back</mat-icon>
@@ -62,24 +63,27 @@
             <span class="button-text">Next</span>
             <mat-icon>arrow_forward</mat-icon>
           </button>
-        </div>
-      </form>
+          </div>
+        </form>
+      </ng-template>
     </mat-step>
     <mat-step [stepControl]="threeFormGroup" label="Terms & Conditions">
-      <form [formGroup]="threeFormGroup">
-        <app-terms-and-condition [formGroup]="threeFormGroup"></app-terms-and-condition>
-        <div class="flex justify-end gap-4">
-          <button class="button-fill-secondary" matStepperPrevious>
-            <mat-icon>arrow_back</mat-icon>
-            <span class="button-text">Back</span>
-          </button>
-          <button class="button-fill" (click)="submitForm('submit')" 
-            [disabled]="!checkFormValidity()">
-            <mat-icon>done</mat-icon>
-            <span class="button-text">Submit</span>
-          </button>
-        </div>
-      </form>
+      <ng-template matStepContent>
+        <form [formGroup]="threeFormGroup">
+          <app-terms-and-condition [formGroup]="threeFormGroup" *ngIf="isAuthenticated()"></app-terms-and-condition>
+          <div class="flex justify-end gap-4">
+            <button class="button-fill-secondary" matStepperPrevious>
+              <mat-icon>arrow_back</mat-icon>
+              <span class="button-text">Back</span>
+            </button>
+            <button class="button-fill" (click)="submitForm('submit')" 
+              [disabled]="!checkFormValidity()">
+              <mat-icon>done</mat-icon>
+              <span class="button-text">Submit</span>
+            </button>
+          </div>
+        </form>
+      </ng-template>
     </mat-step>
     <mat-step [stepControl]="foreFormGroup" label="Waiting for Approvals">
       <form [formGroup]="foreFormGroup">

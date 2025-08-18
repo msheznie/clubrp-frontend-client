@@ -58,7 +58,7 @@ export class AuthService {
     const token = this.getToken();
     const username = localStorage.getItem('username'); 
 
-    if (token) {
+    if (token && !this.isTokenExpired()) {
       this.isAuthenticatedSubject.next(true);
       this.userNameSubject.next(username || '');
     }

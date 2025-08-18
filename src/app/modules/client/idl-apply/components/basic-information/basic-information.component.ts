@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnInit, signal, Input, Output, EventEmitter } from '@angular/core';
+import { Component, computed, inject, OnInit, OnDestroy, signal, Input, Output, EventEmitter } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -19,6 +19,9 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { CommonModule } from '@angular/common';
 import { IdlService } from '../../../../../shared/services/idl.service';
 import { HelperService } from '../../../../../shared/services/helper.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { AuthService } from 'src/app/shared/services/auth.service';
 
 @Component({
   selector: 'app-basic-information',
@@ -44,11 +47,12 @@ import { HelperService } from '../../../../../shared/services/helper.service';
     CommonModule
   ],
 })
-export class BasicInformationComponent implements OnInit{
+export class BasicInformationComponent implements OnInit, OnDestroy{
   @Input() formGroup!: FormGroup;
   @Output() photoRequiredChange = new EventEmitter<boolean>();
   private _helperService = inject(HelperService);
   private idlService = inject(IdlService);
+  private auth = inject(AuthService);
 
   uploadedFiles: File[] = [];
   fileName: File[] = [];
@@ -73,9 +77,12 @@ export class BasicInformationComponent implements OnInit{
   
   imageAllowedTypes: string[] = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'tiff', 'ico', 'webp'];
   readonly announcer = inject(LiveAnnouncer);
+  private destroy$ = new Subject<void>();
   
   ngOnInit(): void {
-    this.getIdlFormData();
+    if (this.auth.isAuthenticated()) {
+      this.getIdlFormData();
+    }
 
     // Initialize selected countries from form if they exist
     if (this.formGroup && this.formGroup.get('countries_to_visit')?.value) {
@@ -262,7 +269,7 @@ export class BasicInformationComponent implements OnInit{
   }
 
   getIdlFormData() {
-    this.idlService.getIdlFormData().subscribe((response: any) => {
+    this.idlService.getIdlFormData().pipe(takeUntil(this.destroy$)).subscribe((response: any) => {
       this.licenseMasters = response.data.licenseMasters;
       const documents = response.data.documentList.details;
       const photoDocument = documents.find((document: any) => document.attachment_type == 3);
@@ -293,5 +300,10 @@ export class BasicInformationComponent implements OnInit{
     }
     
     return '';
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
