@@ -1,8 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { NavbarComponent } from '../components/navbar/navbar.component';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { BreadcrumbComponent } from '../components/breadcrumb/breadcrumb.component';
 
 @Component({
@@ -19,6 +19,7 @@ import { BreadcrumbComponent } from '../components/breadcrumb/breadcrumb.compone
   ]
 })
 export class TrackComponent {
+  private router = inject(Router);
   breadcrumbs = [
     { label: 'Oman Automobile Association', link: '/association' },
     { label: 'Vehicle Transportation Permit', link: '/vehicle-transport' },
@@ -49,5 +50,9 @@ export class TrackComponent {
     }
   ];
   
+  
+  navigateToHome() {
+    this.router.navigate(['/']);
+  }
   
 }
