@@ -252,11 +252,9 @@ export class BasicInformationComponent implements OnInit{
         };
   
         reader.readAsDataURL(file);
-        this.selectedFiles = Array.from(this.selectedFiles).concat(Array.from(input));
         if (this.formGroup) {
           this.formGroup.patchValue({
             photo: input,
-            documents: this.selectedFiles
           });
         }
       }

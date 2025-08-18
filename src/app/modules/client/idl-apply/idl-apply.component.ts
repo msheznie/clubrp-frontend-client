@@ -166,7 +166,7 @@ export class IdlApplyComponent {
           this._helperService.openMessageSnackBar('Application submitted successfully!', '');
         },
         error: (error: any) => {
-          this._helperService.openErrorMessageSnackBar(error, '');
+          this._helperService.openErrorSnackBar(error, '');
         }
       });
     } else {

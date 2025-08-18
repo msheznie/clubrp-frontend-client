@@ -50,7 +50,7 @@
               </div>
         </form>
     </mat-step>
-    <mat-step [stepControl]="secondFormGroup" label="Basic Information">
+    <mat-step [stepControl]="secondFormGroup" label="Basic Information" [editable]="true" [completed]="false">
       <form [formGroup]="secondFormGroup">
         <app-basic-information [formGroup]="secondFormGroup" (photoRequiredChange)="onPhotoRequiredChange($event)"></app-basic-information>
         <div class="flex justify-end gap-4">
