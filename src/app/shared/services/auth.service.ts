@@ -162,6 +162,13 @@ export class AuthService {
   }
 
   /**
+   * Update OTP verification status
+   */
+  updateOtpVerificationStatus(email: string): Observable<any> {
+    return this.http.post<any>(`${this.config.baseUrl}/${this.subdomain}${this.apiversion}/idl/verify-otp`, { email });
+  }
+
+  /**
    * Check if token is expired
    */
   isTokenExpired(): boolean {

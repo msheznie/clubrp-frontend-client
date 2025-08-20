@@ -93,7 +93,17 @@ export class OtpVerifyComponent implements OnDestroy {
       const otpCode = Object.values(this.otpForm.value).join('');
       const otpCode2= Object.values(this.otp).join('');
       if(otpCode == otpCode2){
-        this.dialogRef.close({ success: true, data: otpCode });
+        // Update OTP verification status in database
+        this.authService.updateOtpVerificationStatus(this.email)
+          .pipe(takeUntil(this.destroy$))
+          .subscribe({
+            next: (response) => {
+              this.dialogRef.close({ success: true, data: otpCode });
+            },
+            error: (error) => {
+              this.submitted = false;
+            }
+          });
       }
       else{
         this.submitted = false;
