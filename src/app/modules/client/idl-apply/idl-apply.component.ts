@@ -1,4 +1,4 @@
-import { Component, inject, ViewChild } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
   FormBuilder,
   Validators,
@@ -27,6 +27,9 @@ import { MatStepper } from '@angular/material/stepper';
 import { SignInComponent } from '../../auth/sign-in/sign-in.component';
 import { AuthService } from '../../../shared/services/auth.service';
 import { CommonModule } from '@angular/common';
+import { IdlService } from '../../../shared/services/idl.service';
+import { HelperService } from '../../../shared/services/helper.service';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   standalone: true,
@@ -55,9 +58,13 @@ import { CommonModule } from '@angular/common';
     MatIconModule,
   ],
 })
-export class IdlApplyComponent {
+export class IdlApplyComponent implements OnInit, OnDestroy {
+  private destroy$ = new Subject<void>();
+  private autoNextTimeoutId: number | null = null;
   private _formBuilder = inject(FormBuilder);
   private dialog = inject(MatDialog);
+  private idlService = inject(IdlService);
+  private _helperService = inject(HelperService);
 
   @ViewChild('steppe') stepper!: MatStepper;
 
@@ -65,10 +72,29 @@ export class IdlApplyComponent {
     firstCtrl: ['', Validators.required],
   });
   secondFormGroup = this._formBuilder.group({
-    secondCtrl: ['', Validators.required],
+    license_type: ['1', Validators.required],
+    first_name: ['', Validators.required],
+    last_name: ['', Validators.required],
+    other_name: [''],
+    nationality: ['', Validators.required],
+    date_of_birth: ['', Validators.required],
+    address: ['', Validators.required],
+    postal_code: ['', Validators.required],
+    po_box: [''],
+    email: ['', [Validators.required, Validators.email, Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)]],
+    gsm: ['', [Validators.required, Validators.pattern(/^\+[1-9]\d{7,14}$/)]],
+    oman_license_number: ['', Validators.required],
+    first_issue_date: ['', Validators.required],
+    expiry_date: ['', Validators.required],
+    license_eligibility: ['', Validators.required],
+    license_type_id: ['', Validators.required],
+    countries_to_visit: [[] as string[]],
+    documents: [[]],
+    photo: [null],
+    status: [0]
   });
   threeFormGroup = this._formBuilder.group({
-    secondCtrl: ['', Validators.required],
+    terms_and_conditions: [false, Validators.requiredTrue],
   });
   foreFormGroup = this._formBuilder.group({
     secondCtrl: ['', Validators.required],
@@ -77,6 +103,7 @@ export class IdlApplyComponent {
     secondCtrl: ['', Validators.required],
   });
   isLinear = false;
+  isPhotoRequired: boolean = false;
 
   breadcrumbs = [
     { label: 'Oman Automobile Association', link: '/association' },
@@ -99,13 +126,19 @@ export class IdlApplyComponent {
   ngOnInit() {
     this.urlSafe = this.sanitizer.bypassSecurityTrustResourceUrl(this.url);
 
-    this.route.queryParams.subscribe((params) => {
+    this.route.queryParams
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((params) => {
       if (params['autoNext'] === 'true') {
-        setTimeout(() => {
-          this.moveToNextStep();
-        }, 100);
+        this.autoNextTimeoutId = window.setTimeout(() => this.moveToNextStep(), 100);
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    if (this.autoNextTimeoutId !== null) clearTimeout(this.autoNextTimeoutId);
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   navigateToHome() {
@@ -120,6 +153,53 @@ export class IdlApplyComponent {
       data: {
         type: 'idl'
       }
+    });
+  }
+
+  checkFormValidity () {
+    if (this.isPhotoRequired) {
+      return this.secondFormGroup.valid && this.threeFormGroup.valid && this.secondFormGroup.get('photo')?.value && (this.secondFormGroup.get('countries_to_visit')?.value as string[])?.length > 0;
+    } else {
+      return this.secondFormGroup.valid && this.threeFormGroup.valid && (this.secondFormGroup.get('countries_to_visit')?.value as string[])?.length > 0;
+    }
+  }
+
+  submitForm(type: string) {
+    if (this.secondFormGroup.valid) {
+      const formData = this.secondFormGroup.value;
+      if (this.isPhotoRequired && !formData.photo) {
+        this._helperService.openErrorSnackBar('Please upload a photo.', '');
+        return;
+      }
+      if(!formData.countries_to_visit || formData.countries_to_visit.length === 0) {
+        this._helperService.openErrorSnackBar('Please select at least one country to visit.', '');
+        return;
+      }
+      if (type == 'submit') {
+        formData.status = 1;
+      }
+      this.idlService.submitIdlApplication(formData).subscribe({
+        next: (response: any) => {
+          this._helperService.openMessageSnackBar('Application submitted successfully!', '');
+        },
+        error: (error: any) => {
+          this._helperService.openErrorSnackBar(error, '');
+        }
+      });
+    } else {
+      this.markApplicationFormTouched();
+      this._helperService.openErrorSnackBar('Please fill in all required fields correctly.', '');
+    }
+  }
+
+  onPhotoRequiredChange(isPhotoRequired: boolean) {
+    this.isPhotoRequired = isPhotoRequired;
+  }
+
+  markApplicationFormTouched() {
+    Object.keys(this.secondFormGroup.controls).forEach(key => {
+      const control = this.secondFormGroup.get(key);
+      control?.markAsTouched();
     });
   }
 

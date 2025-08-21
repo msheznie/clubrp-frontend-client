@@ -2,7 +2,7 @@
 <div class="flex justify-between items-center mt-6 mx-4 md:mx-14">
     <app-breadcrumb [breadcrumbs]="breadcrumbs"></app-breadcrumb>
     <div>
-        <button class="button-outline">
+        <button class="button-outline" (click)="navigateToHome()">
             <mat-icon>cancel</mat-icon>
             <span class="button-text">Cancel</span>
             </button>

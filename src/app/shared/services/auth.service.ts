@@ -24,6 +24,7 @@ export interface AuthResponse {
   refresh_token?: string;
   expires_in?: number;
   username?: string;
+  user_id?: string;
 }
 
 @Injectable({
@@ -57,7 +58,7 @@ export class AuthService {
     const token = this.getToken();
     const username = localStorage.getItem('username'); 
 
-    if (token) {
+    if (token && !this.isTokenExpired()) {
       this.isAuthenticatedSubject.next(true);
       this.userNameSubject.next(username || '');
     }
@@ -104,6 +105,7 @@ export class AuthService {
     localStorage.removeItem(this.TOKEN_KEY);
     localStorage.removeItem(this.REFRESH_TOKEN_KEY);
     localStorage.removeItem('username');
+    localStorage.removeItem('user_id');
 
     this.isAuthenticatedSubject.next(false);
     this.userNameSubject.next('');
@@ -144,6 +146,10 @@ export class AuthService {
     return localStorage.getItem('username') || '';
   }
 
+  getUserId(): string | null {
+    return localStorage.getItem('user_id');
+  }
+
   /**
    * Get authentication token
    */
@@ -153,6 +159,13 @@ export class AuthService {
 
   resendOtp(resendData: { email: string }): Observable<any> {
     return this.http.post<any>(`${this.config.baseUrl}/${this.subdomain}${this.apiversion}/idl/resend-otp`, resendData)
+  }
+
+  /**
+   * Update OTP verification status
+   */
+  updateOtpVerificationStatus(email: string): Observable<any> {
+    return this.http.post<any>(`${this.config.baseUrl}/${this.subdomain}${this.apiversion}/idl/verify-otp`, { email });
   }
 
   /**
@@ -183,6 +196,7 @@ export class AuthService {
 
     if (response.username) {
       localStorage.setItem('username', response.username);
+      localStorage.setItem('user_id', response.user_id || '');
     }
 
     this.isAuthenticatedSubject.next(true);
@@ -205,6 +219,7 @@ export class AuthService {
     localStorage.removeItem(this.TOKEN_KEY);
     localStorage.removeItem(this.REFRESH_TOKEN_KEY);
     localStorage.removeItem('username');
+    localStorage.removeItem('user_id');
     this.isAuthenticatedSubject.next(false);
     this.userNameSubject.next('');
   }

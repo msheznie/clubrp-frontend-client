@@ -1,8 +1,8 @@
-<div class="mb-4">
+<div class="mb-4" [formGroup]="formGroup">
   <div
     class="mb-6 w-full p-4 bg-[var(--color-secondary)] border border-[var(--color-border)] rounded-lg shadow-sm sm:p-8 overflow-y-scroll max-h-[100vh]">
     <div class="!pl-0">
-      <mat-radio-group color="primary" class="custom-radio !ml-0">
+      <mat-radio-group formControlName="license_type" color="primary" class="custom-radio !ml-0">
         <mat-radio-button value="1">New License</mat-radio-button>
         <mat-radio-button value="2">Re-New License</mat-radio-button>
       </mat-radio-group>
@@ -12,30 +12,42 @@
     <div class="contant-section">
       <div class="grid md:grid-cols-3 sm:grid-cols-1 gap-4 mb-4">
         <mat-form-field appearance="outline" class="mat-form-field">
-          <mat-label>First Name</mat-label>
-          <input matInput />
-        </mat-form-field>
+           <mat-label>First Name</mat-label>
+           <input matInput formControlName="first_name" />
+           <mat-error *ngIf="hasError('first_name', 'required')">
+             First Name is required
+           </mat-error>
+         </mat-form-field>
 
         <mat-form-field appearance="outline" class="form-field">
-          <mat-label>Last Name</mat-label>
-          <input matInput />
-        </mat-form-field>
+           <mat-label>Last Name</mat-label>
+           <input matInput formControlName="last_name" />
+           <mat-error *ngIf="hasError('last_name', 'required')">
+             Last Name is required
+           </mat-error>
+         </mat-form-field>
 
         <mat-form-field appearance="outline" class="form-field">
           <mat-label>First Name / Other Name(s)</mat-label>
-          <input matInput />
+          <input matInput formControlName="other_name" />
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="form-field">
           <mat-label>Nationality</mat-label>
-          <input matInput />
+          <input matInput formControlName="nationality" />
+          <mat-error *ngIf="hasError('nationality', 'required')">
+            Nationality is required
+          </mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="form-field">
           <mat-label>Date of Birth</mat-label>
-          <input matInput placeholder="MM/DD/YYYY" [matDatepicker]="picker" readonly="true" />
+          <input matInput placeholder="MM/DD/YYYY" [matDatepicker]="picker" readonly="true" formControlName="date_of_birth" />
           <mat-datepicker-toggle matIconSuffix [for]="picker" />
           <mat-datepicker #picker />
+          <mat-error *ngIf="hasError('date_of_birth', 'required')">
+            Date of Birth is required
+          </mat-error>
         </mat-form-field>
       </div>
 
@@ -43,30 +55,45 @@
       <div class="grid md:grid-cols-3 sm:grid-cols-1 gap-4 mb-4">
         <mat-form-field appearance="outline" class="form-field w-full">
           <mat-label>Address</mat-label>
-          <input matInput />
+          <input matInput formControlName="address" />
+          <mat-error *ngIf="hasError('address', 'required')">
+            Address is required
+          </mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="form-field">
           <mat-label>Postal Code</mat-label>
-          <input matInput />
+          <input matInput formControlName="postal_code" />
+          <mat-error *ngIf="hasError('postal_code', 'required')">
+            Postal Code is required
+          </mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="form-field">
           <mat-label>P.O Box (Not Mandatory)</mat-label>
-          <input matInput />
+          <input matInput formControlName="po_box" />
         </mat-form-field>
 
 
         <mat-form-field appearance="outline" class="form-field">
-          <mat-label>E-Mail</mat-label>
-          <input matInput type="email" />
-        </mat-form-field>
+           <mat-label>E-Mail</mat-label>
+           <input matInput type="email" formControlName="email" />
+           <mat-error *ngIf="getEmailErrorMessage()">
+            {{ getEmailErrorMessage() }}
+          </mat-error>
+         </mat-form-field>
 
 
         <mat-form-field appearance="outline" class="form-field">
-          <mat-label>GSM</mat-label>
-          <input matInput />
-        </mat-form-field>
+           <mat-label>GSM</mat-label>
+           <input matInput formControlName="gsm" />
+           <mat-error *ngIf="hasError('gsm', 'required')">
+             GSM is required
+           </mat-error>
+           <mat-error *ngIf="hasError('gsm', 'pattern')">
+               Please enter a valid GSM
+           </mat-error>
+         </mat-form-field>
 
       </div>
 
@@ -74,56 +101,72 @@
       <div class="grid md:grid-cols-3 sm:grid-cols-1 gap-4 mb-4">
         <mat-form-field appearance="outline" class="form-field">
           <mat-label>Omani Driving License No.</mat-label>
-          <input matInput />
+          <input matInput formControlName="oman_license_number" />
+          <mat-error *ngIf="hasError('oman_license_number', 'required')">
+            Omani Driving License No. is required
+          </mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="form-field">
           <mat-label>First Issue Date</mat-label>
-          <input matInput placeholder="MM/DD/YYYY" [matDatepicker]="picker1" readonly="true" />
+          <input matInput placeholder="MM/DD/YYYY" [matDatepicker]="picker1" readonly="true" formControlName="first_issue_date" />
           <mat-datepicker-toggle matIconSuffix [for]="picker1" />
           <mat-datepicker #picker1 />
+          <mat-error *ngIf="hasError('first_issue_date', 'required')">
+            First Issue Date is required
+          </mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="form-field">
           <mat-label>Expiry Date</mat-label>
-          <input matInput placeholder="MM/DD/YYYY" [matDatepicker]="picker2" readonly="true" />
+          <input matInput placeholder="MM/DD/YYYY" [matDatepicker]="picker2" readonly="true" formControlName="expiry_date" />
           <mat-datepicker-toggle matIconSuffix [for]="picker2" />
           <mat-datepicker #picker2 />
+          <mat-error *ngIf="hasError('expiry_date', 'required')">
+            Expiry Date is required
+          </mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="form-field">
           <mat-label>Licenses Eligibility</mat-label>
-          <input matInput type="text" />
+          <input matInput type="text" formControlName="license_eligibility" />
+          <mat-error *ngIf="hasError('license_eligibility', 'required')">
+            License Eligibility is required
+          </mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline">
           <mat-label>Type of License</mat-label>
-          <mat-select>
-            <mat-option value="1">Motor Cycle</mat-option>
-            <mat-option value="2">Motor Cycle</mat-option>
+          <mat-select formControlName="license_type_id" >
+            <mat-option *ngFor="let licenseMaster of licenseMasters" [value]="licenseMaster.id">
+              {{ licenseMaster.license_type }}
+            </mat-option>
           </mat-select>
+          <mat-error *ngIf="hasError('license_type_id', 'required')">
+            Type of License is required
+          </mat-error>
         </mat-form-field>
       </div>
       <div class="grid md:grid-cols-1 sm:grid-cols-1 gap-4 mb-4">
 
-        <mat-form-field appearance="outline" class="example-chip-list col-span-3 form-field">
+        <mat-form-field appearance="outline" class="countrySet example-chip-list col-span-3 form-field">
           <mat-label>Countries to be visit</mat-label>
-          <mat-chip-grid #chipGrid aria-label="Fruit selection">
-            <mat-chip-row *ngFor="let fruit of fruits(); let i = index; trackBy: trackByIndex"
-              (removed)="remove(fruit)">
-              {{ fruit }}
-              <button matChipRemove [attr.aria-label]="'remove ' + fruit">
+          <mat-chip-grid #chipGrid aria-label="Country selection">
+            <mat-chip-row *ngFor="let country of selectedCountries; let i = index; trackBy: trackByIndex"
+              (removed)="remove(country)">
+              {{ country.name }}
+              <button matChipRemove [attr.aria-label]="'remove ' + country.name">
                 <mat-icon>cancel</mat-icon>
               </button>
             </mat-chip-row>
           </mat-chip-grid>
-          <input name="currentFruit" placeholder="New Fruit..." #fruitInput [(ngModel)]="currentFruit"
-            [matChipInputFor]="chipGrid" [matAutocomplete]="auto" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-            (matChipInputTokenEnd)="add($event)" />
+          <input name="currentCountry" placeholder="New Country..." #countryInput formControlName="countries_to_visit"
+             [matChipInputFor]="chipGrid" [matAutocomplete]="auto" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+             (matChipInputTokenEnd)="add($event)" (input)="onChipInputChange($event)" />
 
-          <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event); fruitInput.value = ''">
-            <mat-option *ngFor="let fruit of filteredFruits()" [value]="fruit">
-              {{ fruit }}
+          <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event); countryInput.value = ''">
+            <mat-option *ngFor="let country of filteredCountries()" [value]="country">
+              {{ country }}
             </mat-option>
           </mat-autocomplete>
         </mat-form-field>
@@ -133,6 +176,17 @@
         <p class="text-[var(--color-text-error)] text-sm flex justify-end items-center">NOT VALID IN JAPAN
           <mat-icon class="ml-3">info_i</mat-icon>
         </p>
+
+        <p class="text-[var(--color-text-primary)] !mb-[5px] !font-[500] !text-[15px]">Required Documents</p>
+         <div class="mb-4">
+           <ul class="list-disc list-inside space-y-2">
+             <li *ngFor="let document of documentList" class="text-[var(--color-text-primary)] !mb-[5px] !text-[14px]">
+               <span>{{ document.display_name }}</span> 
+               <span> - ({{ document.is_mandatory == 1 ? 'Mandatory' : 'Optional' }})</span>
+             </li>
+           </ul>
+         </div>
+
         <div class="border-dashed border-2 border-[var(--color-border)] rounded-lg p-4">
           <div class="text-center mb-4">
             <mat-icon>cloud_upload</mat-icon>
@@ -141,7 +195,7 @@
             <input #fileInput type="file" multiple (change)="onFilesSelected($event)" class="hidden" />
           </div>
         </div>
-        <div *ngFor="let file of uploadedFiles; let i = index"
+        <div *ngFor="let file of selectedFiles; let i = index"
           class="flex items-center justify-between border-dashed border-2 border-[var(--color-border)] p-2 rounded-md my-2">
           <div class="flex items-center gap-2">
             <img src="/assets/icons/pdf.png" class="w-8 h-8" alt="PDF" />
@@ -160,7 +214,7 @@
       <div class="grid grid-cols-1 gap-4 mb-4">
         <div class="flex items-center">
           <div class="m-2">
-            <img src="/assets/img/placeholder-image.png" alt="PDF"
+            <img [src]="photoPreviewUrl" alt="Photo"
               class="w-[150px] h-[180px] object-cover rounded-md border border-[var(--color-border)] min-w-[100px]" />
           </div>
 
@@ -171,7 +225,7 @@
             <div>
               <mat-form-field appearance="outline" class="form-field">
                 <mat-label>Upload a Photo</mat-label>
-                <input matInput [value]="getPhotoNames()" readonly (click)="fileInput2.click()" />
+                <input matInput [value]="getPhotoName()" readonly (click)="fileInput2.click()" />
                 <button matSuffix mat-icon-button (click)="fileInput2.click()" aria-label="Upload">
                   <mat-icon >attach_file</mat-icon>
                 </button>

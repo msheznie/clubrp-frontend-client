@@ -3,3 +3,8 @@
     opacity: 0.5;
     cursor: not-allowed;
   }
+
+::ng-deep button:disabled {
+    pointer-events: none;
+    background-color: #908d8d;
+  }

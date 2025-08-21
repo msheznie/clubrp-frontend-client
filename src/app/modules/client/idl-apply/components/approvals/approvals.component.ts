@@ -1,11 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { BasicInformationComponent } from "../basic-information/basic-information.component";
+import { FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-approvals',
@@ -23,6 +24,8 @@ import { BasicInformationComponent } from "../basic-information/basic-informatio
 ],
 })
 export class ApprovalsComponent {
+  @Input() formGroup!: FormGroup;
+  
   documents = [
     { label: 'Basic Information', status: 'Approved', icon: 'assets/icons/basic-info.png' },
     { label: 'Particular Of Vehicle', status: 'Approved', icon: 'assets/icons/vehicle.png' },
