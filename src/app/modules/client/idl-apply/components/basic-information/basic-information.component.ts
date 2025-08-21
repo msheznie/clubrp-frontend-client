@@ -270,13 +270,13 @@ export class BasicInformationComponent implements OnInit, OnDestroy{
 
   getIdlFormData() {
     this.idlService.getIdlFormData().pipe(takeUntil(this.destroy$)).subscribe((response: any) => {
-      this.licenseMasters = response.data.licenseMasters;
-      const documents = response.data.documentList.details;
+      this.licenseMasters = response.data?.licenseMasters || [];
+      const documents = response.data?.documentList?.details || [];
       const photoDocument = documents.find((document: any) => document.attachment_type == 3);
       this.isPhotoRequired = photoDocument && photoDocument.is_mandatory == 1 ? true : false;
       this.documentList = documents.filter((document: any) => document.attachment_type != 3);
       this.photoRequiredChange.emit(this.isPhotoRequired);
-      const countries = response.data.countryList.map((country: any) => {
+      const countries = (response.data?.countryList || []).map((country: any) => {
         return country.name;
       });
       this.allCountries.set(countries);
