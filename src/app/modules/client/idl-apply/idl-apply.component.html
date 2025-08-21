@@ -67,7 +67,7 @@
         </form>
       </ng-template>
     </mat-step>
-    <mat-step [stepControl]="threeFormGroup" label="Terms & Conditions">
+    <mat-step [stepControl]="threeFormGroup" label="Terms & Conditions" [editable]="true" [completed]="false">
       <ng-template matStepContent>
         <form [formGroup]="threeFormGroup">
           <app-terms-and-condition [formGroup]="threeFormGroup" *ngIf="isAuthenticated()"></app-terms-and-condition>
