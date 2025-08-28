@@ -183,6 +183,7 @@ export class IdlApplyComponent implements OnInit, OnDestroy {
       }
       formData.date_of_birth = this._datepipe.transform(formData.date_of_birth, 'MM/dd/yyyy');
       formData.first_issue_date = this._datepipe.transform(formData.first_issue_date, 'MM/dd/yyyy');
+      formData.expiry_date = this._datepipe.transform(formData.expiry_date, 'MM/dd/yyyy');
       this.idlService.submitIdlApplication(formData).subscribe({
         next: (response: any) => {
           this._helperService.openMessageSnackBar('Application submitted successfully!', '');
