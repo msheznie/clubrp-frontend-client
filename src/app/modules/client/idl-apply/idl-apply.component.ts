@@ -30,12 +30,14 @@ import { CommonModule } from '@angular/common';
 import { IdlService } from '../../../shared/services/idl.service';
 import { HelperService } from '../../../shared/services/helper.service';
 import { Subject, takeUntil } from 'rxjs';
+import { DatePipe } from '@angular/common';
 
 @Component({
   standalone: true,
   selector: 'app-idl-apply',
   templateUrl: './idl-apply.component.html',
   styleUrls: ['./idl-apply.component.scss'],
+  providers: [DatePipe],
   imports: [
     CommonModule,
     MatStepperModule,
@@ -120,6 +122,7 @@ export class IdlApplyComponent implements OnInit, OnDestroy {
     private router: Router,
     private route: ActivatedRoute,
     private newDialog: MatDialog,
+    private _datepipe: DatePipe,
     public authService: AuthService
   ) {}
 
@@ -178,6 +181,9 @@ export class IdlApplyComponent implements OnInit, OnDestroy {
       if (type == 'submit') {
         formData.status = 1;
       }
+      formData.date_of_birth = this._datepipe.transform(formData.date_of_birth, 'MM/dd/yyyy');
+      formData.first_issue_date = this._datepipe.transform(formData.first_issue_date, 'MM/dd/yyyy');
+      formData.expiry_date = this._datepipe.transform(formData.expiry_date, 'MM/dd/yyyy');
       this.idlService.submitIdlApplication(formData).subscribe({
         next: (response: any) => {
           this._helperService.openMessageSnackBar('Application submitted successfully!', '');
