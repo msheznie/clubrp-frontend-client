@@ -10,47 +10,87 @@
 </div>
 
 <div class="mx-4 md:mx-14 mt-4 overflow-scroll">
-<table class="w-full text-sm text-left rounded-md" >
-    <thead class="bg-[var(--color-table-header-bg)] text-[var(--color-text-secondary)]">
-      <tr>
-        <th class="px-6 py-3 font-medium">Application ID</th>
-        <th class="px-6 py-3 font-medium">Applicant Name</th>
-        <th class="px-6 py-3 font-medium">Licence Type</th>
-        <th class="px-6 py-3 font-medium">Created Date & Time</th>
-        <th class="px-6 py-3 font-medium">Status</th>
-        <th class="px-6 py-3 font-medium">Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr
-        class="bg-[var(--color-table-row-bg)] !rounded-3xl hover:bg-[var(--color-table-row-hover-bg)]"
-        *ngFor="let application of applications"
-      >
-        <td class="px-6 py-4">{{ application.id }}</td>
-        <td class="px-6 py-4">{{ application.name }}</td>
-        <td class="px-6 py-4">{{ application.licenceType }}</td>
-        <td class="px-6 py-4">{{ application.createdAt }}</td>
-        <td class="px-6 py-4">
-          <span
-            class="status-badge"
-            [ngClass]="{
-              'in-review': application.status === 'In Review',
-              'approved': application.status === 'Approved'
-            }"
-          >
-            {{ application.status }}
+   <div *ngIf="isLoading" class="text-center text-[var(--color-text-secondary)] py-8">
+     Loading applications...
+   </div>
+   
+   <div *ngIf="!isLoading && errorMessage" class="text-center text-red-500 py-8">
+     Failed to load applications.
+   </div>
+
+  <div *ngIf="!isLoading && !errorMessage" class="mat-elevation-z8">
+    <table mat-table [dataSource]="dataSource" matSort matSortActive="created_at" matSortDirection="desc" matSortDisableClear class="w-full">
+
+      <ng-container matColumnDef="request_id">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Application ID</th>
+        <td mat-cell *matCellDef="let row">{{ row.code }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="applicant_name">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Applicant Name</th>
+        <td mat-cell *matCellDef="let row">{{ getApplicantName(row) }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="licence_type">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Licence Type</th>
+        <td mat-cell *matCellDef="let row">{{ getLicenseType(row) }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="created_at">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Created Date & Time</th>
+        <td mat-cell *matCellDef="let row">{{ formatDate(row.created_at) }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+        <td mat-cell *matCellDef="let row">
+          <span class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
+                [ngClass]="getStatusColor(getStatusText(row.overall_status))">
+            {{ getStatusText(row.overall_status) }}
           </span>
         </td>
-        <td class="px-6 py-4 text-center space-x-2 table-actions">
-          <button mat-icon-button class="table-actions-inner" [routerLink]="'/track-view'">
-            <mat-icon>visibility</mat-icon>
-          </button>
-          <button mat-icon-button *ngIf="application.status === 'Approved'" class="table-actions-inner">
-            <mat-icon>local_printshop</mat-icon>
-          </button>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef class="text-center">Actions</th>
+        <td mat-cell *matCellDef="let row" class="text-center">
+          <div class="flex justify-center items-center gap-2">
+            <!-- View button - always visible -->
+            <button 
+              mat-icon-button 
+              class="action-button view-button" 
+              [routerLink]="['/track-view', row.id]"
+              title="View Details">
+              <mat-icon>visibility</mat-icon>
+            </button>
+            
+            <!-- Print button - show for specific statuses -->
+            <button 
+              mat-icon-button 
+              *ngIf="row.overall_status === 3 || row.overall_status === 6 || row.overall_status === 8"
+              class="action-button print-button"
+              title="Print">
+              <mat-icon>local_printshop</mat-icon>
+            </button>
+          </div>
         </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" [attr.colspan]="displayedColumns.length">No data</td>
       </tr>
-    </tbody>
-  </table>
+    </table>
+
+    <mat-paginator
+      [pageSize]="pageSize"
+      [pageIndex]="pageIndex"
+      [length]="totalItems"
+      [showFirstLastButtons]="true"
+      [pageSizeOptions]="[5, 10, 25, 100]"
+      (page)="onPageChange($event)">
+    </mat-paginator>
+  </div>
   
 </div>

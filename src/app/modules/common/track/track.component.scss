@@ -21,4 +21,42 @@ table {
       }
   }
 
+  // Action buttons styling
+  .action-button {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    
+    mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+      line-height: 18px;
+    }
+    
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  .view-button {
+    background-color: #e3f2fd;
+    color: #1976d2;
+    
+    &:hover {
+      background-color: #bbdefb;
+    }
+  }
+
+  .print-button {
+    background-color: #f3e5f5;
+    color: #7b1fa2;
+    
+    &:hover {
+      background-color: #e1bee7;
+    }
+  }
+
   
