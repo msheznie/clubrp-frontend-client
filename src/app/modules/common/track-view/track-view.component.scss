@@ -1,0 +1,135 @@
+// Status badge styles to match track list
+.status-badge {
+  @apply inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase;
+  
+  &.draft {
+    @apply bg-gray-200 text-gray-800 dark:bg-gray-600 dark:text-gray-50;
+  }
+  
+  &.pending-review {
+    @apply bg-blue-200 text-blue-800 dark:bg-blue-600 dark:text-blue-50;
+  }
+  
+  &.in-review {
+    @apply bg-yellow-200 text-yellow-800 dark:bg-yellow-600 dark:text-yellow-50;
+  }
+  
+  &.approved {
+    @apply bg-green-200 text-green-800 dark:bg-green-600 dark:text-green-50;
+  }
+  
+  &.rejected {
+    @apply bg-red-200 text-red-800 dark:bg-red-600 dark:text-red-50;
+  }
+  
+  &.referred-back {
+    @apply bg-orange-200 text-orange-800 dark:bg-orange-600 dark:text-orange-50;
+  }
+  
+  &.generated {
+    @apply bg-purple-200 text-purple-800 dark:bg-purple-600 dark:text-purple-50;
+  }
+  
+  &.not-generated {
+    @apply bg-pink-200 text-pink-800 dark:bg-pink-600 dark:text-pink-50;
+  }
+  
+  &.paid {
+    @apply bg-emerald-200 text-emerald-800 dark:bg-emerald-600 dark:text-emerald-50;
+  }
+}
+
+// Submit again button styling
+.submit-again {
+  @apply flex items-center gap-1 px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-md transition-colors duration-200;
+  
+  mat-icon {
+    @apply text-sm;
+  }
+  
+  .button-text {
+    @apply text-xs font-medium;
+  }
+}
+
+// Section styling
+.section-header {
+  @apply flex items-center justify-between mb-4;
+}
+
+.section-content {
+  @apply grid grid-cols-1 md:grid-cols-2 gap-4;
+}
+
+.field-group {
+  @apply space-y-2;
+  
+  label {
+    @apply text-sm font-medium text-gray-600;
+  }
+  
+  p {
+    @apply text-gray-900;
+  }
+}
+
+// File attachment styling
+.attachment-item {
+  @apply flex items-center justify-between bg-white p-3 rounded-md shadow-sm border;
+  
+  .file-info {
+    @apply flex items-center space-x-3;
+  }
+  
+  .file-actions {
+    @apply flex items-center space-x-2;
+    
+    button {
+      @apply p-1 rounded hover:bg-gray-100 transition-colors;
+    }
+  }
+}
+
+// Country tags styling
+.country-tag {
+  @apply bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-sm font-medium;
+}
+
+// No data message styling
+.no-data-message {
+  @apply text-center py-4 text-gray-500 italic;
+}
+
+// Card expansion styling
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.rotate-180 {
+  transform: rotate(180deg);
+}
+
+.transition-transform {
+  transition: transform 0.2s ease-in-out;
+}
+
+// Card separation styling
+.card-section {
+  @apply bg-gray-100 rounded-lg shadow-sm border border-gray-200 mb-4;
+  
+  &:hover {
+    @apply shadow-md bg-gray-50;
+  }
+}
+
+.card-header {
+  @apply flex items-center justify-between p-4 cursor-pointer;
+  
+  &:hover {
+    @apply bg-gray-200;
+  }
+}
+
+.card-content {
+  @apply p-4 bg-white rounded-b-lg;
+}
