@@ -2,7 +2,7 @@ import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { NavbarComponent } from '../components/navbar/navbar.component';
-import { Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { BreadcrumbComponent } from '../components/breadcrumb/breadcrumb.component';
 import { TrackService, IdlApplication } from '../../../shared/services/track.service';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
@@ -28,11 +28,12 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 })
 export class TrackComponent implements OnInit {
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
   private trackService = inject(TrackService);
 
   breadcrumbs = [
     { label: 'Oman Automobile Association', link: '/association' },
-    { label: 'Vehicle Transportation Permit', link: '/vehicle-transport' },
+    { label: 'International Driving License', link: '/international-driving-license' },
     { label: 'Track Update' }
   ];
 
@@ -48,9 +49,23 @@ export class TrackComponent implements OnInit {
   sortOrder: 'asc' | 'desc' = 'desc';
   isLoading = false;
   errorMessage = '';
+  applicationTypeFilter: 'null' | '2' | undefined;
 
   ngOnInit(): void {
-    this.loadApplications();
+    this.route.queryParamMap.subscribe(params => {
+      const type = params.get('application_type');
+      // if provided, include in subsequent loads
+      if (type === '2') {
+        this.applicationTypeFilter = '2';
+      } else if (type === 'null') {
+        this.applicationTypeFilter = 'null';
+      } else {
+        this.applicationTypeFilter = undefined; // default to 'null' when building params
+      }
+      this.updateBreadcrumbs();
+      this.pageIndex = 0;
+      this.loadApplications();
+    });
   }
 
   ngAfterViewInit(): void {
@@ -80,6 +95,9 @@ export class TrackComponent implements OnInit {
       sort_order: this.sortOrder
     } as any;
 
+    // business rule: 'null' => IDL records; '2' => VTP records
+    params.application_type = this.applicationTypeFilter ?? 'null';
+
     this.trackService.getApplications(params).subscribe({
       next: (response) => {
         console.log('Full API Response:', response); // Debug log
@@ -93,11 +111,18 @@ export class TrackComponent implements OnInit {
         
         // Handle nested data structure like IDL request component
         const applications = response.data?.data || [];
-        this.applications = applications;
+        // Client-side fallback filter in case backend ignores application_type
+        const filterIsVtp = this.applicationTypeFilter === '2';
+        const filtered = applications.filter((a: IdlApplication) => {
+          const appType = a.application_type;
+          return filterIsVtp ? appType === 2 : appType == null;
+        });
+        this.applications = filtered;
         this.dataSource.data = this.applications;
         
         // Extract total count from API response - nested structure
-        this.totalItems = response.data?.total || 0;
+        // Total reflects filtered count when client-side filtering applied
+        this.totalItems = this.applications.length;
         // Sync paginator state with server response
         this.pageSize = Number(response.data?.per_page || 10);
         this.pageIndex = Math.max(0, (response.data?.current_page || 1) - 1);
@@ -215,5 +240,26 @@ export class TrackComponent implements OnInit {
   
   navigateToHome() {
     this.router.navigate(['/']);
+  }
+
+  private updateBreadcrumbs(): void {
+    const middleLabel = this.applicationTypeFilter === '2'
+      ? 'Vehicle Transportation Permit'
+      : 'International Driving License';
+
+    const middleLink = this.applicationTypeFilter === '2'
+      ? '/vehicle-transport'
+      : '/international-driving-license';
+
+    this.breadcrumbs = [
+      { label: 'Oman Automobile Association', link: '/association' },
+      { label: middleLabel, link: middleLink },
+      { label: 'Track Update' }
+    ];
+  }
+
+  editDraft(row: IdlApplication): void {
+    // Navigate to IDL apply with draft id to prefill
+    this.router.navigate(['/idl-apply'], { queryParams: { draft_id: row.id } });
   }
 }

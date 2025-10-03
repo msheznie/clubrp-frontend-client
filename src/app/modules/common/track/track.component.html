@@ -64,6 +64,16 @@
               <mat-icon>visibility</mat-icon>
             </button>
             
+            <!-- Edit button - show for IDL drafts (application_type null and status Draft) -->
+            <button
+              mat-icon-button
+              *ngIf="row.application_type == null && row.overall_status === 0"
+              class="action-button edit-button"
+              title="Edit Draft"
+              (click)="editDraft(row)">
+              <mat-icon>edit</mat-icon>
+            </button>
+
             <!-- Print button - show for specific statuses -->
             <button 
               mat-icon-button 

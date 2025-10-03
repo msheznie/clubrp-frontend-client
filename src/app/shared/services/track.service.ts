@@ -13,7 +13,7 @@ export interface IdlApplication {
   created_by: number;
   created_at: string;
   updated_at: string;
-  application_type: number;
+  application_type: number | null;
   attachments: any[];
   basic_information: any;
   oman_license_information: any;
@@ -151,13 +151,13 @@ export class TrackService {
     if (params && params.sort_order) baseParams['sort_order'] = params.sort_order as string;
 
     return this.http.get<IdlApplicationListResponse>(
-      `${this.baseUrl}/${this.subdomain}${this.apiversion}/idl/get-idl-applications`,
+      `${this.baseUrl}/${this.subdomain}${this.apiversion}/idl/get-applications-by-user`,
       { params: baseParams }
     );
   }
 
   getIdlApplicationDetails(id: number): Observable<IdlApplicationDetailsResponse> {
-    return this.http.get<IdlApplicationDetailsResponse>(`${this.baseUrl}/${this.subdomain}${this.apiversion}/idl/get-idl-application-data/${id}`);
+    return this.http.get<IdlApplicationDetailsResponse>(`${this.baseUrl}/${this.subdomain}${this.apiversion}/idl/get-track-application-data/${id}`);
   }
 }
 
