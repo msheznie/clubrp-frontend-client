@@ -16,7 +16,7 @@ export const routes: Routes = [
   },
 
   { path: 'track', component: TrackComponent },
-  { path: 'track-view', component: TrackViewComponent },
+  { path: 'track-view/:id', component: TrackViewComponent },
   { path: 'idl-apply', component: IdlApplyComponent},
 
   { path: '**', component: HomeComponent},

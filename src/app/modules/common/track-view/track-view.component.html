@@ -2,7 +2,7 @@
 <div class="flex justify-between items-center mt-6 mx-4 md:mx-14">
   <app-breadcrumb [breadcrumbs]="breadcrumbs"></app-breadcrumb>
   <div>
-    <button class="button-outline">
+    <button class="button-outline" routerLink="/track">
       <mat-icon>cancel</mat-icon>
       <span class="button-text">Cancel</span>
       </button>
@@ -19,7 +19,7 @@
       </div>
     </button>
     <div class="flex flex-col gap-4">
-      <span class="font-semibold text-[var(--color-text-primary)] text-[24px]">TRC-N-0024</span>
+      <span class="font-semibold text-[var(--color-text-primary)] text-[24px]">{{ trackData?.data?.idlApplication?.code || 'Loading...' }}</span>
       <div class="grid gap-1">
         <span class="text-[var(--color-text-primary)] text-[18px]">Wait, we are reviewing your documents. Stay tuned with us...</span>
         <span class="text-[var(--color-text-primary)] text-[14px]">If all your documents are in order, you can proceed with the payment
@@ -38,7 +38,7 @@
         </div>
       </button>
       <div class="flex flex-col gap-4">
-        <span class="font-semibold text-[var(--color-text-primary)] text-[24px]">TRC-N-0024</span>
+        <span class="font-semibold text-[var(--color-text-primary)] text-[24px]">{{ trackData?.data?.idlApplication?.code || 'Loading...' }}</span>
         <div class="grid gap-1">
           <span class="text-[var(--color-text-primary)] text-[18px]">Your All Documents are good...!</span>
           <span class="text-[var(--color-text-primary)] text-[14px]">You can do the payment now</span>
@@ -47,7 +47,7 @@
     </div>
     <div class="flex gap-6 items-center bg-[var(--color-card-secondary-bg)] py-2 px-4 rounded-3xl">
       <div class="flex items-center gap-2">
-        <img src="/assets/icons/pdf.png" alt="icon" class="w-8 h-8">
+        <img src="assets/icons/pdf.png" alt="icon" class="w-8 h-8">
         <div class="grid">
           <span class="text-[var(--color-text-primary)] text-[14px]">Bank Guarantee Form </span>
           <span class="text-[var(--color-text-primary)] text-[12px]">1.3 MB</span>
@@ -60,131 +60,185 @@
   </div>
   <!-- Document Items -->
   <div class="space-y-3 mt-8">
-    <div class="flex items-center justify-between bg-[var(--color-card-tertiary-bg)] p-3 rounded-md shadow-sm">
-      <div class="flex items-center space-x-3">
-        <img src="/assets/icons/basic-info.png" alt="icon" class="w-8 h-8">
-        <span class="text-[var(--color-text-secondary)]">Basic Information</span>
+    <div class="bg-[var(--color-card-tertiary-bg)] rounded-md shadow-sm">
+      <div class="flex items-center justify-between p-3 cursor-pointer" (click)="toggleBasicInfo()">
+        <div class="flex items-center space-x-3">
+          <img src="/assets/icons/basic-info.png" alt="icon" class="w-8 h-8">
+          <span class="text-[var(--color-text-secondary)]">Basic Information</span>
+        </div>
+        <div class="flex items-center space-x-2">
+          <button class="submit-again" *ngIf="trackData?.data?.idlApplication?.overall_status === 4">
+            <mat-icon>refresh</mat-icon> 
+            <span class="button-text">Submit Again</span>
+          </button>
+          <span class="status-badge" [ngClass]="getStatusClass(trackData?.data?.idlApplication?.overall_status || 0)">
+            {{ getStatusText(trackData?.data?.idlApplication?.overall_status || 0) }}
+          </span>
+          <mat-icon class="transition-transform duration-200" [class.rotate-180]="isBasicInfoExpanded">
+            expand_more
+          </mat-icon>
+        </div>
       </div>
-      <div class="flex items-center space-x-2">
-        <!-- <button mat-stroked-button color="primary" class="text-xs">Submit Again</button> -->
-        <span class="status-badge approved">
-          Approved
-        </span>
-      </div>
-    </div>
-    <div class="flex items-center justify-between bg-[var(--color-card-tertiary-bg)] p-3 rounded-md shadow-sm">
-      <div class="flex items-center space-x-3">
-        <img src="/assets/icons/driver-details.png" alt="icon" class="w-8 h-8">
-        <span class="text-[var(--color-text-secondary)]">Driver Details</span>
-      </div>
-      <div class="flex items-center space-x-2">
-        <!-- <button mat-stroked-button color="primary" class="text-xs">Submit Again</button> -->
-        <span class="status-badge approved">
-          Approved
-        </span>
-      </div>
-    </div>
-    <div class="flex items-center justify-between bg-[var(--color-card-tertiary-bg)] p-3 rounded-md shadow-sm">
-      <div class="flex items-center space-x-3">
-        <img src="/assets/icons/insurance.png" alt="icon" class="w-8 h-8">
-        <span class="text-[var(--color-text-secondary)]">Particular of Vehicle</span>
-      </div>
-      <div class="flex items-center space-x-2">
-        <!-- <button mat-stroked-button color="primary" class="text-xs">Submit Again</button> -->
-        <span class="status-badge approved">
-          Approved
-        </span>
-      </div>
-    </div>
-    <div class="flex items-center justify-between bg-[var(--color-card-tertiary-bg)] p-3 rounded-md shadow-sm">
-      <div class="flex items-center space-x-3">
-        <img src="/assets/icons/location.png" alt="icon" class="w-8 h-8">
-        <span class="text-[var(--color-text-secondary)]">Owner’s address in Sultanate of Oman</span>
-      </div>
-      <div class="flex items-center space-x-2">
-        <!-- <button mat-stroked-button color="primary" class="text-xs">Submit Again</button> -->
-        <span class="status-badge approved">
-          Approved
-        </span>
+      
+      <!-- Collapsible Content -->
+      <div class="px-3 pb-3" *ngIf="isBasicInfoExpanded">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4" *ngIf="trackData?.data?.idlApplication?.basic_information">
+          <div class="space-y-2">
+            <label class="text-sm font-medium text-[var(--color-text-secondary)]">Full Name</label>
+            <p class="text-[var(--color-text-primary)]">{{ trackData?.data?.idlApplication?.basic_information?.first_name }} {{ trackData?.data?.idlApplication?.basic_information?.last_name }}</p>
+          </div>
+          <div class="space-y-2" *ngIf="trackData?.data?.idlApplication?.basic_information?.other_name">
+            <label class="text-sm font-medium text-[var(--color-text-secondary)]">Other Name(s)</label>
+            <p class="text-[var(--color-text-primary)]">{{ trackData?.data?.idlApplication?.basic_information?.other_name }}</p>
+          </div>
+          <div class="space-y-2">
+            <label class="text-sm font-medium text-[var(--color-text-secondary)]">Nationality</label>
+            <p class="text-[var(--color-text-primary)]">{{ trackData?.data?.idlApplication?.basic_information?.nationality }}</p>
+          </div>
+          <div class="space-y-2">
+            <label class="text-sm font-medium text-[var(--color-text-secondary)]">Date of Birth</label>
+            <p class="text-[var(--color-text-primary)]">{{ formatDate(trackData?.data?.idlApplication?.basic_information?.date_of_birth) }}</p>
+          </div>
+        </div>
+        <div *ngIf="!trackData?.data?.idlApplication?.basic_information" class="text-center py-4 text-[var(--color-text-secondary)]">
+          No basic information available
+        </div>
       </div>
     </div>
-    <div class="flex items-center justify-between bg-[var(--color-card-tertiary-bg)] p-3 rounded-md shadow-sm">
-      <div class="flex items-center space-x-3">
-        <img src="/assets/icons/home.png" alt="icon" class="w-8 h-8">
-        <span class="text-[var(--color-text-secondary)]">Owner’s address in His Home Country</span>
+    
+    <div class="bg-[var(--color-card-tertiary-bg)] rounded-md shadow-sm">
+      <div class="flex items-center justify-between p-3 cursor-pointer" (click)="toggleLicenseInfo()">
+        <div class="flex items-center space-x-3">
+          <img src="/assets/icons/driver-details.png" alt="icon" class="w-8 h-8">
+          <span class="text-[var(--color-text-secondary)]">Driver Details</span>
+        </div>
+        <div class="flex items-center space-x-2">
+          <button class="submit-again" *ngIf="trackData?.data?.idlApplication?.overall_status === 4">
+            <mat-icon>refresh</mat-icon> 
+            <span class="button-text">Submit Again</span>
+          </button>
+          <span class="status-badge" [ngClass]="getStatusClass(trackData?.data?.idlApplication?.overall_status || 0)">
+            {{ getStatusText(trackData?.data?.idlApplication?.overall_status || 0) }}
+          </span>
+          <mat-icon class="transition-transform duration-200" [class.rotate-180]="isLicenseInfoExpanded">
+            expand_more
+          </mat-icon>
+        </div>
       </div>
-      <div class="flex items-center space-x-2">
-        <button class="submit-again">
-          <mat-icon>refresh</mat-icon> <span class="button-text">Submit Again</span></button>
-        <span class="status-badge rejected">
-          Rejected
-        </span>
+      
+      <!-- Collapsible Content -->
+      <div class="px-3 pb-3" *ngIf="isLicenseInfoExpanded">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4" *ngIf="trackData?.data?.idlApplication?.oman_license_information">
+          <div class="space-y-2">
+            <label class="text-sm font-medium text-[var(--color-text-secondary)]">Omani Driving License No.</label>
+            <p class="text-[var(--color-text-primary)]">{{ trackData?.data?.idlApplication?.oman_license_information?.oman_license_number }}</p>
+          </div>
+          <div class="space-y-2">
+            <label class="text-sm font-medium text-[var(--color-text-secondary)]">Date of Issue</label>
+            <p class="text-[var(--color-text-primary)]">{{ formatDate(trackData?.data?.idlApplication?.oman_license_information?.first_issue_date) }}</p>
+          </div>
+          <div class="space-y-2">
+            <label class="text-sm font-medium text-[var(--color-text-secondary)]">Type of License</label>
+            <p class="text-[var(--color-text-primary)]">{{ trackData?.data?.idlApplication?.oman_license_information?.license_type?.license_type }}</p>
+          </div>
+          <div class="space-y-2">
+            <label class="text-sm font-medium text-[var(--color-text-secondary)]">Countries to Visit</label>
+            <div class="flex flex-wrap gap-2">
+              <span *ngFor="let country of trackData?.data?.idlApplication?.oman_license_information?.countries_to_visit" 
+                    class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-sm">
+                {{ country }}
+              </span>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="!trackData?.data?.idlApplication?.oman_license_information" class="text-center py-4 text-[var(--color-text-secondary)]">
+          No license information available
+        </div>
       </div>
     </div>
-    <div class="flex items-center justify-between bg-[var(--color-card-tertiary-bg)] p-3 rounded-md shadow-sm">
-      <div class="flex items-center space-x-3">
-        <img src="/assets/icons/reference.png" alt="icon" class="w-8 h-8">
-        <span class="text-[var(--color-text-secondary)]">References In Sultanate of Oman</span>
+    
+    <div class="bg-[var(--color-card-tertiary-bg)] rounded-md shadow-sm">
+      <div class="flex items-center justify-between p-3 cursor-pointer" (click)="toggleContactInfo()">
+        <div class="flex items-center space-x-3">
+          <img src="/assets/icons/insurance.png" alt="icon" class="w-8 h-8">
+          <span class="text-[var(--color-text-secondary)]">Contact Details</span>
+        </div>
+        <div class="flex items-center space-x-2">
+          <button class="submit-again" *ngIf="trackData?.data?.idlApplication?.overall_status === 4">
+            <mat-icon>refresh</mat-icon> 
+            <span class="button-text">Submit Again</span>
+          </button>
+          <span class="status-badge" [ngClass]="getStatusClass(trackData?.data?.idlApplication?.overall_status || 0)">
+            {{ getStatusText(trackData?.data?.idlApplication?.overall_status || 0) }}
+          </span>
+          <mat-icon class="transition-transform duration-200" [class.rotate-180]="isContactInfoExpanded">
+            expand_more
+          </mat-icon>
+        </div>
       </div>
-      <div class="flex items-center space-x-2">
-        <!-- <button mat-stroked-button color="primary" class="text-xs">Submit Again</button> -->
-        <span class="status-badge pending-review">
-          Pending Review
-        </span>
+      
+      <!-- Collapsible Content -->
+      <div class="px-3 pb-3" *ngIf="isContactInfoExpanded">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4" *ngIf="trackData?.data?.idlApplication?.basic_information">
+          <div class="space-y-2">
+            <label class="text-sm font-medium text-[var(--color-text-secondary)]">Address</label>
+            <p class="text-[var(--color-text-primary)]">{{ trackData?.data?.idlApplication?.basic_information?.address }}</p>
+          </div>
+          <div class="space-y-2">
+            <label class="text-sm font-medium text-[var(--color-text-secondary)]">Postal Code</label>
+            <p class="text-[var(--color-text-primary)]">{{ trackData?.data?.idlApplication?.basic_information?.postal_code }}</p>
+          </div>
+          <div class="space-y-2" *ngIf="trackData?.data?.idlApplication?.basic_information?.po_box">
+            <label class="text-sm font-medium text-[var(--color-text-secondary)]">P.O Box</label>
+            <p class="text-[var(--color-text-primary)]">{{ trackData?.data?.idlApplication?.basic_information?.po_box }}</p>
+          </div>
+          <div class="space-y-2">
+            <label class="text-sm font-medium text-[var(--color-text-secondary)]">Email</label>
+            <p class="text-[var(--color-text-primary)]">{{ trackData?.data?.idlApplication?.basic_information?.email }}</p>
+          </div>
+          <div class="space-y-2">
+            <label class="text-sm font-medium text-[var(--color-text-secondary)]">GSM</label>
+            <p class="text-[var(--color-text-primary)]">{{ trackData?.data?.idlApplication?.basic_information?.gsm }}</p>
+          </div>
+        </div>
+        <div *ngIf="!trackData?.data?.idlApplication?.basic_information" class="text-center py-4 text-[var(--color-text-secondary)]">
+          No vehicle information available
+        </div>
       </div>
     </div>
-    <div class="flex items-center justify-between bg-[var(--color-card-tertiary-bg)] p-3 rounded-md shadow-sm">
-      <div class="flex items-center space-x-3">
-        <img src="/assets/icons/reference.png" alt="icon" class="w-8 h-8">
-        <span class="text-[var(--color-text-secondary)]">References In your home country</span>
-      </div>
-      <div class="flex items-center space-x-2">
-        <!-- <button mat-stroked-button color="primary" class="text-xs">Submit Again</button> -->
-        <span class="status-badge pending-review">
-          Pending Review
-        </span>
-      </div>
-    </div>
-    <div class="gird bg-[var(--color-card-tertiary-bg)] p-3 rounded-md shadow-sm">
+    
+
+    
+    <div class="grid bg-[var(--color-card-tertiary-bg)] p-3 rounded-md shadow-sm">
       <div class="flex items-center space-x-3">
         <img src="/assets/icons/attachment.png" alt="icon" class="w-8 h-8">
         <span class="text-[var(--color-text-secondary)]">Attachments</span>
       </div>
 
-      <div class="space-y-2 mt-4">
-        <div class="flex items-center justify-between bg-[var(--color-card-primary-bg)] p-3 rounded-md shadow-sm">
+      <div class="space-y-2 mt-4" *ngIf="(trackData?.data?.idlApplication?.attachments?.length || 0) > 0">
+        <div *ngFor="let attachment of trackData?.data?.idlApplication?.attachments" 
+             class="flex items-center justify-between bg-[var(--color-card-primary-bg)] p-3 rounded-md shadow-sm">
           <div class="flex items-center space-x-3">
-            <img src="/assets/icons/pdf.png" alt="icon" class="w-8 h-8">
+            <img [src]="getFileIcon(attachment?.attachment?.file_type)" alt="file icon" class="w-8 h-8">
             <div class="grid">
-              <span class="text-[14px] text-[var(--color-text-primary)] font-semibold">Vehicle Registration</span>
+              <span class="text-[14px] text-[var(--color-text-primary)] font-semibold">{{ attachment?.attachment?.file_name }}</span>
               <span class="text-[14px] text-[var(--color-text-secondary)]">File Size should be between 2MB to 10MB</span>
             </div>
           </div>
           <div class="flex items-center space-x-2">
-            <!-- <button mat-stroked-button color="primary" class="text-xs">Submit Again</button> -->
-            <span class="status-badge approved">
-              Approved
-            </span>
-          </div>
-        </div>
-        <div class="flex items-center justify-between bg-[var(--color-card-primary-bg)] p-3 rounded-md shadow-sm">
-          <div class="flex items-center space-x-3">
-            <img src="/assets/icons/pdf.png" alt="icon" class="w-8 h-8">
-            <div class="grid">
-              <span class="text-[14px] text-[var(--color-text-primary)] font-semibold">Bank Document</span>
-              <span class="text-[14px] text-[var(--color-text-secondary)]">File Size should be between 2MB to 10MB</span>
-            </div>
-          </div>
-          <div class="flex items-center space-x-2">
-            <!-- <button mat-stroked-button color="primary" class="text-xs">Submit Again</button> -->
-            <span class="status-badge in-review">
-              In Review
+            <span class="status-badge" [ngClass]="getStatusClass(trackData?.data?.idlApplication?.overall_status || 0)">
+              {{ getStatusText(trackData?.data?.idlApplication?.overall_status || 0) }}
             </span>
           </div>
         </div>
       </div>
+      <div *ngIf="!trackData?.data?.idlApplication?.attachments || trackData?.data?.idlApplication?.attachments?.length === 0" 
+           class="text-center py-4 text-[var(--color-text-secondary)]">
+        No attachments available
+      </div>
     </div>
-    <div class="gird bg-[var(--color-card-tertiary-bg)] p-3 rounded-md shadow-sm">
+    
+    <div class="grid bg-[var(--color-card-tertiary-bg)] p-3 rounded-md shadow-sm">
       <div class="flex items-center space-x-3">
         <img src="/assets/icons/review.png" alt="icon" class="w-8 h-8">
         <span class="text-[var(--color-text-secondary)]">Review</span>
@@ -198,12 +252,25 @@
               <span class="text-[14px] text-[var(--color-text-primary)] font-semibold">Abdulla Al Rahuman</span>
               <span class="text-[14px] text-[var(--color-text-secondary)]">Senior Director</span>
             </div>
-
           </div>
           <div class="flex items-center space-x-2">
-            <!-- <button mat-stroked-button color="primary" class="text-xs">Submit Again</button> -->
             <span class="status-badge approved">
               1st Approval
+            </span>
+          </div>
+        </div>
+        
+        <div class="flex items-center justify-between bg-[var(--color-secondary)] p-3 rounded-md shadow-sm">
+          <div class="flex items-center space-x-3">
+            <img src="/assets/icons/profile-img.png" alt="icon" class="rounded-full w-10 h-10">
+            <div class="grid">
+              <span class="text-[14px] text-[var(--color-text-primary)] font-semibold">Jammey Keelen</span>
+              <span class="text-[14px] text-[var(--color-text-secondary)]">Director</span>
+            </div>
+          </div>
+          <div class="flex items-center space-x-2">
+            <span class="status-badge approved">
+              2nd Approval
             </span>
           </div>
         </div>

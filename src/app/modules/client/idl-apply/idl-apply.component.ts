@@ -31,6 +31,7 @@ import { IdlService } from '../../../shared/services/idl.service';
 import { HelperService } from '../../../shared/services/helper.service';
 import { Subject, takeUntil } from 'rxjs';
 import { DatePipe } from '@angular/common';
+import { TrackService } from '../../../shared/services/track.service';
 
 @Component({
   standalone: true,
@@ -66,6 +67,7 @@ export class IdlApplyComponent implements OnInit, OnDestroy {
   private _formBuilder = inject(FormBuilder);
   private dialog = inject(MatDialog);
   private idlService = inject(IdlService);
+  private trackService = inject(TrackService);
   private _helperService = inject(HelperService);
 
   @ViewChild('steppe') stepper!: MatStepper;
@@ -128,12 +130,26 @@ export class IdlApplyComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.urlSafe = this.sanitizer.bypassSecurityTrustResourceUrl(this.url);
+    // Handle initial load with snapshot as well
+    const initialDraft = this.route.snapshot.queryParamMap.get('draft_id');
+    if (initialDraft) {
+      const idNum = Number(initialDraft);
+      if (!isNaN(idNum)) {
+        this.loadDraft(idNum);
+      }
+    }
 
     this.route.queryParams
     .pipe(takeUntil(this.destroy$))
     .subscribe((params) => {
       if (params['autoNext'] === 'true') {
         this.autoNextTimeoutId = window.setTimeout(() => this.moveToNextStep(), 100);
+      }
+      if (params['draft_id']) {
+        const draftId = Number(params['draft_id']);
+        if (!isNaN(draftId)) {
+          this.loadDraft(draftId);
+        }
       }
     });
   }
@@ -223,5 +239,67 @@ export class IdlApplyComponent implements OnInit, OnDestroy {
 
   isAuthenticated() { 
     return this.authService.isAuthenticated();
+  }
+
+  private loadDraft(id: number): void {
+    this.trackService.getIdlApplicationDetails(id).pipe(takeUntil(this.destroy$)).subscribe({
+      next: (resp) => {
+        console.log('Draft details response', resp);
+        const idlApp = (resp as any)?.data?.idlApplication || (resp as any)?.data?.data?.idlApplication;
+        const basic = idlApp?.basic_information;
+        const oman = idlApp?.oman_license_information;
+        if (basic) {
+          this.secondFormGroup.patchValue({
+            license_type: idlApp?.license_type != null ? String(idlApp.license_type) : this.secondFormGroup.get('license_type')?.value,
+            first_name: basic.first_name || '',
+            last_name: basic.last_name || '',
+            other_name: basic.other_name || '',
+            nationality: basic.nationality || '',
+            address: basic.address || '',
+            postal_code: basic.postal_code || '',
+            po_box: basic.po_box || '',
+            email: basic.email || '',
+            gsm: basic.gsm || ''
+          });
+          // also set explicitly to ensure bindings update
+          this.secondFormGroup.get('first_name')?.setValue(basic.first_name || '');
+          this.secondFormGroup.get('last_name')?.setValue(basic.last_name || '');
+          this.secondFormGroup.get('other_name')?.setValue(basic.other_name || '');
+          this.secondFormGroup.get('nationality')?.setValue(basic.nationality || '');
+          this.secondFormGroup.get('address')?.setValue(basic.address || '');
+          this.secondFormGroup.get('postal_code')?.setValue(basic.postal_code || '');
+          this.secondFormGroup.get('po_box')?.setValue(basic.po_box || '');
+          this.secondFormGroup.get('email')?.setValue(basic.email || '');
+          this.secondFormGroup.get('gsm')?.setValue(basic.gsm || '');
+          if (basic.date_of_birth) {
+            this.secondFormGroup.patchValue({ date_of_birth: new Date(basic.date_of_birth) as any });
+            this.secondFormGroup.get('date_of_birth')?.setValue(new Date(basic.date_of_birth) as any);
+          }
+        }
+        if (oman) {
+          this.secondFormGroup.patchValue({
+            oman_license_number: oman.oman_license_number || '',
+            first_issue_date: oman.first_issue_date ? (new Date(oman.first_issue_date) as any) : '',
+            license_type_id: oman.license_type_id != null ? String(oman.license_type_id) : ''
+          });
+          this.secondFormGroup.get('oman_license_number')?.setValue(oman.oman_license_number || '');
+          if (oman.first_issue_date) {
+            this.secondFormGroup.get('first_issue_date')?.setValue(new Date(oman.first_issue_date) as any);
+          }
+          if (oman.license_type_id != null) {
+            this.secondFormGroup.get('license_type_id')?.setValue(String(oman.license_type_id));
+          }
+          if (Array.isArray(oman.countries_to_visit)) {
+            this.secondFormGroup.patchValue({ countries_to_visit: oman.countries_to_visit });
+          }
+        }
+        // trigger change detection for form controls
+        this.secondFormGroup.updateValueAndValidity({ onlySelf: false, emitEvent: true });
+        // ensure user is on Basic Information step
+        try { this.stepper.selectedIndex = 1; } catch {}
+        console.log('Patched form value', this.secondFormGroup.value);
+      },
+      error: () => {}
+    });
   }
 }
