@@ -52,9 +52,9 @@
       </ng-container>
 
       <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef class="text-center">Actions</th>
-        <td mat-cell *matCellDef="let row" class="text-center">
-          <div class="flex justify-center items-center gap-2">
+        <th mat-header-cell *matHeaderCellDef class="actions-col">Actions</th>
+        <td mat-cell *matCellDef="let row" class="actions-col">
+          <div class="flex justify-start items-center gap-2 table-actions-inner">
             <!-- View button - always visible -->
             <button 
               mat-icon-button 
