@@ -50,6 +50,7 @@ import { AuthService } from 'src/app/shared/services/auth.service';
 export class BasicInformationComponent implements OnInit, OnDestroy{
   @Input() formGroup!: FormGroup;
   @Output() photoRequiredChange = new EventEmitter<boolean>();
+  @Output() licenseMastersLoaded = new EventEmitter<any[]>();
   private _helperService = inject(HelperService);
   private idlService = inject(IdlService);
   private auth = inject(AuthService);
@@ -101,7 +102,12 @@ export class BasicInformationComponent implements OnInit, OnDestroy{
     });
 
     const existingPhoto = this.formGroup.get('photo')?.value;
-    this.photoPreviewUrl = existingPhoto?.attachment || null;
+    this.photoPreviewUrl = existingPhoto?.attachment || existingPhoto?.file_path || existingPhoto?.url || null;
+    
+    const existingDocuments = this.formGroup.get('documents')?.value;
+    if (existingDocuments && Array.isArray(existingDocuments)) {
+      this.selectedFiles = existingDocuments;
+    }
   }
 
   add(event: MatChipInputEvent): void {
@@ -271,6 +277,7 @@ export class BasicInformationComponent implements OnInit, OnDestroy{
   getIdlFormData() {
     this.idlService.getIdlFormData().pipe(takeUntil(this.destroy$)).subscribe((response: any) => {
       this.licenseMasters = response.data?.licenseMasters || [];
+      this.licenseMastersLoaded.emit(this.licenseMasters);
       const documents = response.data?.documentList?.details || [];
       const photoDocument = documents.find((document: any) => document.attachment_type == 3);
       this.isPhotoRequired = photoDocument && photoDocument.is_mandatory == 1 ? true : false;
@@ -302,8 +309,24 @@ export class BasicInformationComponent implements OnInit, OnDestroy{
     return '';
   }
 
+  onImageError(event: any): void {
+    this.photoPreviewUrl = null;
+  }
+
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  updateFromFormData(): void {
+    const existingDocuments = this.formGroup.get('documents')?.value;
+    if (existingDocuments && Array.isArray(existingDocuments)) {
+      this.selectedFiles = existingDocuments;
+    }
+    
+    const existingPhoto = this.formGroup.get('photo')?.value;
+    if (existingPhoto) {
+      this.photoPreviewUrl = existingPhoto.attachment || existingPhoto.file_path || existingPhoto.url || null;
+    }
   }
 }

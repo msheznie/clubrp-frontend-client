@@ -54,13 +54,12 @@ export class TrackComponent implements OnInit {
   ngOnInit(): void {
     this.route.queryParamMap.subscribe(params => {
       const type = params.get('application_type');
-      // if provided, include in subsequent loads
       if (type === '2') {
         this.applicationTypeFilter = '2';
       } else if (type === 'null') {
         this.applicationTypeFilter = 'null';
       } else {
-        this.applicationTypeFilter = undefined; // default to 'null' when building params
+        this.applicationTypeFilter = undefined;
       }
       this.updateBreadcrumbs();
       this.pageIndex = 0;
@@ -69,9 +68,7 @@ export class TrackComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {
-    // Connect paginator to data source for UI updates
     this.dataSource.paginator = this.paginator;
-    // Attach sort instance to data source for header arrows and accessibility
     this.dataSource.sort = this.sort;
     
     if (this.sort) {
@@ -95,23 +92,11 @@ export class TrackComponent implements OnInit {
       sort_order: this.sortOrder
     } as any;
 
-    // business rule: 'null' => IDL records; '2' => VTP records
     params.application_type = this.applicationTypeFilter ?? 'null';
 
     this.trackService.getApplications(params).subscribe({
       next: (response) => {
-        console.log('Full API Response:', response); // Debug log
-        console.log('Response structure:', {
-          hasData: !!response.data,
-          hasNestedData: !!response.data?.data,
-          total: response.data?.total,
-          perPage: response.data?.per_page,
-          currentPage: response.data?.current_page
-        });
-        
-        // Handle nested data structure like IDL request component
         const applications = response.data?.data || [];
-        // Client-side fallback filter in case backend ignores application_type
         const filterIsVtp = this.applicationTypeFilter === '2';
         const filtered = applications.filter((a: IdlApplication) => {
           const appType = a.application_type;
@@ -120,30 +105,15 @@ export class TrackComponent implements OnInit {
         this.applications = filtered;
         this.dataSource.data = this.applications;
         
-        // Extract total count from API response - nested structure
-        // Total reflects filtered count when client-side filtering applied
         this.totalItems = this.applications.length;
-        // Sync paginator state with server response
         this.pageSize = Number(response.data?.per_page || 10);
         this.pageIndex = Math.max(0, (response.data?.current_page || 1) - 1);
         
-        console.log('Final values:', {
-          totalItems: this.totalItems,
-          applicationsLength: this.applications.length,
-          pageSize: this.pageSize,
-          pageIndex: this.pageIndex
-        });
         this.isLoading = false;
       },
       error: (error) => {
         this.errorMessage = 'Failed to load applications.';
         this.isLoading = false;
-        console.error('Error loading applications:', error);
-        console.error('Error details:', {
-          status: error.status,
-          message: error.message,
-          url: error.url
-        });
       }
     });
   }
@@ -159,7 +129,6 @@ export class TrackComponent implements OnInit {
       case 'request_id':
         return 'code';
       case 'applicant_name':
-        // Backend should support applicant_name (joined) sorting like IDL list
         return 'applicant_name';
       case 'licence_type':
         return 'license_type';
@@ -171,7 +140,6 @@ export class TrackComponent implements OnInit {
     }
   }
 
-  // Map backend numeric status to display text
   getStatusText(status: number): string {
     switch (status) {
       case 0: return 'Draft';
@@ -187,7 +155,6 @@ export class TrackComponent implements OnInit {
     }
   }
 
-  // Return Tailwind utility classes for colored badges
   getStatusColor(statusText: string): string {
     switch (statusText) {
       case 'Draft':
@@ -259,7 +226,6 @@ export class TrackComponent implements OnInit {
   }
 
   editDraft(row: IdlApplication): void {
-    // Navigate to IDL apply with draft id to prefill
     this.router.navigate(['/idl-apply'], { queryParams: { draft_id: row.id } });
   }
 }
