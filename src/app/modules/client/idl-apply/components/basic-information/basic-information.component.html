@@ -200,7 +200,7 @@
           <div class="flex items-center gap-2">
             <img src="/assets/icons/pdf.png" class="w-8 h-8" alt="PDF" />
             <div>
-              <p class="font-medium text-sm !mb-0">{{ file.name }}</p>
+              <p class="font-medium text-sm !mb-0">{{ file.file_name || file.name }}</p>
               <p class="text-xs text-[var(--color-text-secondary)] !mb-0">File Size should be between 2MB to 10MB</p>
             </div>
           </div>
@@ -214,8 +214,12 @@
       <div class="grid grid-cols-1 gap-4 mb-4">
         <div class="flex items-center">
           <div class="m-2">
-            <img [src]="photoPreviewUrl" alt="Photo"
-              class="w-[150px] h-[180px] object-cover rounded-md border border-[var(--color-border)] min-w-[100px]" />
+            <img [src]="photoPreviewUrl" alt="Photo" *ngIf="photoPreviewUrl"
+              class="w-[150px] h-[180px] object-cover rounded-md border border-[var(--color-border)] min-w-[100px]"
+              (error)="onImageError($event)" />
+            <div *ngIf="!photoPreviewUrl" class="w-[150px] h-[180px] border border-[var(--color-border)] rounded-md flex items-center justify-center bg-gray-100">
+              <span class="text-gray-500 text-sm">No Photo</span>
+            </div>
           </div>
 
           <div class="">

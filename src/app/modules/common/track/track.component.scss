@@ -8,6 +8,20 @@ table {
     overflow: hidden;
   }
   
+  th.mat-header-cell,
+  td.mat-cell,
+  td.mat-footer-cell {
+    vertical-align: middle;
+  }
+  
+  // Fixed width to keep action buttons aligned across rows
+  .actions-col {
+    width: 140px;
+    text-align: left !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  
   .table-actions {
     display: flex;
     mat-icon {
@@ -23,16 +37,19 @@ table {
 
   // Action buttons styling
   .action-button {
-    width: 32px;
-    height: 32px;
+    width: 36px;
+    height: 36px;
     border-radius: 6px;
     transition: all 0.2s ease;
     
     mat-icon {
-      font-size: 18px;
-      width: 18px;
-      height: 18px;
-      line-height: 18px;
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+      line-height: 20px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
     
     &:hover {
@@ -56,6 +73,15 @@ table {
     
     &:hover {
       background-color: #e1bee7;
+    }
+  }
+
+  .edit-button {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+
+    &:hover {
+      background-color: #c8e6c9;
     }
   }
 

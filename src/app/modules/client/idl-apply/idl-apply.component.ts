@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import {
   FormBuilder,
   Validators,
@@ -61,7 +61,7 @@ import { TrackService } from '../../../shared/services/track.service';
     MatIconModule,
   ],
 })
-export class IdlApplyComponent implements OnInit, OnDestroy {
+export class IdlApplyComponent implements OnInit, OnDestroy, AfterViewInit {
   private destroy$ = new Subject<void>();
   private autoNextTimeoutId: number | null = null;
   private _formBuilder = inject(FormBuilder);
@@ -71,6 +71,7 @@ export class IdlApplyComponent implements OnInit, OnDestroy {
   private _helperService = inject(HelperService);
 
   @ViewChild('steppe') stepper!: MatStepper;
+  @ViewChild(BasicInformationComponent) basicInfoComponent!: BasicInformationComponent;
 
   firstFormGroup = this._formBuilder.group({
     firstCtrl: ['', Validators.required],
@@ -91,7 +92,7 @@ export class IdlApplyComponent implements OnInit, OnDestroy {
     first_issue_date: ['', Validators.required],
     expiry_date: ['', Validators.required],
     license_eligibility: ['', Validators.required],
-    license_type_id: ['', Validators.required],
+    license_type_id: [null as number | null, Validators.required],
     countries_to_visit: [[] as string[]],
     documents: [[]],
     photo: [null],
@@ -108,6 +109,7 @@ export class IdlApplyComponent implements OnInit, OnDestroy {
   });
   isLinear = false;
   isPhotoRequired: boolean = false;
+  pendingLicenseTypeId: number | null = null;
 
   breadcrumbs = [
     { label: 'Oman Automobile Association', link: '/association' },
@@ -154,6 +156,28 @@ export class IdlApplyComponent implements OnInit, OnDestroy {
     });
   }
 
+  ngAfterViewInit() {
+    // Set pending license type after view is initialized
+    if (this.pendingLicenseTypeId !== null) {
+      setTimeout(() => {
+        this.setLicenseType(this.pendingLicenseTypeId!);
+        this.pendingLicenseTypeId = null;
+      }, 100);
+    }
+  }
+
+  private setLicenseType(licenseTypeId: number) {
+    const control = this.secondFormGroup.get('license_type_id');
+    if (control) {
+      control.setValue(licenseTypeId);
+      control.updateValueAndValidity();
+      this.secondFormGroup.patchValue({ license_type_id: licenseTypeId });
+      setTimeout(() => {
+        control.setValue(licenseTypeId);
+      }, 100);
+    }
+  }
+
   ngOnDestroy(): void {
     if (this.autoNextTimeoutId !== null) clearTimeout(this.autoNextTimeoutId);
     this.destroy$.next();
@@ -194,23 +218,22 @@ export class IdlApplyComponent implements OnInit, OnDestroy {
         this._helperService.openErrorSnackBar('Please select at least one country to visit.', '');
         return;
       }
-      if (type == 'submit') {
+      if (type === 'draft') {
+        formData.status = 0;
+      } else if (type === 'submit') {
         formData.status = 1;
       }
-      formData.date_of_birth = this._datepipe.transform(formData.date_of_birth, 'MM/dd/yyyy');
-      formData.first_issue_date = this._datepipe.transform(formData.first_issue_date, 'MM/dd/yyyy');
-      formData.expiry_date = this._datepipe.transform(formData.expiry_date, 'MM/dd/yyyy');
-      this.idlService.submitIdlApplication(formData).subscribe({
-        next: (response: any) => {
-          this._helperService.openMessageSnackBar('Application submitted successfully!', '');
+      this.idlService.submitIdlApplication(formData).pipe(takeUntil(this.destroy$)).subscribe({
+        next: (response) => {
+          this.router.navigate(['/track']);
         },
-        error: (error: any) => {
-          this._helperService.openErrorSnackBar(error, '');
+        error: (error) => {
+          this._helperService.openErrorSnackBar('Failed to submit application. Please try again.', '');
         }
       });
     } else {
       this.markApplicationFormTouched();
-      this._helperService.openErrorSnackBar('Please fill in all required fields correctly.', '');
+      this._helperService.openErrorSnackBar('Please fill in all required fields.', '');
     }
   }
 
@@ -218,23 +241,38 @@ export class IdlApplyComponent implements OnInit, OnDestroy {
     this.isPhotoRequired = isPhotoRequired;
   }
 
+  onLicenseMastersLoaded(licenseMasters: any[]) {
+    if (this.pendingLicenseTypeId !== null) {
+      this.setLicenseType(this.pendingLicenseTypeId);
+      this.pendingLicenseTypeId = null;
+    }
+  }
+
   markApplicationFormTouched() {
     Object.keys(this.secondFormGroup.controls).forEach(key => {
-      const control = this.secondFormGroup.get(key);
-      control?.markAsTouched();
+      this.secondFormGroup.get(key)?.markAsTouched();
     });
   }
 
   paySubmit() {
-    const dialogRef = this.newDialog.open(PaymentGatewayComponent, {
-      height: 'auto',
-      width: '50em',
-      panelClass: 'default-preview-dialog',
-    });
+    if (this.secondFormGroup.valid) {
+      const formData = this.secondFormGroup.value;
+      formData.status = 1;
+      this.idlService.submitIdlApplication(formData).pipe(takeUntil(this.destroy$)).subscribe({
+        next: (response) => {
+          this.router.navigate(['/track']);
+        },
+        error: (error) => {
+          this._helperService.openErrorSnackBar('Failed to submit application. Please try again.', '');
+        }
+      });
+    }
   }
 
   moveToNextStep() {
-    this.stepper.next();
+    if (this.stepper) {
+      this.stepper.next();
+    }
   }
 
   isAuthenticated() { 
@@ -244,10 +282,10 @@ export class IdlApplyComponent implements OnInit, OnDestroy {
   private loadDraft(id: number): void {
     this.trackService.getIdlApplicationDetails(id).pipe(takeUntil(this.destroy$)).subscribe({
       next: (resp) => {
-        console.log('Draft details response', resp);
         const idlApp = (resp as any)?.data?.idlApplication || (resp as any)?.data?.data?.idlApplication;
         const basic = idlApp?.basic_information;
         const oman = idlApp?.oman_license_information;
+        const attachments = idlApp?.attachments || [];
         if (basic) {
           this.secondFormGroup.patchValue({
             license_type: idlApp?.license_type != null ? String(idlApp.license_type) : this.secondFormGroup.get('license_type')?.value,
@@ -261,7 +299,6 @@ export class IdlApplyComponent implements OnInit, OnDestroy {
             email: basic.email || '',
             gsm: basic.gsm || ''
           });
-          // also set explicitly to ensure bindings update
           this.secondFormGroup.get('first_name')?.setValue(basic.first_name || '');
           this.secondFormGroup.get('last_name')?.setValue(basic.last_name || '');
           this.secondFormGroup.get('other_name')?.setValue(basic.other_name || '');
@@ -280,24 +317,58 @@ export class IdlApplyComponent implements OnInit, OnDestroy {
           this.secondFormGroup.patchValue({
             oman_license_number: oman.oman_license_number || '',
             first_issue_date: oman.first_issue_date ? (new Date(oman.first_issue_date) as any) : '',
-            license_type_id: oman.license_type_id != null ? String(oman.license_type_id) : ''
+            expiry_date: oman.expiry_date ? (new Date(oman.expiry_date) as any) : '',
+            license_eligibility: oman.license_eligibility || '',
+            license_type_id: oman.license_type_id != null ? oman.license_type_id : null
           });
           this.secondFormGroup.get('oman_license_number')?.setValue(oman.oman_license_number || '');
           if (oman.first_issue_date) {
             this.secondFormGroup.get('first_issue_date')?.setValue(new Date(oman.first_issue_date) as any);
           }
+          if (oman.expiry_date) {
+            this.secondFormGroup.get('expiry_date')?.setValue(new Date(oman.expiry_date) as any);
+          }
+          if (oman.license_eligibility) {
+            this.secondFormGroup.get('license_eligibility')?.setValue(oman.license_eligibility);
+          }
           if (oman.license_type_id != null) {
-            this.secondFormGroup.get('license_type_id')?.setValue(String(oman.license_type_id));
+            this.pendingLicenseTypeId = oman.license_type_id;
+            this.secondFormGroup.get('license_type_id')?.setValue(oman.license_type_id);
           }
           if (Array.isArray(oman.countries_to_visit)) {
             this.secondFormGroup.patchValue({ countries_to_visit: oman.countries_to_visit });
           }
         }
-        // trigger change detection for form controls
+        
+        if (attachments && attachments.length > 0) {
+          const documents = attachments.filter((att: any) => att.attachment_type !== 3);
+          const photoAttachment = attachments.find((att: any) => att.attachment_type === 3);
+          
+          if (documents.length > 0) {
+            const documentAttachments = documents.map((att: any) => att.attachment);
+            this.secondFormGroup.patchValue({ documents: documentAttachments });
+            this.secondFormGroup.get('documents')?.setValue(documentAttachments);
+          }
+          
+          if (photoAttachment) {
+            const photoData = {
+              ...photoAttachment.attachment,
+              attachment: photoAttachment.attachment.file_path,
+              file_name: photoAttachment.attachment.file_name
+            };
+            this.secondFormGroup.patchValue({ photo: photoData });
+            this.secondFormGroup.get('photo')?.setValue(photoData);
+          }
+        }
+        
         this.secondFormGroup.updateValueAndValidity({ onlySelf: false, emitEvent: true });
-        // ensure user is on Basic Information step
         try { this.stepper.selectedIndex = 1; } catch {}
-        console.log('Patched form value', this.secondFormGroup.value);
+        
+        setTimeout(() => {
+          if (this.basicInfoComponent) {
+            this.basicInfoComponent.updateFromFormData();
+          }
+        }, 200);
       },
       error: () => {}
     });

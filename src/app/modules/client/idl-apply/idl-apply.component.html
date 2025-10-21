@@ -53,7 +53,7 @@
     <mat-step [stepControl]="secondFormGroup" label="Basic Information" [editable]="true" [completed]="false">
       <ng-template matStepContent>
       <form [formGroup]="secondFormGroup">
-        <app-basic-information  *ngIf="isAuthenticated()" [formGroup]="secondFormGroup" (photoRequiredChange)="onPhotoRequiredChange($event)"></app-basic-information>
+        <app-basic-information  *ngIf="isAuthenticated()" [formGroup]="secondFormGroup" (photoRequiredChange)="onPhotoRequiredChange($event)" (licenseMastersLoaded)="onLicenseMastersLoaded($event)"></app-basic-information>
         <div class="flex justify-end gap-4">
           <button class="button-fill-secondary" matStepperPrevious>
             <mat-icon>arrow_back</mat-icon>
