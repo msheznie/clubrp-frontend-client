@@ -96,8 +96,8 @@
                   <mat-label>Type Of Vehicle</mat-label>
                   <mat-chip-grid #vehicleTypeChipGrid aria-label="Vehicle Type selection">
                     <mat-chip-row *ngIf="selectedVehicleType" (removed)="removeVehicleType()">
-                      {{ selectedVehicleType.name }}
-                      <button matChipRemove [attr.aria-label]="'remove ' + selectedVehicleType.name">
+                      {{ selectedVehicleType.vehicle_name || selectedVehicleType.name }}
+                      <button matChipRemove [attr.aria-label]="'remove ' + (selectedVehicleType.vehicle_name || selectedVehicleType.name)">
                         <mat-icon>cancel</mat-icon>
                       </button>
                     </mat-chip-row>
@@ -107,8 +107,8 @@
                     (matChipInputTokenEnd)="addVehicleType($event)" (input)="onVehicleTypeInputChange($event)" 
                     (click)="openVehicleTypeAutocomplete(vehicleTypeInput, vehicleTypeAuto)" />
                   <mat-autocomplete #vehicleTypeAuto="matAutocomplete" (optionSelected)="selectedVehicleTypeOption($event); vehicleTypeInput.value = ''">
-                    <mat-option *ngFor="let vehicleType of filteredVehicleTypes()" [value]="vehicleType" [attr.aria-label]="vehicleType">
-                      {{ vehicleType }}
+                    <mat-option *ngFor="let vehicleType of filteredVehicleTypes()" [value]="vehicleType" [attr.aria-label]="vehicleType.vehicle_name">
+                      {{ vehicleType.vehicle_name }}
                     </mat-option>
                   </mat-autocomplete>
                   <mat-error *ngIf="hasError('typeOfVehicle', 'required')">

@@ -45,6 +45,7 @@ export class ParticularOfVehicleComponent implements OnInit, OnDestroy {
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
   private destroy$ = new Subject<void>();
   vehicleTypes = signal<string[]>([]);
+  vehicleTypeObjects = signal<any[]>([]); // Store full vehicle type objects with id and vehicle_name
   allCountries = signal<string[]>([]);
   
   selectedVehicleType: any = null;
@@ -63,10 +64,12 @@ export class ParticularOfVehicleComponent implements OnInit, OnDestroy {
     // Setup filtered vehicle types computed signal
     this.filteredVehicleTypes = computed(() => {
       const currentVehicleType = this.currentVehicleType().toLowerCase();
-      const vehicleTypes = this.vehicleTypes();
+      const vehicleTypeObjects = this.vehicleTypeObjects();
       return currentVehicleType
-        ? vehicleTypes.filter(vehicleType => vehicleType.toLowerCase().includes(currentVehicleType))
-        : vehicleTypes.slice();
+        ? vehicleTypeObjects.filter((vehicleType: any) => 
+            (vehicleType.vehicle_name || '').toLowerCase().includes(currentVehicleType)
+          )
+        : vehicleTypeObjects.slice();
     });
 
     // Setup filtered countries computed signal
@@ -79,12 +82,7 @@ export class ParticularOfVehicleComponent implements OnInit, OnDestroy {
     });
 
     // Initialize selected vehicle type from form if it exists
-    if (this.formGroup && this.formGroup.get('typeOfVehicle')?.value) {
-      const existingVehicleType = this.formGroup.get('typeOfVehicle')?.value;
-      if (existingVehicleType) {
-        this.selectedVehicleType = { name: existingVehicleType };
-      }
-    }
+    // This will be set after vehicle types are loaded
 
     // Initialize selected country from form if it exists
     if (this.formGroup && this.formGroup.get('countryOfRegistration')?.value) {
@@ -97,10 +95,25 @@ export class ParticularOfVehicleComponent implements OnInit, OnDestroy {
 
   getAssignmentDetails() {
     this.idlService.getVtpApplicationAssignmentDetails().pipe(takeUntil(this.destroy$)).subscribe((response: any) => {
-      const vehicleTypes = (response.data?.license_masters || []).map((vehicleType: any) => {
+      const licenseMasters = response.data?.license_masters || [];
+      // Store full objects with id and vehicle_name
+      this.vehicleTypeObjects.set(licenseMasters);
+      // Also store names for display
+      const vehicleTypes = licenseMasters.map((vehicleType: any) => {
         return vehicleType.vehicle_name;
       });
       this.vehicleTypes.set(vehicleTypes);
+      
+      // Initialize selected vehicle type from form if it exists (after data is loaded)
+      if (this.formGroup && this.formGroup.get('typeOfVehicle')?.value) {
+        const existingVehicleTypeId = this.formGroup.get('typeOfVehicle')?.value;
+        if (existingVehicleTypeId) {
+          const matchedVehicle = licenseMasters.find((v: any) => v.id === existingVehicleTypeId);
+          if (matchedVehicle) {
+            this.selectedVehicleType = matchedVehicle;
+          }
+        }
+      }
     });
   }
 
@@ -145,7 +158,18 @@ export class ParticularOfVehicleComponent implements OnInit, OnDestroy {
     const value = (event.value || '').trim();
     
     if (value) {
-      this.selectedVehicleType = { name: value };
+      // Find matching vehicle type by name
+      const matched = this.vehicleTypeObjects().find((v: any) => 
+        (v.vehicle_name || '').toLowerCase() === value.toLowerCase()
+      );
+      if (matched) {
+        this.selectedVehicleType = matched;
+        if (this.formGroup) {
+          this.formGroup.patchValue({
+            typeOfVehicle: matched.id // Store the ID, not the name
+          });
+        }
+      }
     }
     
     this.currentVehicleType.set('');
@@ -153,17 +177,11 @@ export class ParticularOfVehicleComponent implements OnInit, OnDestroy {
     if (event.input) {
       event.input.value = '';
     }
-    
-    if (this.formGroup) {
-      this.formGroup.patchValue({
-        typeOfVehicle: this.selectedVehicleType?.name || ''
-      });
-    }
   }
 
   removeVehicleType(): void {
     if (this.selectedVehicleType) {
-      this.announcer.announce(`Removed ${this.selectedVehicleType.name}`);
+      this.announcer.announce(`Removed ${this.selectedVehicleType.vehicle_name || this.selectedVehicleType.name}`);
       this.selectedVehicleType = null;
     }
     
@@ -175,15 +193,17 @@ export class ParticularOfVehicleComponent implements OnInit, OnDestroy {
   }
 
   selectedVehicleTypeOption(event: MatAutocompleteSelectedEvent): void {
-    const selectedVehicleType = event.option.viewValue;
-    this.selectedVehicleType = { name: selectedVehicleType };
-    this.currentVehicleType.set('');
-    event.option.deselect();
-    
-    if (this.formGroup) {
-      this.formGroup.patchValue({
-        typeOfVehicle: selectedVehicleType
-      });
+    const selected = event.option?.value; // This will be the full vehicle type object
+    if (selected && selected.id) {
+      this.selectedVehicleType = selected;
+      this.currentVehicleType.set('');
+      event.option.deselect();
+      
+      if (this.formGroup) {
+        this.formGroup.patchValue({
+          typeOfVehicle: selected.id // Store the ID, not the name
+        });
+      }
     }
   }
 

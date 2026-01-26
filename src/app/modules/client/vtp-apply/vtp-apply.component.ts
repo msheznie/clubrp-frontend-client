@@ -1,5 +1,5 @@
 import { Component, inject, ViewChild } from '@angular/core';
-import {FormBuilder, Validators, FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {FormBuilder, Validators, FormsModule, ReactiveFormsModule, FormGroup} from '@angular/forms';
 import {MatStepperModule} from '@angular/material/stepper';
 import {MatButtonModule} from '@angular/material/button';
 import {MatInputModule} from '@angular/material/input';
@@ -29,6 +29,10 @@ import { NgIf } from '@angular/common';
 import { MatStepper } from '@angular/material/stepper';
 import { SignInComponent } from '../../auth/sign-in/sign-in.component';
 import { DriverDetailsComponent } from './driver-details/driver-details.component';
+import { ApiService } from '../../../shared/services/api.service';
+import { HelperService } from '../../../shared/services/helper.service';
+import { HttpClient } from '@angular/common/http';
+import { AppConfigService } from '../../../shared/services/app-config.service';
 
 @Component({
   standalone: true,
@@ -66,8 +70,22 @@ import { DriverDetailsComponent } from './driver-details/driver-details.componen
 export class VtpApplyComponent {
   private _formBuilder = inject(FormBuilder);
   private dialog = inject(MatDialog);
+  private apiService = inject(ApiService);
+  private helperService = inject(HelperService);
+  private httpClient = inject(HttpClient);
+  private appConfigService = inject(AppConfigService);
 
   @ViewChild('steppe') stepper!: MatStepper;
+  
+  // ViewChild references to access child component forms
+  @ViewChild(BasicInformationComponent) basicInformationComponent!: BasicInformationComponent;
+  @ViewChild(DriverDetailsComponent) driverDetailsComponent!: DriverDetailsComponent;
+  @ViewChild(ParticularOfVehicleComponent) particularOfVehicleComponent!: ParticularOfVehicleComponent;
+  @ViewChild(OwnerAddressSultanateOfOmanComponent) ownerAddressComponent!: OwnerAddressSultanateOfOmanComponent;
+  @ViewChild(ReferencesYourHomeCountryComponent) referencesHomeCountryComponent!: ReferencesYourHomeCountryComponent;
+  @ViewChild(ReferenceSultanateOmanComponent) referenceSultanateOmanComponent!: ReferenceSultanateOmanComponent;
+  @ViewChild(AttachmentsComponent) attachmentsComponent!: AttachmentsComponent;
+  @ViewChild(TermsAndConditionComponent) termsAndConditionComponent!: TermsAndConditionComponent;
 
   firstFormGroup = this._formBuilder.group({
     firstCtrl: ['', Validators.required],
@@ -145,5 +163,295 @@ export class VtpApplyComponent {
 
   isAuthenticated() { 
     return this.authService.isAuthenticated();
+  }
+
+  /**
+   * Collect all form data from child components and submit to API
+   */
+  submitApplication(): void {
+    // Validate all forms before submission
+    if (!this.validateAllForms()) {
+      console.error('Please fill all required fields');
+      alert('Please fill all required fields before submitting.');
+      return;
+    }
+
+    // Collect all form data
+    const combinedForm = this.createCombinedFormGroup();
+    const payload = this.buildPayloadFromFormGroup(combinedForm);
+
+    // Submit to API - handle both FormData and JSON
+    let request: any;
+    if (payload instanceof FormData) {
+      // Use HttpClient directly for FormData
+      const baseUrl = this.appConfigService.baseUrl;
+      const subdomain = this.helperService.getSubDomain();
+      const apiversion = '/api/v1';
+      
+      request = this.httpClient.post(`${baseUrl}/${subdomain}${apiversion}/vtp/vtp-applications`, payload);
+    } else {
+      // Use ApiService for JSON
+      request = this.apiService.post('/vtp/vtp-applications', payload);
+    }
+
+    request.subscribe({
+      next: (response: any) => {
+        console.log('Application submitted successfully:', response);
+        // Navigate to success page or show success message
+        // You can customize this based on your requirements
+        alert('Application submitted successfully!');
+        this.router.navigate(['/']);
+      },
+      error: (error: any) => {
+        console.error('Error submitting application:', error);
+        const errorMessage = error?.error?.message || error?.message || 'Error submitting application. Please try again.';
+        alert(errorMessage);
+      }
+    });
+  }
+
+  /**
+   * Validate all child component forms
+   */
+  private validateAllForms(): boolean {
+    const validationResults: any = {
+      basicInformation: this.validateForm('Basic Information', this.basicInformationComponent?.formGroup),
+      driverDetails: this.validateForm('Driver Details', this.driverDetailsComponent?.formGroup),
+      vehicleParticulars: this.validateForm('Vehicle Particulars', this.particularOfVehicleComponent?.formGroup),
+      ownerAddress: this.validateForm('Owner Address', this.ownerAddressComponent?.formGroup),
+      referencesHomeCountry: this.validateForm('References (Home Country)', this.referencesHomeCountryComponent?.formGroup),
+      referenceOman: this.validateForm('References (Oman)', this.referenceSultanateOmanComponent?.formGroup),
+      termsAccepted: this.termsAndConditionComponent?.accepted ?? false
+    };
+
+    // Log invalid forms and their empty fields
+    const invalidForms: string[] = [];
+    Object.keys(validationResults).forEach((key) => {
+      if (key === 'termsAccepted') {
+        if (!validationResults[key]) {
+          invalidForms.push('Terms & Conditions (not accepted)');
+        }
+      } else if (validationResults[key] && !validationResults[key].isValid) {
+        invalidForms.push(`${validationResults[key].formName}: ${validationResults[key].invalidFields.join(', ')}`);
+      }
+    });
+
+    if (invalidForms.length > 0) {
+      console.error('Validation failed. Invalid/empty fields:', invalidForms);
+      console.log('Detailed validation results:', validationResults);
+    }
+
+    const allValid = Object.values(validationResults).every((result: any) => {
+      if (typeof result === 'boolean') {
+        return result;
+      }
+      return result?.isValid ?? false;
+    });
+
+    return allValid;
+  }
+
+  /**
+   * Validate a form and return validation details
+   */
+  private validateForm(formName: string, formGroup: FormGroup | undefined): { isValid: boolean; formName: string; invalidFields: string[] } {
+    if (!formGroup) {
+      return { isValid: false, formName, invalidFields: ['Form not initialized'] };
+    }
+
+    const invalidFields: string[] = [];
+    
+    // Check each control in the form
+    Object.keys(formGroup.controls).forEach((key) => {
+      const control = formGroup.get(key);
+      if (control && control.invalid) {
+        invalidFields.push(key);
+      }
+    });
+
+    return {
+      isValid: formGroup.valid,
+      formName,
+      invalidFields
+    };
+  }
+
+  /**
+   * Create a combined FormGroup from all child component forms
+   */
+  private createCombinedFormGroup(): FormGroup {
+    const basicInfoValue = this.basicInformationComponent?.formGroup?.value || {};
+    const driverDetailsValue = this.driverDetailsComponent?.formGroup?.value || {};
+    const vehicleParticularsValue = this.particularOfVehicleComponent?.formGroup?.value || {};
+    const ownerAddressValue = this.ownerAddressComponent?.formGroup?.value || {};
+    const referencesHomeCountryValue = this.referencesHomeCountryComponent?.formGroup?.value || {};
+    const referenceOmanValue = this.referenceSultanateOmanComponent?.formGroup?.value || {};
+    const termsAccepted = this.termsAndConditionComponent?.accepted || false;
+
+    // Handle vehicle type - convert typeOfVehicle (ID) to vehicle_license_type
+    let vehicleParticularsProcessed = { ...vehicleParticularsValue };
+    if (vehicleParticularsProcessed.typeOfVehicle && !vehicleParticularsProcessed.vehicle_license_type) {
+      // typeOfVehicle now contains the ID, so we can directly use it
+      vehicleParticularsProcessed.vehicle_license_type = vehicleParticularsProcessed.typeOfVehicle;
+      delete vehicleParticularsProcessed.typeOfVehicle;
+    } else if (!vehicleParticularsProcessed.typeOfVehicle && !vehicleParticularsProcessed.vehicle_license_type) {
+      // If no vehicle type is selected, ensure both are removed
+      delete vehicleParticularsProcessed.vehicle_license_type;
+      delete vehicleParticularsProcessed.typeOfVehicle;
+    }
+
+    // Process attachments
+    const attachments = this.processAttachments();
+
+    return this._formBuilder.group({
+      applicant_name: basicInfoValue.vehicleOwnerName || '',
+      application_type: 'VTP', // Default application type
+      status: 1, // Default status
+      overall_status: 0, // Draft status
+      isMulkiyaTranslationRequired: false,
+      
+      basic_information: basicInfoValue,
+      driver_details: driverDetailsValue,
+      vehicle_particulars: vehicleParticularsProcessed,
+      owner_address: ownerAddressValue,
+      references: referencesHomeCountryValue,
+      oman_references: referenceOmanValue,
+      attachments: attachments,
+      terms_accepted: termsAccepted,
+      approvals: {},
+      fees: {},
+      is_auto_approval: false,
+      is_rop_integrated: 0,
+      crud_type: 'C', // Create
+      parent_id: null
+    });
+  }
+
+  /**
+   * Process attachments from AttachmentsComponent
+   */
+  private processAttachments(): any[] {
+    const uploadedFiles = this.attachmentsComponent?.uploadedFiles || [];
+    
+    return uploadedFiles.map((file: File, index: number) => {
+      return {
+        document_type: 'ATTACHMENT',
+        file_type: file.type || '',
+        file_size: file.size || 0,
+        file_name: file.name || `file_${index}`,
+        attachment: file, // The actual File object
+        attachment_type: null,
+        expire_on: null,
+        id: null,
+        vtp_attachment_id: null
+      };
+    });
+  }
+
+  /**
+   * Build payload from FormGroup matching admin component structure
+   * Returns FormData if files are present, otherwise returns JSON
+   */
+  private buildPayloadFromFormGroup(formGroup: FormGroup): FormData | any {
+    const formValue = formGroup.value;
+    
+    // Extract attachments
+    const attachmentsControl = formGroup.get('attachments');
+    const attachmentsFromControl = attachmentsControl?.value || [];
+    
+    // Check if we have file objects that need FormData
+    const hasFileObjects = Array.isArray(attachmentsFromControl) && 
+      attachmentsFromControl.some((att: any) => att.attachment instanceof File);
+    
+    // Process attachments
+    let attachments: any[] = [];
+    if (Array.isArray(attachmentsFromControl) && attachmentsFromControl.length > 0) {
+      attachments = attachmentsFromControl.map((attachment: any) => {
+        return {
+          ...attachment,
+          document_type: attachment.document_type || 'ATTACHMENT',
+          file_type: attachment.file_type || (attachment.attachment instanceof File ? attachment.attachment.type : ''),
+          file_size: attachment.file_size || (attachment.attachment instanceof File ? attachment.attachment.size : 0),
+          file_name: attachment.file_name || (attachment.attachment instanceof File ? attachment.attachment.name : 'file'),
+          attachment: attachment.attachment instanceof File ? null : (attachment.attachment || attachment.file_path || null),
+          attachment_type: attachment.attachment_type || null,
+          expire_on: attachment.expire_on || null,
+          id: attachment.id || null,
+          vtp_attachment_id: attachment.vtp_attachment_id || null
+        };
+      });
+    }
+
+    // Build clean payload
+    const cleanPayload: any = { ...formValue };
+    
+    // Handle vehicle_particulars - ensure vehicle_license_type is set
+    if (cleanPayload.vehicle_particulars && typeof cleanPayload.vehicle_particulars === 'object') {
+      const vp = cleanPayload.vehicle_particulars;
+      if (!vp.vehicle_license_type && vp.typeOfVehicle) {
+        vp.vehicle_license_type = vp.typeOfVehicle;
+        delete vp.typeOfVehicle;
+      }
+    }
+
+    // Set attachments metadata
+    cleanPayload.attachments = attachments;
+
+    // If we have file objects, create FormData
+    if (hasFileObjects) {
+      const formData = new FormData();
+      
+      // Add all form fields except attachments
+      Object.keys(cleanPayload).forEach((key) => {
+        if (key === 'attachments') {
+          return; // Handle attachments separately
+        }
+        
+        const value = cleanPayload[key];
+        if (value !== undefined && value !== null) {
+          if (typeof value === 'object' && !Array.isArray(value)) {
+            // Handle nested objects (like basic_information, driver_details, etc.)
+            Object.keys(value).forEach((nestedKey) => {
+              const nestedValue = value[nestedKey];
+              if (nestedValue !== undefined && nestedValue !== null) {
+                formData.append(`${key}[${nestedKey}]`, String(nestedValue));
+              }
+            });
+          } else if (Array.isArray(value)) {
+            // Handle arrays
+            value.forEach((item, index) => {
+              if (typeof item === 'object') {
+                Object.keys(item).forEach((itemKey) => {
+                  formData.append(`${key}[${index}][${itemKey}]`, String(item[itemKey] || ''));
+                });
+              } else {
+                formData.append(`${key}[${index}]`, String(item));
+              }
+            });
+          } else {
+            formData.append(key, String(value));
+          }
+        }
+      });
+      
+      // Add attachments metadata and files
+      attachments.forEach((attachment, index) => {
+        // Add attachment metadata
+        Object.keys(attachment).forEach((key) => {
+          if (key !== 'attachment' || !(attachment.attachment instanceof File)) {
+            formData.append(`attachments[${index}][${key}]`, String(attachment[key] || ''));
+          }
+        });
+        
+        // Add file if it's a File object
+        if (attachment.attachment instanceof File) {
+          formData.append(`attachments[${index}][file]`, attachment.attachment, attachment.file_name || attachment.attachment.name);
+        }
+      });
+      
+      return formData;
+    }
+
+    return cleanPayload;
   }
 }
