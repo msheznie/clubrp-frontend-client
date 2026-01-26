@@ -12,53 +12,68 @@
                 </mat-panel-title>
               </mat-expansion-panel-header>
           <div class="contant-section">
-            <form class="grid grid-cols-1 md:grid-cols-3 gap-4 ">
+            <form  [formGroup]="formGroup" class="grid grid-cols-1 md:grid-cols-3 gap-4 ">
                 <!-- Row 1 -->
                 <mat-form-field appearance="outline">
                   <mat-label>Name</mat-label>
-                  <input matInput placeholder="Full Name" />
+                  <input matInput placeholder="Full Name" formControlName="name" />
+                  <mat-error *ngIf="hasError('name', 'required')">
+                      Name is required
+                  </mat-error>
                 </mat-form-field>
               
                 <mat-form-field appearance="outline">
                   <mat-label>Office Work</mat-label>
-                  <input matInput placeholder="Company Name" />
+                  <input matInput placeholder="Company Name" formControlName="officeWork" />
                 </mat-form-field>
               
                 <mat-form-field appearance="outline">
                   <mat-label>Residence</mat-label>
-                  <input matInput placeholder="Country" />
+                  <input matInput placeholder="Country" formControlName="residenceCountry" />
+                  <mat-error *ngIf="hasError('residenceCountry', 'pattern')">
+                      Residence format is invalid
+                  </mat-error>
                 </mat-form-field>
               
                 <!-- Row 2 -->
                 <mat-form-field appearance="outline">
                   <mat-label>P.O Box Number</mat-label>
-                  <input matInput />
+                  <input matInput formControlName="poBoxNumberOwner" />
                 </mat-form-field>
               
                 <mat-form-field appearance="outline">
                   <mat-label>Postal Code</mat-label>
-                  <input matInput />
+                  <input matInput formControlName="postalCode" />
                 </mat-form-field>
               
                 <mat-form-field appearance="outline">
                   <mat-label>Tel. No Business</mat-label>
-                  <input matInput placeholder="+xx xx xxx xxxx" />
+                  <input matInput placeholder="+xx xx xxx xxxx" formControlName="telNoBusiness" />
                 </mat-form-field>
               
                 <!-- Row 3 -->
                 <mat-form-field appearance="outline">
                   <mat-label>Residence</mat-label>
-                  <input matInput placeholder="City" />
+                  <input matInput placeholder="City" formControlName="residenceCity" />
+                  <mat-error *ngIf="hasError('residenceCity', 'required')">
+                      Residence is required
+                  </mat-error>
                 </mat-form-field>
               
                 <mat-form-field appearance="outline">
                   <mat-label>GSM</mat-label>
-                  <input matInput placeholder="Mobile" />
+                  <input matInput placeholder="Mobile" formControlName="gsm" />
+                  <mat-error *ngIf="hasError('gsm', 'pattern')">
+                      GSM format is invalid
+                  </mat-error>
                 </mat-form-field>
               
                 <mat-form-field appearance="outline">
                   <mat-label>Email</mat-label>
-                  <input matInput type="email" />
+                  <input matInput type="email" formControlName="email" />
+                  <mat-error *ngIf="hasError('email', 'pattern')">
+                      Email is invalid
+                  </mat-error>
                 </mat-form-field>
               </form>              
               

@@ -12,61 +12,60 @@
                 </mat-panel-title>
               </mat-expansion-panel-header>
           <div class="contant-section">
-            <form>
+            <form  [formGroup]="formGroup">
                 <!-- reference-form.component.html -->
                     <h3 class="text-lg font-semibold mb-4">1st Reference Details</h3>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                         <mat-form-field appearance="outline">
                         <mat-label>Name</mat-label>
-                        <input matInput value="Abdulla Al Kalam">
+                        <input matInput formControlName="firstReferenceName">
+                        <mat-error *ngIf="hasError('firstReferenceName', 'required')">
+                            Name is required
+                        </mat-error>
                         </mat-form-field>
                 
                         <mat-form-field appearance="outline">
                         <mat-label>Office Work</mat-label>
-                        <input matInput value="OSOS PVT LTD">
+                        <input matInput formControlName="firstOfficeWork">
                         </mat-form-field>
                 
                         <mat-form-field appearance="outline">
                         <mat-label>P.O Box Number</mat-label>
-                        <input matInput value="85544-PO">
+                        <input matInput formControlName="firstPoBoxNumber">
                         </mat-form-field>
                 
                         <mat-form-field appearance="outline">
                         <mat-label>GSM</mat-label>
-                        <input matInput value="-">
-                        </mat-form-field>
-                
-                        <mat-form-field appearance="outline">
-                        <mat-label>Tel.</mat-label>
-                        <input matInput value="+94 76 465 7842">
-                        </mat-form-field>
+                        <input matInput formControlName="firstGsm">
+                        <mat-error *ngIf="hasError('firstGsm', 'pattern')">
+                            GSM is invalid
+                        </mat-error>
+                    </mat-form-field>
                     </div>
 
                     <h3 class="text-lg font-semibold mb-4">2nd Reference Details</h3>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <mat-form-field appearance="outline">
-                        <mat-label>Tel.</mat-label>
-                        <input matInput value="+94 76 465 7842">
-                        </mat-form-field>
-                
-                        <mat-form-field appearance="outline">
-                        <mat-label>Office Work</mat-label>
-                        <input matInput value="OSOS PVT LTD">
-                        </mat-form-field>
-                
-                        <mat-form-field appearance="outline">
-                        <mat-label>Name</mat-label>
-                        <input matInput value="Abdulla Al Kalam">
-                        </mat-form-field>
-                
-                        <mat-form-field appearance="outline">
-                        <mat-label>P.O Box Number</mat-label>
-                        <input matInput value="85544-PO">
-                        </mat-form-field>
-                
-                        <mat-form-field appearance="outline">
-                        <mat-label>GSM</mat-label>
-                        <input matInput value="-">
+                            <mat-label>Name</mat-label>
+                            <input matInput formControlName="secondReferenceName">
+                            </mat-form-field>
+                    
+                            <mat-form-field appearance="outline">
+                            <mat-label>Office Work</mat-label>
+                            <input matInput formControlName="secondOfficeWork">
+                            </mat-form-field>
+                    
+                            <mat-form-field appearance="outline">
+                            <mat-label>P.O Box Number</mat-label>
+                            <input matInput formControlName="secondPoBoxNumber">
+                            </mat-form-field>
+                    
+                            <mat-form-field appearance="outline">
+                            <mat-label>GSM</mat-label>
+                            <input matInput formControlName="secondGsm">
+                            <mat-error *ngIf="hasError('secondGsm', 'pattern')">
+                                GSM is invalid
+                            </mat-error>
                         </mat-form-field>
                     </div>
    

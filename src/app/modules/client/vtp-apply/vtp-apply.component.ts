@@ -28,6 +28,7 @@ import { PaymentGatewayComponent } from '../idl-apply/components/payment-gateway
 import { NgIf } from '@angular/common';
 import { MatStepper } from '@angular/material/stepper';
 import { SignInComponent } from '../../auth/sign-in/sign-in.component';
+import { DriverDetailsComponent } from './driver-details/driver-details.component';
 
 @Component({
   standalone: true,
@@ -46,6 +47,7 @@ import { SignInComponent } from '../../auth/sign-in/sign-in.component';
     NavbarComponent,
     PrerequisitesComponent,
     BasicInformationComponent,
+    DriverDetailsComponent,
     ParticularOfVehicleComponent,
     OwnerAddressSultanateOfOmanComponent,
     OwnerAddressHomeCountryComponent,

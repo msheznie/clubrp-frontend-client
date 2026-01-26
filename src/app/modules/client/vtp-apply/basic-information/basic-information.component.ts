@@ -1,9 +1,21 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, signal, computed } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { CommonModule } from '@angular/common';
 import {MatAccordion, MatExpansionModule} from '@angular/material/expansion';
+import { MatChipInputEvent, MatChipsModule } from '@angular/material/chips';
+import { LiveAnnouncer } from '@angular/cdk/a11y';
+import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { IdlService } from '../../../../shared/services/idl.service';
+
+
+
 @Component({
   selector: 'app-basic-information',
   templateUrl: './basic-information.component.html',
@@ -15,8 +27,158 @@ import {MatAccordion, MatExpansionModule} from '@angular/material/expansion';
     MatIconModule,
     MatFormFieldModule,
     MatInputModule,
+    ReactiveFormsModule,
+    MatChipsModule,
+    CommonModule,
+    MatAutocompleteModule,
   ],
 })
-export class BasicInformationComponent {
+export class BasicInformationComponent implements OnInit, OnDestroy {
+  formGroup: FormGroup;
 
+  constructor(private fb: FormBuilder) {
+    this.formGroup = this.fb.group({});
+  }
+  private idlService = inject(IdlService);
+
+  selectedCountries: any[] = [];
+  readonly announcer = inject(LiveAnnouncer);
+  readonly separatorKeysCodes: number[] = [ENTER, COMMA];
+  currentCountry = signal('');
+  allCountries = signal<string[]>([]);
+  filteredCountries: any;
+  private destroy$ = new Subject<void>();
+  
+
+
+
+  ngOnInit(): void {
+    this.initializeForm();
+    this.getIdlFormData()
+    
+    // Initialize selected countries from form if they exist
+    if (this.formGroup && this.formGroup.get('countriesToBeVisited')?.value) {
+      const existingCountries = this.formGroup.get('countriesToBeVisited')?.value;
+      if (Array.isArray(existingCountries)) {
+        this.selectedCountries = existingCountries.map(country => ({ name: country }));
+      }
+    }
+
+    // Setup filtered countries computed signal
+    this.filteredCountries = computed(() => {
+      const currentCountry = this.currentCountry().toLowerCase();
+      const countries = this.allCountries();
+      return currentCountry
+        ? countries.filter(country => country.toLowerCase().includes(currentCountry))
+        : countries.slice();
+    });
+
+  }
+
+    getIdlFormData() {
+    this.idlService.getIdlFormData().pipe(takeUntil(this.destroy$)).subscribe((response: any) => {
+      const countries = (response.data?.countryList || []).map((country: any) => {
+        return country.name;
+      });
+      this.allCountries.set(countries);
+    });
+  }
+
+  private initializeForm(): void {
+    this.formGroup = this.fb.group({
+      vehicleOwnerName: ['', [Validators.required]],
+      driverName: ['', [Validators.required]],
+      nationality: ['', Validators.required],
+      idOrPassportNumber: ['', [Validators.required, Validators.pattern('^[\\u0600-\\u06FFa-zA-Z0-9]+$')]],
+      countriesToBeVisited: [[], Validators.required],
+      businessAddress: [''],
+      residenceAddress: ['', Validators.required],
+      poBoxNumber: [''],
+      postalCode: [''],
+      telBusiness: ['+968', [this.optionalPhoneValidator.bind(this)]],
+      telResidence: ['+968', [Validators.required, Validators.pattern(/^\+[1-9]\d{5,14}$/)]],
+      mobile: ['+968', [Validators.required, Validators.pattern(/^\+[1-9]\d{5,14}$/)]],
+      email: ['', [Validators.required, Validators.email]]
+    });
+  }
+
+  hasError(fieldName: string, errorType: string): boolean {
+    const field = this.formGroup.get(fieldName);
+    return !!(field && field.hasError(errorType) && (field.dirty || field.touched));
+  }
+
+    trackByIndex(index: number): number {
+    return index;
+  }
+
+    add(event: MatChipInputEvent): void {
+      const value = (event.value || '').trim();
+  
+      // Add country if it's not empty and not already selected
+      if (value && !this.selectedCountries.find(country => country.name === value)) {
+        this.selectedCountries.push({ name: value });
+      }
+  
+      // Clear the input value
+      this.currentCountry.set('');
+      
+      // Clear the input element
+      if (event.input) {
+        event.input.value = '';
+      }
+      
+      // Update form control
+      if (this.formGroup) {
+        this.formGroup.patchValue({
+          countriesToBeVisited: this.selectedCountries.map(country => country.name)
+        });
+      }
+    }
+  remove(country: any): void {
+    const index = this.selectedCountries.indexOf(country);
+    if (index >= 0) {
+      this.selectedCountries.splice(index, 1);
+      this.announcer.announce(`Removed ${country.name}`);
+    }
+    
+    // Update form control
+    if (this.formGroup) {
+      this.formGroup.patchValue({
+        countriesToBeVisited: this.selectedCountries.map(country => country.name)
+      });
+    }
+  }
+
+    selected(event: MatAutocompleteSelectedEvent): void {
+    const selectedCountry = event.option.viewValue;
+    if (!this.selectedCountries.find(country => country.name === selectedCountry)) {
+      this.selectedCountries.push({ name: selectedCountry });
+    }
+    this.currentCountry.set('');
+    event.option.deselect();
+    
+    // Update form control
+    if (this.formGroup) {
+      this.formGroup.patchValue({
+        countriesToBeVisited: this.selectedCountries.map(country => country.name)
+      });
+    }
+  }
+
+    onChipInputChange(event: any): void {
+    this.currentCountry.set(event.target.value);
+  }
+
+    optionalPhoneValidator(control: any): { [key: string]: any } | null {
+    if (!control.value || control.value === '' || control.value === '+968') {
+      return null; // Valid for optional fields
+    }
+    const pattern = /^\+[1-9]\d{5,14}$/;
+    return pattern.test(control.value) ? null : { pattern: true };
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 }

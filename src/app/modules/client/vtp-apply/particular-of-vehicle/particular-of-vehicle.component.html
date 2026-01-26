@@ -12,48 +12,68 @@
                 </mat-panel-title>
               </mat-expansion-panel-header>
           <div class="contant-section">
-            <form class="grid grid-cols-1 md:grid-cols-3 gap-4 ">
+            <form [formGroup]="formGroup" class="grid grid-cols-1 md:grid-cols-3 gap-4 ">
                 <!-- Row 1 -->
-                <mat-form-field appearance="outline">
+                <mat-form-field appearance="outline" class="form-field">
                   <mat-label>Country Of Registration</mat-label>
-                  <input matInput placeholder="Country" />
+                  <input matInput type="text" formControlName="countryOfRegistration">
+                  <mat-error *ngIf="hasError('countryOfRegistration', 'required')">
+                      Country Of Registration is required
+                  </mat-error>
                 </mat-form-field>
               
                 <mat-form-field appearance="outline">
                   <mat-label>Registration Number</mat-label>
-                  <input matInput />
+                  <input matInput formControlName="registrationNumber" />
+                  <mat-error *ngIf="hasError('registrationNumber', 'required')">  
+                      Registration Number is required
+                  </mat-error>
+                  <mat-error *ngIf="hasError('registrationNumber', 'pattern')">  
+                      Registration Number format is invalid 
+                  </mat-error>
                 </mat-form-field>
-              
-                <mat-form-field appearance="outline">
-                  <mat-label>Make of Vehicle’s Chassis</mat-label>
-                  <input matInput />
-                </mat-form-field>
-              
+      
                 <!-- Row 2 -->
                 <mat-form-field appearance="outline">
                   <mat-label>Chassis Number</mat-label>
-                  <input matInput />
-                </mat-form-field>
-              
-                <mat-form-field appearance="outline">
-                  <mat-label>Make Of Vehicle’s Engine</mat-label>
-                  <input matInput />
+                  <input matInput formControlName="chassisNumber" />
+                  <mat-error *ngIf="hasError('chassisNumber', 'required')">
+                      Chassis Number is required  
+                  </mat-error>
+                  <mat-error *ngIf="hasError('chassisNumber', 'pattern')">
+                      Chassis Number format is invalid
+                  </mat-error>
                 </mat-form-field>
               
                 <mat-form-field appearance="outline">
                   <mat-label>Engine Number</mat-label>
-                  <input matInput />
+                  <input matInput formControlName="engineNumber" />
+                  <mat-error *ngIf="hasError('engineNumber', 'required')">
+                      Engine Number is required
+                  </mat-error>
+                  <mat-error *ngIf="hasError('engineNumber', 'pattern')">
+                      Engine Number format is invalid
+                  </mat-error>
                 </mat-form-field>
               
                 <!-- Row 3 -->
                 <mat-form-field appearance="outline">
                   <mat-label>Number Of Cylinders</mat-label>
-                  <input matInput />
+                  <input matInput formControlName="numberOfCylinders" />
+                  <mat-error *ngIf="hasError('numberOfCylinders', 'required')">
+                      Number Of Cylinders is required
+                  </mat-error>
+                  <mat-error *ngIf="hasError('numberOfCylinders', 'pattern')">
+                      Number Of Cylinders format is invalid
+                  </mat-error>
                 </mat-form-field>
               
                 <mat-form-field appearance="outline">
                   <mat-label>Engine Power (In CC)</mat-label>
-                  <input matInput />
+                  <input matInput formControlName="enginePowerCc" />
+                  <mat-error *ngIf="hasError('enginePowerCc', 'required')">
+                      Engine Power (In CC) is required
+                  </mat-error>
                 </mat-form-field>
               
                 <mat-form-field appearance="outline">
@@ -67,49 +87,85 @@
                 <!-- Row 4 -->
                 <mat-form-field appearance="outline">
                   <mat-label>Exterior Color</mat-label>
-                  <input matInput />
+                  <input matInput formControlName="exteriorColor" />
+                  <mat-error *ngIf="hasError('exteriorColor', 'required')">
+                      Exterior Color is required
+                  </mat-error>
                 </mat-form-field>
               
                 <mat-form-field appearance="outline">
                   <mat-label>Interior Color</mat-label>
-                  <input matInput />
+                  <input matInput formControlName="interiorColor" />
+                  <mat-error *ngIf="hasError('interiorColor', 'required')">
+                      Interior Color is required
+                  </mat-error>
                 </mat-form-field>
               
                 <mat-form-field appearance="outline">
                   <mat-label>No. Of Seats</mat-label>
-                  <input matInput />
+                  <input matInput formControlName="numberOfSeats" />
+                  <mat-error *ngIf="hasError('numberOfSeats', 'required')">
+                      No. Of Seats is required
+                  </mat-error>
+                  <mat-error *ngIf="hasError('numberOfSeats', 'pattern')">
+                      No. Of Seats format is invalid
+                  </mat-error>
                 </mat-form-field>
               
                 <!-- Row 5 -->
                 <mat-form-field appearance="outline">
                   <mat-label>No. Of Spare Tyres</mat-label>
-                  <input matInput />
+                  <input matInput formControlName="numberOfSpareTyres" />
+                  <mat-error *ngIf="hasError('numberOfSpareTyres', 'required')">
+                      No. Of Spare Tyres is required
+                  </mat-error>
+                  <mat-error *ngIf="hasError('numberOfSpareTyres', 'pattern')">
+                      No. Of Spare Tyres format is invalid
+                  </mat-error>
                 </mat-form-field>
               
                 <mat-form-field appearance="outline">
                   <mat-label>Make Of Radio / Recorder</mat-label>
-                  <input matInput />
+                  <input matInput formControlName="makeOfRadioRecorder" />
                 </mat-form-field>
               
                 <mat-form-field class="md:col-span-3" appearance="outline">
                   <mat-label>Other Accessories</mat-label>
-                  <input matInput placeholder="e.g., Recorder, Location Tracker" />
+                  <input matInput placeholder="e.g., Recorder, Location Tracker" formControlName="otherAccessories" />
                 </mat-form-field>
               
                 <!-- Row 6 -->
                 <mat-form-field appearance="outline">
                   <mat-label>Year Of Manufacture</mat-label>
-                  <input matInput />
+                  <input matInput formControlName="yearOfManufacture" />
+                  <mat-error *ngIf="hasError('yearOfManufacture', 'required')">
+                      Year Of Manufacture is required
+                  </mat-error>
+                  <mat-error *ngIf="hasError('yearOfManufacture', 'pattern')">
+                      Year Of Manufacture format is invalid
+                  </mat-error>
                 </mat-form-field>
               
                 <mat-form-field appearance="outline">
                   <mat-label>Weight In Kg</mat-label>
-                  <input matInput />
+                  <input matInput formControlName="weightInKg" />
+                  <mat-error *ngIf="hasError('weightInKg', 'required')">
+                      Weight In Kg is required  
+                  </mat-error>
+                  <mat-error *ngIf="hasError('weightInKg', 'pattern')">
+                      Weight In Kg format is invalid
+                  </mat-error>
                 </mat-form-field>
               
                 <mat-form-field appearance="outline">
                   <mat-label>Present Value Of Vehicle R.O</mat-label>
-                  <input matInput />
+                  <input matInput formControlName="presentValueRO" />
+                  <mat-error *ngIf="hasError('presentValueRO', 'required')">
+                      Present Value Of Vehicle R.O is required
+                  </mat-error>
+                  <mat-error *ngIf="hasError('presentValueRO', 'pattern')">
+                      Present Value Of Vehicle R.O format is invalid
+                  </mat-error>
                 </mat-form-field>
               
                 <!-- Footer Note -->

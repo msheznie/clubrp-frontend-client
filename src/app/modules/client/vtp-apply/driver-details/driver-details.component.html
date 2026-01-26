@@ -1,0 +1,55 @@
+<div class="mb-4">
+    <mat-accordion class="example-headers-align" multi>
+        <mat-expansion-panel>
+            <mat-expansion-panel-header>
+                <mat-panel-title> 
+                    <span>
+                        <img class="w-[28px]" src="../../../assets/img/accordion5.png" alt="">
+                    </span>
+                    <span class="mx-4">
+                        Driver Details
+                    </span>
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+          <div class="contant-section">
+            <form [formGroup]="formGroup">
+                <!-- reference-form.component.html -->
+                    <div>
+                        <h3 class="text-lg font-semibold mb-4">Driver 01 Details</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                            <mat-form-field appearance="outline" class="w-full">
+                            <mat-label>Name</mat-label>
+                            <input matInput formControlName="firstReferenceName">
+                            <mat-error *ngIf="hasError('firstReferenceName', 'required')">
+                                Name is required
+                            </mat-error>
+                            </mat-form-field>
+                    
+                            <mat-form-field appearance="outline" class="w-full">
+                            <mat-label>Office Work</mat-label>
+                            <input matInput formControlName="firstOfficeWork">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                
+                    <div>
+                    <h3 class="text-lg font-semibold mb-4">Driver 02 Details</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                            <mat-form-field appearance="outline" class="w-full">
+                            <mat-label>Name</mat-label>
+                            <input matInput formControlName="secondReferenceName">
+
+                            </mat-form-field>
+                    
+                            <mat-form-field appearance="outline" class="w-full">
+                            <mat-label>Office Work</mat-label>
+                            <input matInput formControlName="secondOfficeWork">
+                            </mat-form-field>
+                    
+                        </div>
+                    </div>
+              </form>              
+          </div>
+        </mat-expansion-panel>
+    </mat-accordion>
+</div>

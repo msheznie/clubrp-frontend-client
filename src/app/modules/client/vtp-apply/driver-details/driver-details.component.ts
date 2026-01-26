@@ -9,9 +9,9 @@ import { MatSelectModule } from '@angular/material/select';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-references-your-home-country',
-  templateUrl: './references-your-home-country.component.html',
-  styleUrls: ['./references-your-home-country.component.scss'],
+  selector: 'app-driver-details',
+  templateUrl: './driver-details.component.html',
+  styleUrls: ['./driver-details.component.scss'],
     standalone: true,
     imports: [
         MatButtonModule,
@@ -24,7 +24,7 @@ import { CommonModule } from '@angular/common';
       CommonModule,
       ],
 })
-export class ReferencesYourHomeCountryComponent implements OnInit {
+export class DriverDetailsComponent implements OnInit {
   formGroup: FormGroup;
 
   constructor(private fb: FormBuilder) {
