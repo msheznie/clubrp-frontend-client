@@ -29,9 +29,25 @@
                         </mat-error>
                       </mat-form-field>
                     
-                      <mat-form-field appearance="outline" class="form-field">
+                      <mat-form-field appearance="outline" class="countrySet example-chip-list form-field formFieldHelpers">
                         <mat-label>Nationality</mat-label>
-                        <input matInput formControlName="nationality" />
+                        <mat-chip-grid #nationalityChipGrid aria-label="Nationality selection">
+                          <mat-chip-row *ngIf="selectedNationality" (removed)="removeNationality()">
+                            {{ selectedNationality.name }}
+                            <button matChipRemove [attr.aria-label]="'remove ' + selectedNationality.name">
+                              <mat-icon>cancel</mat-icon>
+                            </button>
+                          </mat-chip-row>
+                        </mat-chip-grid>
+                        <input name="currentNationality" #nationalityInput formControlName="nationality" placeholder="Select nationality..."
+                          [matChipInputFor]="nationalityChipGrid" [matAutocomplete]="nationalityAuto" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                          (matChipInputTokenEnd)="addNationality($event)" (input)="onNationalityInputChange($event)" 
+                          (click)="openNationalityAutocomplete(nationalityInput, nationalityAuto)" />
+                        <mat-autocomplete #nationalityAuto="matAutocomplete" (optionSelected)="selectedNationalityOption($event); nationalityInput.value = ''">
+                          <mat-option *ngFor="let nationality of filteredNationalities()" [value]="nationality" [attr.aria-label]="nationality">
+                            {{ nationality }}
+                          </mat-option>
+                        </mat-autocomplete>
                         <mat-error *ngIf="hasError('nationality', 'required')">
                           Nationality is required
                         </mat-error>
@@ -49,26 +65,27 @@
                         </mat-error>
                       </mat-form-field>
                     
-                      <mat-form-field appearance="outline" class="countrySet example-chip-list form-field col-span-3 formFieldHelpers">
-                      <mat-label>Countries to be visit</mat-label>
-                      <mat-chip-grid #chipGrid aria-label="Country selection">
-                        <mat-chip-row *ngFor="let country of selectedCountries; let i = index; trackBy: trackByIndex"
-                          (removed)="remove(country)">
-                          {{ country.name }}
-                          <button matChipRemove [attr.aria-label]="'remove ' + country.name">
-                            <mat-icon>cancel</mat-icon>
-                          </button>
-                        </mat-chip-row>
-                      </mat-chip-grid>
-                      <input name="currentCountry" placeholder="New Country..." #countryInput formControlName="countriesToBeVisited"
-                        [matChipInputFor]="chipGrid" [matAutocomplete]="auto" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                        (matChipInputTokenEnd)="add($event)" (input)="onChipInputChange($event)"  />
-                      <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event); countryInput.value = ''">
-                        <mat-option *ngFor="let country of filteredCountries()" [value]="country" [attr.aria-label]="country">
-                          {{ country }}
-                        </mat-option>
-                      </mat-autocomplete>
-                    </mat-form-field>
+                      <mat-form-field appearance="outline" class="countrySet example-chip-list form-field col-span-2 formFieldHelpers">
+                        <mat-label>Countries to be visit</mat-label>
+                        <mat-chip-grid #chipGrid aria-label="Country selection">
+                          <mat-chip-row *ngFor="let country of selectedCountries; let i = index; trackBy: trackByIndex"
+                            (removed)="remove(country)">
+                            {{ country.name }}
+                            <button matChipRemove [attr.aria-label]="'remove ' + country.name">
+                              <mat-icon>cancel</mat-icon>
+                            </button>
+                          </mat-chip-row>
+                        </mat-chip-grid>
+                        <input name="currentCountry" placeholder="Select countries.." #countryInput formControlName="countriesToBeVisited"
+                          [matChipInputFor]="chipGrid" [matAutocomplete]="auto" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                          (matChipInputTokenEnd)="add($event)" (input)="onChipInputChange($event)" 
+                          (click)="openCountryAutocomplete(countryInput, auto)" />
+                        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event); countryInput.value = ''">
+                          <mat-option *ngFor="let country of filteredCountries()" [value]="country" [attr.aria-label]="country">
+                            {{ country }}
+                          </mat-option>
+                        </mat-autocomplete>
+                      </mat-form-field>
                 <!-- </div>
     
                 <div class="grid gap-4 mb-4"> -->

@@ -42,12 +42,17 @@ export class BasicInformationComponent implements OnInit, OnDestroy {
   private idlService = inject(IdlService);
 
   selectedCountries: any[] = [];
+  selectedNationality: any = null;
   readonly announcer = inject(LiveAnnouncer);
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
   currentCountry = signal('');
+  currentNationality = signal('');
   allCountries = signal<string[]>([]);
   filteredCountries: any;
+  filteredNationalities: any;
   private destroy$ = new Subject<void>();
+  allnationalities = signal<string[]>([]);
+
   
 
 
@@ -73,6 +78,23 @@ export class BasicInformationComponent implements OnInit, OnDestroy {
         : countries.slice();
     });
 
+    // Setup filtered nationalities computed signal
+    this.filteredNationalities = computed(() => {
+      const currentNationality = this.currentNationality().toLowerCase();
+      const nationalities = this.allnationalities();
+      return currentNationality
+        ? nationalities.filter(nationality => nationality.toLowerCase().includes(currentNationality))
+        : nationalities.slice();
+    });
+
+    // Initialize selected nationality from form if it exists
+    if (this.formGroup && this.formGroup.get('nationality')?.value) {
+      const existingNationality = this.formGroup.get('nationality')?.value;
+      if (existingNationality) {
+        this.selectedNationality = { name: existingNationality };
+      }
+    }
+
   }
 
     getIdlFormData() {
@@ -81,7 +103,12 @@ export class BasicInformationComponent implements OnInit, OnDestroy {
         return country.name;
       });
       this.allCountries.set(countries);
+      const nationalities = (response.data?.countryList || []).map((country: any) => {
+    return country.nationality;
+      });
+      this.allnationalities.set(nationalities);
     });
+
   }
 
   private initializeForm(): void {
@@ -167,6 +194,77 @@ export class BasicInformationComponent implements OnInit, OnDestroy {
 
     onChipInputChange(event: any): void {
     this.currentCountry.set(event.target.value);
+  }
+
+  // Nationality methods (single selection)
+  addNationality(event: MatChipInputEvent): void {
+    const value = (event.value || '').trim();
+    
+    // Add nationality if it's not empty
+    if (value) {
+      this.selectedNationality = { name: value };
+    }
+    
+    // Clear the input value
+    this.currentNationality.set('');
+    
+    // Clear the input element
+    if (event.input) {
+      event.input.value = '';
+    }
+    
+    // Update form control
+    if (this.formGroup) {
+      this.formGroup.patchValue({
+        nationality: this.selectedNationality?.name || ''
+      });
+    }
+  }
+
+  removeNationality(): void {
+    if (this.selectedNationality) {
+      this.announcer.announce(`Removed ${this.selectedNationality.name}`);
+      this.selectedNationality = null;
+    }
+    
+    // Update form control
+    if (this.formGroup) {
+      this.formGroup.patchValue({
+        nationality: ''
+      });
+    }
+  }
+
+  selectedNationalityOption(event: MatAutocompleteSelectedEvent): void {
+    const selectedNationality = event.option.viewValue;
+    this.selectedNationality = { name: selectedNationality };
+    this.currentNationality.set('');
+    event.option.deselect();
+    
+    // Update form control
+    if (this.formGroup) {
+      this.formGroup.patchValue({
+        nationality: selectedNationality
+      });
+    }
+  }
+
+  onNationalityInputChange(event: any): void {
+    this.currentNationality.set(event.target.value);
+  }
+
+  openNationalityAutocomplete(input: HTMLInputElement, autocomplete: any): void {
+    input.focus();
+    if (autocomplete && !autocomplete.isOpen) {
+      autocomplete.openPanel();
+    }
+  }
+
+  openCountryAutocomplete(input: HTMLInputElement, autocomplete: any): void {
+    input.focus();
+    if (autocomplete && !autocomplete.isOpen) {
+      autocomplete.openPanel();
+    }
   }
 
     optionalPhoneValidator(control: any): { [key: string]: any } | null {

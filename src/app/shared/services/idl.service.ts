@@ -20,4 +20,9 @@ export class IdlService {
     return this.http.get<any>(`${this.baseUrl}/${this.subdomain}${this.apiversion}/idl/get-idl-form-data`);
   }
 
+  getVtpApplicationAssignmentDetails(): Observable<any> {
+     return this.http.get<any>(`${this.baseUrl}/${this.subdomain}${this.apiversion}/vtp/get-vtp-application-assignment-details`);
+  }
+
+
 }

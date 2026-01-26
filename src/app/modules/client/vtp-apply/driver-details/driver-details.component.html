@@ -18,16 +18,46 @@
                         <h3 class="text-lg font-semibold mb-4">Driver 01 Details</h3>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                             <mat-form-field appearance="outline" class="w-full">
-                            <mat-label>Name</mat-label>
-                            <input matInput formControlName="firstReferenceName">
-                            <mat-error *ngIf="hasError('firstReferenceName', 'required')">
-                                Name is required
+                            <mat-label>Driver 01 Name</mat-label>
+                            <input matInput formControlName="driver1Name">
+                            <mat-error *ngIf="hasError('driver1Name', 'required')">
+                                Driver 01 Name is required
                             </mat-error>
                             </mat-form-field>
                     
                             <mat-form-field appearance="outline" class="w-full">
-                            <mat-label>Office Work</mat-label>
-                            <input matInput formControlName="firstOfficeWork">
+                            <mat-label>Driver 01 ID</mat-label>
+                            <input matInput formControlName="driver1Id">
+                            <mat-error *ngIf="hasError('driver1Id', 'required')">
+                                Driver 01 ID is required
+                            </mat-error>
+                            <mat-error *ngIf="hasError('driver1Id', 'pattern')">
+                                Driver 01 ID format is invalid
+                            </mat-error>
+                            </mat-form-field>
+
+                            <mat-form-field appearance="outline" class="countrySet example-chip-list form-field formFieldHelpers w-full">
+                            <mat-label>Driver 01 Nationality <span>*</span></mat-label>
+                            <mat-chip-grid #driver1NationalityChipGrid aria-label="Driver 1 Nationality selection">
+                                <mat-chip-row *ngIf="selectedDriver1Nationality" (removed)="removeDriver1Nationality()">
+                                    {{ selectedDriver1Nationality.name }}
+                                    <button matChipRemove [attr.aria-label]="'remove ' + selectedDriver1Nationality.name">
+                                        <mat-icon>cancel</mat-icon>
+                                    </button>
+                                </mat-chip-row>
+                            </mat-chip-grid>
+                            <input name="currentDriver1Nationality" placeholder="Select nationality..." #driver1NationalityInput formControlName="driver1Nationality"
+                                [matChipInputFor]="driver1NationalityChipGrid" [matAutocomplete]="driver1NationalityAuto" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                                (matChipInputTokenEnd)="addDriver1Nationality($event)" (input)="onDriver1NationalityInputChange($event)" 
+                                (click)="openDriver1NationalityAutocomplete(driver1NationalityInput, driver1NationalityAuto)" />
+                            <mat-autocomplete #driver1NationalityAuto="matAutocomplete" (optionSelected)="selectedDriver1NationalityOption($event); driver1NationalityInput.value = ''">
+                                <mat-option *ngFor="let nationality of filteredDriver1Nationalities()" [value]="nationality" [attr.aria-label]="nationality">
+                                    {{ nationality }}
+                                </mat-option>
+                            </mat-autocomplete>
+                            <mat-error *ngIf="hasError('driver1Nationality', 'required')">
+                                Driver 01 Nationality is required
+                            </mat-error>
                             </mat-form-field>
                         </div>
                     </div>
@@ -35,17 +65,48 @@
                     <div>
                     <h3 class="text-lg font-semibold mb-4">Driver 02 Details</h3>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                           <mat-form-field appearance="outline" class="w-full">
+                            <mat-label>Driver 02 Name</mat-label>
+                            <input matInput formControlName="driver2Name">
+                            <mat-error *ngIf="hasError('driver2Name', 'required')">
+                                Driver 02 Name is required
+                            </mat-error>
+                            </mat-form-field>
+                    
                             <mat-form-field appearance="outline" class="w-full">
-                            <mat-label>Name</mat-label>
-                            <input matInput formControlName="secondReferenceName">
+                            <mat-label>Driver 02 ID</mat-label>
+                            <input matInput formControlName="driver2Id">
+                            <mat-error *ngIf="hasError('driver2Id', 'required')">
+                                Driver 02 ID is required
+                            </mat-error>
+                            <mat-error *ngIf="hasError('driver2Id', 'pattern')">
+                                Driver 02 ID format is invalid
+                            </mat-error>
+                            </mat-form-field>
 
+                            <mat-form-field appearance="outline" class="countrySet example-chip-list form-field formFieldHelpers w-full">
+                            <mat-label>Driver 02 Nationality</mat-label>
+                            <mat-chip-grid #driver2NationalityChipGrid aria-label="Driver 2 Nationality selection">
+                                <mat-chip-row *ngIf="selectedDriver2Nationality" (removed)="removeDriver2Nationality()">
+                                    {{ selectedDriver2Nationality.name }}
+                                    <button matChipRemove [attr.aria-label]="'remove ' + selectedDriver2Nationality.name">
+                                        <mat-icon>cancel</mat-icon>
+                                    </button>
+                                </mat-chip-row>
+                            </mat-chip-grid>
+                            <input name="currentDriver2Nationality" placeholder="Select nationality..." #driver2NationalityInput formControlName="driver2Nationality"
+                                [matChipInputFor]="driver2NationalityChipGrid" [matAutocomplete]="driver2NationalityAuto" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                                (matChipInputTokenEnd)="addDriver2Nationality($event)" (input)="onDriver2NationalityInputChange($event)" 
+                                (click)="openDriver2NationalityAutocomplete(driver2NationalityInput, driver2NationalityAuto)" />
+                            <mat-autocomplete #driver2NationalityAuto="matAutocomplete" (optionSelected)="selectedDriver2NationalityOption($event); driver2NationalityInput.value = ''">
+                                <mat-option *ngFor="let nationality of filteredDriver2Nationalities()" [value]="nationality" [attr.aria-label]="nationality">
+                                    {{ nationality }}
+                                </mat-option>
+                            </mat-autocomplete>
+                            <mat-error *ngIf="hasError('driver2Nationality', 'required')">
+                                Driver 02 Nationality is required
+                            </mat-error>
                             </mat-form-field>
-                    
-                            <mat-form-field appearance="outline" class="w-full">
-                            <mat-label>Office Work</mat-label>
-                            <input matInput formControlName="secondOfficeWork">
-                            </mat-form-field>
-                    
                         </div>
                     </div>
               </form>              
