@@ -45,14 +45,20 @@ export class ParticularOfVehicleComponent implements OnInit, OnDestroy {
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
   private destroy$ = new Subject<void>();
   vehicleTypes = signal<string[]>([]);
+  allCountries = signal<string[]>([]);
   
   selectedVehicleType: any = null;
   currentVehicleType = signal('');
   filteredVehicleTypes: any;
 
+  selectedCountry: any = null;
+  currentCountry = signal('');
+  filteredCountries: any;
+
   ngOnInit(): void {
     this.initializeForm();
     this.getAssignmentDetails();
+    this.getIdlFormData();
 
     // Setup filtered vehicle types computed signal
     this.filteredVehicleTypes = computed(() => {
@@ -63,6 +69,15 @@ export class ParticularOfVehicleComponent implements OnInit, OnDestroy {
         : vehicleTypes.slice();
     });
 
+    // Setup filtered countries computed signal
+    this.filteredCountries = computed(() => {
+      const currentCountry = this.currentCountry().toLowerCase();
+      const countries = this.allCountries();
+      return currentCountry
+        ? countries.filter(country => country.toLowerCase().includes(currentCountry))
+        : countries.slice();
+    });
+
     // Initialize selected vehicle type from form if it exists
     if (this.formGroup && this.formGroup.get('typeOfVehicle')?.value) {
       const existingVehicleType = this.formGroup.get('typeOfVehicle')?.value;
@@ -70,17 +85,33 @@ export class ParticularOfVehicleComponent implements OnInit, OnDestroy {
         this.selectedVehicleType = { name: existingVehicleType };
       }
     }
+
+    // Initialize selected country from form if it exists
+    if (this.formGroup && this.formGroup.get('countryOfRegistration')?.value) {
+      const existingCountry = this.formGroup.get('countryOfRegistration')?.value;
+      if (existingCountry) {
+        this.selectedCountry = { name: existingCountry };
+      }
+    }
   }
 
-      getAssignmentDetails() {
-      this.idlService.getVtpApplicationAssignmentDetails().pipe(takeUntil(this.destroy$)).subscribe((response: any) => {
-        const vehicleTypes = (response.data?.license_masters || []).map((vehicleType: any) => {
-          return vehicleType.vehicle_name;
-        });
-        this.vehicleTypes.set(vehicleTypes);
+  getAssignmentDetails() {
+    this.idlService.getVtpApplicationAssignmentDetails().pipe(takeUntil(this.destroy$)).subscribe((response: any) => {
+      const vehicleTypes = (response.data?.license_masters || []).map((vehicleType: any) => {
+        return vehicleType.vehicle_name;
       });
-  
-    }
+      this.vehicleTypes.set(vehicleTypes);
+    });
+  }
+
+  getIdlFormData() {
+    this.idlService.getIdlFormData().pipe(takeUntil(this.destroy$)).subscribe((response: any) => {
+      const countries = (response.data?.countryList || []).map((country: any) => {
+        return country.name;
+      });
+      this.allCountries.set(countries);
+    });
+  }
 
   private initializeForm(): void {
     this.formGroup = this.fb.group({
@@ -161,6 +192,64 @@ export class ParticularOfVehicleComponent implements OnInit, OnDestroy {
   }
 
   openVehicleTypeAutocomplete(input: HTMLInputElement, autocomplete: any): void {
+    input.focus();
+    if (autocomplete && !autocomplete.isOpen) {
+      autocomplete.openPanel();
+    }
+  }
+
+  // Country methods (single selection)
+  addCountry(event: MatChipInputEvent): void {
+    const value = (event.value || '').trim();
+    
+    if (value) {
+      this.selectedCountry = { name: value };
+    }
+    
+    this.currentCountry.set('');
+    
+    if (event.input) {
+      event.input.value = '';
+    }
+    
+    if (this.formGroup) {
+      this.formGroup.patchValue({
+        countryOfRegistration: this.selectedCountry?.name || ''
+      });
+    }
+  }
+
+  removeCountry(): void {
+    if (this.selectedCountry) {
+      this.announcer.announce(`Removed ${this.selectedCountry.name}`);
+      this.selectedCountry = null;
+    }
+    
+    if (this.formGroup) {
+      this.formGroup.patchValue({
+        countryOfRegistration: ''
+      });
+    }
+  }
+
+  selectedCountryOption(event: MatAutocompleteSelectedEvent): void {
+    const selectedCountry = event.option.viewValue;
+    this.selectedCountry = { name: selectedCountry };
+    this.currentCountry.set('');
+    event.option.deselect();
+    
+    if (this.formGroup) {
+      this.formGroup.patchValue({
+        countryOfRegistration: selectedCountry
+      });
+    }
+  }
+
+  onCountryInputChange(event: any): void {
+    this.currentCountry.set(event.target.value);
+  }
+
+  openCountryAutocomplete(input: HTMLInputElement, autocomplete: any): void {
     input.focus();
     if (autocomplete && !autocomplete.isOpen) {
       autocomplete.openPanel();

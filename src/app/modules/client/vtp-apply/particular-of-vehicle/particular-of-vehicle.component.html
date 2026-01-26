@@ -14,9 +14,25 @@
           <div class="contant-section">
             <form [formGroup]="formGroup" class="grid grid-cols-1 md:grid-cols-3 gap-4 ">
                 <!-- Row 1 -->
-                <mat-form-field appearance="outline" class="form-field">
-                  <mat-label>Country Of Registration</mat-label>
-                  <input matInput type="text" formControlName="countryOfRegistration">
+                <mat-form-field appearance="outline" class="countrySet example-chip-list form-field formFieldHelpers">
+                  <mat-label>Country Of Registration*</mat-label>
+                  <mat-chip-grid #countryChipGrid aria-label="Country selection">
+                    <mat-chip-row *ngIf="selectedCountry" (removed)="removeCountry()">
+                      {{ selectedCountry.name }}
+                      <button matChipRemove [attr.aria-label]="'remove ' + selectedCountry.name">
+                        <mat-icon>cancel</mat-icon>
+                      </button>
+                    </mat-chip-row>
+                  </mat-chip-grid>
+                  <input name="currentCountry" placeholder="Select country..." #countryInput formControlName="countryOfRegistration"
+                    [matChipInputFor]="countryChipGrid" [matAutocomplete]="countryAuto" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                    (matChipInputTokenEnd)="addCountry($event)" (input)="onCountryInputChange($event)" 
+                    (click)="openCountryAutocomplete(countryInput, countryAuto)" />
+                  <mat-autocomplete #countryAuto="matAutocomplete" (optionSelected)="selectedCountryOption($event); countryInput.value = ''">
+                    <mat-option *ngFor="let country of filteredCountries()" [value]="country" [attr.aria-label]="country">
+                      {{ country }}
+                    </mat-option>
+                  </mat-autocomplete>
                   <mat-error *ngIf="hasError('countryOfRegistration', 'required')">
                       Country Of Registration is required
                   </mat-error>
