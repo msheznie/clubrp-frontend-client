@@ -333,26 +333,25 @@ export class VtpApplyComponent {
    */
   private buildPayloadFromFormGroup(formGroup: FormGroup): FormData | any {
     const formValue = formGroup.value;
-    
-    // Extract attachments
-    const attachmentsControl = formGroup.get('attachments');
-    const attachmentsFromControl = attachmentsControl?.value || [];
-    
-    // Check if we have file objects that need FormData
-    const hasFileObjects = Array.isArray(attachmentsFromControl) && 
-      attachmentsFromControl.some((att: any) => att.attachment instanceof File);
-    
-    // Process attachments
+
+    const rawAttachments = this.attachmentsComponent?.getAttachments() ?? [];
+    const attachmentsFromControl = Array.isArray(rawAttachments) ? rawAttachments : [];
+
+    const hasFileObjects = attachmentsFromControl.length > 0 &&
+      attachmentsFromControl.some((att: any) => att && att.attachment instanceof File);
+
     let attachments: any[] = [];
-    if (Array.isArray(attachmentsFromControl) && attachmentsFromControl.length > 0) {
+    if (attachmentsFromControl.length > 0) {
       attachments = attachmentsFromControl.map((attachment: any) => {
+        const file = attachment.attachment instanceof File ? attachment.attachment : null;
         return {
           ...attachment,
           document_type: attachment.document_type || 'ATTACHMENT',
-          file_type: attachment.file_type || (attachment.attachment instanceof File ? attachment.attachment.type : ''),
-          file_size: attachment.file_size || (attachment.attachment instanceof File ? attachment.attachment.size : 0),
-          file_name: attachment.file_name || (attachment.attachment instanceof File ? attachment.attachment.name : 'file'),
-          attachment: attachment.attachment instanceof File ? null : (attachment.attachment || attachment.file_path || null),
+          file_type: attachment.file_type || (file ? file.type : ''),
+          file_size: attachment.file_size ?? (file ? file.size : 0),
+          file_name: attachment.file_name || (file ? file.name : 'file'),
+          name: attachment.file_name || (file ? file.name : 'attachment'),
+          attachment: file ?? (attachment.attachment || attachment.file_path || null),
           attachment_type: attachment.attachment_type || null,
           expire_on: attachment.expire_on || null,
           id: attachment.id || null,
@@ -413,18 +412,16 @@ export class VtpApplyComponent {
         }
       });
       
-      // Add attachments metadata and files
       attachments.forEach((attachment, index) => {
-        // Add attachment metadata
-        Object.keys(attachment).forEach((key) => {
-          if (key !== 'attachment' || !(attachment.attachment instanceof File)) {
-            formData.append(`attachments[${index}][${key}]`, String(attachment[key] || ''));
-          }
-        });
-        
-        // Add file if it's a File object
-        if (attachment.attachment instanceof File) {
-          formData.append(`attachments[${index}][file]`, attachment.attachment, attachment.file_name || attachment.attachment.name);
+        const file = attachment.attachment instanceof File ? attachment.attachment : null;
+        if (file) {
+          formData.append(`attachments[${index}]`, file, attachment.file_name || file.name);
+        }
+        formData.append(`attachments[${index}][file_type]`, attachment.file_type || '');
+        formData.append(`attachments[${index}][name]`, attachment.name || attachment.file_name || 'attachment');
+        formData.append(`attachments[${index}][size]`, String(attachment.file_size ?? 0));
+        if (attachment.modifiedDate != null) {
+          formData.append(`attachments[${index}][modifiedDate]`, String(attachment.modifiedDate));
         }
       });
       
