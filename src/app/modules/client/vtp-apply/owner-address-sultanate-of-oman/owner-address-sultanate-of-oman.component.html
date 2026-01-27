@@ -32,9 +32,21 @@
               
                 <mat-form-field appearance="outline">
                   <mat-label>Residence</mat-label>
-                  <input matInput placeholder="Country" formControlName="residenceCountry" />
-                  <mat-error *ngIf="hasError('residenceCountry', 'pattern')">
-                      Residence format is invalid
+                  <input
+                    matInput
+                    placeholder="Select country"
+                    formControlName="residenceCountry"
+                    [matAutocomplete]="resCountryAuto"
+                    (input)="onResidenceCountryInputChange($event)" />
+                  <mat-autocomplete
+                    #resCountryAuto="matAutocomplete"
+                    (optionSelected)="selectedResidenceCountryOption($event)">
+                    <mat-option *ngFor="let country of filteredResidenceCountries()" [value]="country">
+                      {{ country }}
+                    </mat-option>
+                  </mat-autocomplete>
+                  <mat-error *ngIf="hasError('residenceCountry', 'required')">
+                    Residence country is required
                   </mat-error>
                 </mat-form-field>
               
