@@ -33,7 +33,7 @@
                       </mat-form-field>
                     
                       <mat-form-field appearance="outline" class="countrySet example-chip-list form-field formFieldHelpers">
-                        <mat-label>Nationality</mat-label>
+                        <mat-label>Nationality*</mat-label>
                         <mat-chip-grid #nationalityChipGrid aria-label="Nationality selection">
                           <mat-chip-row *ngIf="selectedNationality" (removed)="removeNationality()">
                             {{ selectedNationality.name }}
@@ -69,7 +69,7 @@
                       </mat-form-field>
                     
                       <mat-form-field appearance="outline" class="countrySet example-chip-list form-field col-span-2 formFieldHelpers">
-                        <mat-label>Countries to be visit</mat-label>
+                        <mat-label>Countries to be visit*</mat-label>
                         <mat-chip-grid #chipGrid aria-label="Country selection">
                           <mat-chip-row *ngFor="let country of selectedCountries; let i = index; trackBy: trackByIndex"
                             (removed)="remove(country)">

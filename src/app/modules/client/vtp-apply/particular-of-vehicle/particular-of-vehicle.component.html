@@ -96,7 +96,7 @@
                 </mat-form-field>
               
                 <mat-form-field appearance="outline" class="countrySet example-chip-list form-field formFieldHelpers">
-                  <mat-label>Type Of Vehicle</mat-label>
+                  <mat-label>Type Of Vehicle*</mat-label>
                   <mat-chip-grid #vehicleTypeChipGrid aria-label="Vehicle Type selection">
                     <mat-chip-row *ngIf="selectedVehicleType" (removed)="removeVehicleType()">
                       {{ selectedVehicleType.vehicle_name || selectedVehicleType.name }}
