@@ -17,6 +17,7 @@ export interface IdlApplication {
   attachments: any[];
   basic_information: any;
   oman_license_information: any;
+  vtp_personal_detail: any;
 }
 
 export interface IdlApplicationListResponse {

@@ -39,7 +39,8 @@ export class TrackComponent implements OnInit {
 
   applications: IdlApplication[] = [];
   dataSource: MatTableDataSource<IdlApplication> = new MatTableDataSource<IdlApplication>([]);
-  displayedColumns: string[] = ['request_id', 'applicant_name', 'licence_type', 'created_at', 'status', 'actions'];
+  allDisplayedColumns: string[] = ['request_id', 'applicant_name', 'licence_type', 'created_at', 'status', 'actions'];
+  displayedColumns: string[] = [];
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   pageIndex: number = 0;
@@ -61,10 +62,19 @@ export class TrackComponent implements OnInit {
       } else {
         this.applicationTypeFilter = undefined;
       }
+      this.updateDisplayedColumns();
       this.updateBreadcrumbs();
       this.pageIndex = 0;
       this.loadApplications();
     });
+  }
+
+  updateDisplayedColumns(): void {
+    if (this.applicationTypeFilter === '2') {
+      this.displayedColumns = this.allDisplayedColumns.filter(col => col !== 'licence_type');
+    } else {
+      this.displayedColumns = [...this.allDisplayedColumns];
+    }
   }
 
   ngAfterViewInit(): void {
@@ -183,6 +193,8 @@ export class TrackComponent implements OnInit {
   getApplicantName(application: IdlApplication): string {
     if (application.basic_information) {
       return `${application.basic_information.first_name} ${application.basic_information.last_name}`;
+    }else if (application.vtp_personal_detail) {
+      return application.vtp_personal_detail.vehicle_owner_name || 'N/A';
     }
     return 'N/A';
   }
