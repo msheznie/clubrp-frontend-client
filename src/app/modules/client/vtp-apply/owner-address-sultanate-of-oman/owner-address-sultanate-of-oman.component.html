@@ -31,7 +31,7 @@
                 </mat-form-field>
               
                 <mat-form-field appearance="outline" class="countrySet example-chip-list form-field formFieldHelpers">
-                  <mat-label>Residence</mat-label>
+                  <mat-label>Residence (Country)*</mat-label>
                   <mat-chip-grid #residenceCountryChipGrid aria-label="Residence country selection">
                     <mat-chip-row *ngIf="selectedResidenceCountry" (removed)="removeResidenceCountry()">
                       {{ selectedResidenceCountry.name }}
@@ -79,7 +79,7 @@
               
                 <!-- Row 3 -->
                 <mat-form-field appearance="outline">
-                  <mat-label>Residence</mat-label>
+                  <mat-label>Residence (City)*</mat-label>
                   <input matInput placeholder="City" formControlName="residenceCity" />
                   <mat-error *ngIf="hasError('residenceCity', 'required')">
                       Residence is required
