@@ -22,6 +22,7 @@ import { AttachmentsComponent } from "./attachments/attachments.component";
 import { ReferenceSultanateOmanComponent } from "./reference-sultanate-oman/reference-sultanate-oman.component";
 import { ReferencesYourHomeCountryComponent } from "./references-your-home-country/references-your-home-country.component";
 import { MatIconModule } from '@angular/material/icon';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { BreadcrumbComponent } from "../../common/components/breadcrumb/breadcrumb.component";
 import { MatDialog } from '@angular/material/dialog';
 import { PaymentGatewayComponent } from '../idl-apply/components/payment-gateway/payment-gateway.component';
@@ -60,6 +61,7 @@ import { HelperService } from '../../../shared/services/helper.service';
     ReferenceSultanateOmanComponent,
     ReferencesYourHomeCountryComponent,
     MatIconModule,
+    MatCheckboxModule,
     BreadcrumbComponent,
     CommonModule,
     NgIf
@@ -88,6 +90,7 @@ export class VtpApplyComponent {
   });
   secondFormGroup = this._formBuilder.group({
     secondCtrl: ['', Validators.required],
+    isMulkiyaTranslationRequired: [false],
   });
   threeFormGroup = this._formBuilder.group({
     secondCtrl: ['', Validators.required],
@@ -167,8 +170,12 @@ export class VtpApplyComponent {
   submitApplication(): void {
     // Validate all forms before submission
     if (!this.validateAllForms()) {
-      console.error('Please fill all required fields');
-      this.helperService.openErrorSnackBar('Please fill all required fields before submitting.', '');
+      const hasAttachments = (this.attachmentsComponent?.getAttachments()?.length ?? 0) > 0;
+      const message = !hasAttachments
+        ? 'At least one attachment is required to submit the application'
+        : 'Please fill all required fields before submitting.';
+      console.error('Validation failed:', message);
+      this.helperService.openErrorSnackBar(message, '');
       return;
     }
 
@@ -193,6 +200,7 @@ export class VtpApplyComponent {
    * Validate all child component forms
    */
   private validateAllForms(): boolean {
+    const hasAttachments = (this.attachmentsComponent?.getAttachments()?.length ?? 0) > 0;
     const validationResults: any = {
       basicInformation: this.validateForm('Basic Information', this.basicInformationComponent?.formGroup),
       driverDetails: this.validateForm('Driver Details', this.driverDetailsComponent?.formGroup),
@@ -200,6 +208,7 @@ export class VtpApplyComponent {
       ownerAddress: this.validateForm('Owner Address', this.ownerAddressComponent?.formGroup),
       referencesHomeCountry: this.validateForm('References (Home Country)', this.referencesHomeCountryComponent?.formGroup),
       referenceOman: this.validateForm('References (Oman)', this.referenceSultanateOmanComponent?.formGroup),
+      attachments: hasAttachments,
       termsAccepted: this.termsAndConditionComponent?.accepted ?? false
     };
 
@@ -209,6 +218,10 @@ export class VtpApplyComponent {
       if (key === 'termsAccepted') {
         if (!validationResults[key]) {
           invalidForms.push('Terms & Conditions (not accepted)');
+        }
+      } else if (key === 'attachments') {
+        if (!validationResults[key]) {
+          invalidForms.push('At least one attachment is required to submit the application');
         }
       } else if (validationResults[key] && !validationResults[key].isValid) {
         invalidForms.push(`${validationResults[key].formName}: ${validationResults[key].invalidFields.join(', ')}`);
@@ -266,6 +279,7 @@ export class VtpApplyComponent {
     const referencesHomeCountryValue = this.referencesHomeCountryComponent?.formGroup?.value || {};
     const referenceOmanValue = this.referenceSultanateOmanComponent?.formGroup?.value || {};
     const termsAccepted = this.termsAndConditionComponent?.accepted || false;
+    const isMulkiyaTranslationRequired = (this.secondFormGroup.get('isMulkiyaTranslationRequired')?.value ?? false) ? 1 : 0;
 
     // Handle vehicle type - convert typeOfVehicle (ID) to vehicle_license_type
     let vehicleParticularsProcessed = { ...vehicleParticularsValue };
@@ -287,8 +301,8 @@ export class VtpApplyComponent {
       application_type: 'VTP', // Default application type
       status: 1, // Default status
       overall_status: 0, // Draft status
-      isMulkiyaTranslationRequired: false,
-      
+      isMulkiyaTranslationRequired,
+
       basic_information: basicInfoValue,
       driver_details: driverDetailsValue,
       vehicle_particulars: vehicleParticularsProcessed,
@@ -307,24 +321,10 @@ export class VtpApplyComponent {
   }
 
   /**
-   * Process attachments from AttachmentsComponent
+   * Process attachments from AttachmentsComponent (same shape as admin payload)
    */
   private processAttachments(): any[] {
-    const uploadedFiles = this.attachmentsComponent?.uploadedFiles || [];
-    
-    return uploadedFiles.map((file: File, index: number) => {
-      return {
-        document_type: 'ATTACHMENT',
-        file_type: file.type || '',
-        file_size: file.size || 0,
-        file_name: file.name || `file_${index}`,
-        attachment: file, // The actual File object
-        attachment_type: null,
-        expire_on: null,
-        id: null,
-        vtp_attachment_id: null
-      };
-    });
+    return this.attachmentsComponent?.getAttachments() ?? [];
   }
 
   /**

@@ -9,15 +9,11 @@
       <button class="button-outline">
           <mat-icon>save</mat-icon>
           <span class="button-text">Save as Draft</span>
-          </button>
+      </button>
       <button class="button-fill">
           <mat-icon>done</mat-icon>
           <span class="button-text">Submit</span>
-          </button>
-      <button class="button-fill" (click)="paySubmit()">
-          <mat-icon>attach_money</mat-icon>
-          <span class="button-text">Pay and Submit</span>
-          </button>
+      </button>
   </div>
 </div>
 <div class="container mx-auto px-4 md:px-20 mt-4">
@@ -60,6 +56,11 @@
         <app-references-your-home-country></app-references-your-home-country>
         <app-reference-sultanate-oman></app-reference-sultanate-oman>
         <app-attachments></app-attachments>
+        <h2 class="text-base font-medium mt-6 mb-2">
+          <mat-checkbox color="primary" formControlName="isMulkiyaTranslationRequired">
+            Is Mulkiya translation required
+          </mat-checkbox>
+        </h2>
         <div class="flex justify-end gap-4">
           <button class="button-fill-secondary" matStepperPrevious>
             <mat-icon>arrow_back</mat-icon>
