@@ -148,6 +148,9 @@ export class ParticularOfVehicleComponent implements OnInit, OnDestroy {
     });
   }
 
+  isFormValid(): boolean {
+    return this.formGroup?.valid ?? false;
+  }
   hasError(fieldName: string, errorType: string): boolean {
     const field = this.formGroup.get(fieldName);
     return !!(field && field.hasError(errorType) && (field.dirty || field.touched));

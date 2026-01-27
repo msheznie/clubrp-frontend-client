@@ -49,6 +49,10 @@ export class ReferenceSultanateOmanComponent implements OnInit {
     });
   }
 
+  isFormValid(): boolean {
+    return this.formGroup?.valid ?? false;
+  }
+
   hasError(fieldName: string, errorType: string): boolean {
     const field = this.formGroup.get(fieldName);
     return !!(field && field.hasError(errorType) && (field.dirty || field.touched));

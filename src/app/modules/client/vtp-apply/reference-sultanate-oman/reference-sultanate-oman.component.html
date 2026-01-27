@@ -9,6 +9,9 @@
                     <span class="mx-4">
                         References In Sultanate of Oman
                     </span>
+                    <span class="ml-2 text-sm" [class.text-green-600]="isFormValid()" [class.text-red-600]="!isFormValid()">
+                        {{ isFormValid() ? '✓' : '✗' }}
+                    </span>
                 </mat-panel-title>
               </mat-expansion-panel-header>
           <div class="contant-section">

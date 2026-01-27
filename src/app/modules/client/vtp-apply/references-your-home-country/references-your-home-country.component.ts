@@ -49,6 +49,10 @@ export class ReferencesYourHomeCountryComponent implements OnInit {
       secondGsm: ['+968', [this.optionalPhoneValidator.bind(this)]]
     });
   }
+  
+  isFormValid(): boolean {
+    return this.formGroup?.valid ?? false;
+  }
 
   hasError(fieldName: string, errorType: string): boolean {
     const field = this.formGroup.get(fieldName);

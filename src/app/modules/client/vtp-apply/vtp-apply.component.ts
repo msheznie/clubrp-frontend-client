@@ -29,10 +29,8 @@ import { NgIf } from '@angular/common';
 import { MatStepper } from '@angular/material/stepper';
 import { SignInComponent } from '../../auth/sign-in/sign-in.component';
 import { DriverDetailsComponent } from './driver-details/driver-details.component';
-import { ApiService } from '../../../shared/services/api.service';
+import { VtpService } from '../../../shared/services/vtp.service';
 import { HelperService } from '../../../shared/services/helper.service';
-import { HttpClient } from '@angular/common/http';
-import { AppConfigService } from '../../../shared/services/app-config.service';
 
 @Component({
   standalone: true,
@@ -70,10 +68,8 @@ import { AppConfigService } from '../../../shared/services/app-config.service';
 export class VtpApplyComponent {
   private _formBuilder = inject(FormBuilder);
   private dialog = inject(MatDialog);
-  private apiService = inject(ApiService);
+  private vtpService = inject(VtpService);
   private helperService = inject(HelperService);
-  private httpClient = inject(HttpClient);
-  private appConfigService = inject(AppConfigService);
 
   @ViewChild('steppe') stepper!: MatStepper;
   
@@ -172,7 +168,7 @@ export class VtpApplyComponent {
     // Validate all forms before submission
     if (!this.validateAllForms()) {
       console.error('Please fill all required fields');
-      alert('Please fill all required fields before submitting.');
+      this.helperService.openErrorSnackBar('Please fill all required fields before submitting.', '');
       return;
     }
 
@@ -180,32 +176,15 @@ export class VtpApplyComponent {
     const combinedForm = this.createCombinedFormGroup();
     const payload = this.buildPayloadFromFormGroup(combinedForm);
 
-    // Submit to API - handle both FormData and JSON
-    let request: any;
-    if (payload instanceof FormData) {
-      // Use HttpClient directly for FormData
-      const baseUrl = this.appConfigService.baseUrl;
-      const subdomain = this.helperService.getSubDomain();
-      const apiversion = '/api/v1';
-      
-      request = this.httpClient.post(`${baseUrl}/${subdomain}${apiversion}/vtp/vtp-applications`, payload);
-    } else {
-      // Use ApiService for JSON
-      request = this.apiService.post('/vtp/vtp-applications', payload);
-    }
-
-    request.subscribe({
+    // Submit to API using VTP service
+    this.vtpService.submitVtpApplication(payload).subscribe({
       next: (response: any) => {
-        console.log('Application submitted successfully:', response);
-        // Navigate to success page or show success message
-        // You can customize this based on your requirements
-        alert('Application submitted successfully!');
-        this.router.navigate(['/']);
+        this.helperService.openMessageSnackBar('Application submitted successfully!', '');
+        this.router.navigate(['/track'], { queryParams: { application_type: '2' } });
       },
       error: (error: any) => {
         console.error('Error submitting application:', error);
-        const errorMessage = error?.error?.message || error?.message || 'Error submitting application. Please try again.';
-        alert(errorMessage);
+        this.helperService.openErrorSnackBar(error, '');
       }
     });
   }

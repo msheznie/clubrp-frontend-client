@@ -134,6 +134,10 @@ export class BasicInformationComponent implements OnInit, OnDestroy {
     return !!(field && field.hasError(errorType) && (field.dirty || field.touched));
   }
 
+  isFormValid(): boolean {
+    return this.formGroup?.valid ?? false;
+  }
+
     trackByIndex(index: number): number {
     return index;
   }

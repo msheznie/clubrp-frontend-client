@@ -48,6 +48,10 @@ export class OwnerAddressSultanateOfOmanComponent implements OnInit {
       email: ['', [Validators.required, Validators.email]]
     });
   }
+  
+  isFormValid(): boolean {
+    return this.formGroup?.valid ?? false;
+  }
 
   hasError(fieldName: string, errorType: string): boolean {
     const field = this.formGroup.get(fieldName);
