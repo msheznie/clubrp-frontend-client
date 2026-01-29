@@ -2,15 +2,15 @@
 <div class="flex justify-between items-center mt-6 mx-4 md:mx-14">
   <app-breadcrumb [breadcrumbs]="breadcrumbs"></app-breadcrumb>
   <div class="flex gap-4">
-      <button class="button-outline">
+      <button class="button-outline" (click)="navigateToHome()">
           <mat-icon>cancel</mat-icon>
           <span class="button-text">Cancel</span>
           </button>
-      <button class="button-outline">
+      <button class="button-outline" (click)="submitApplication(0)">
           <mat-icon>save</mat-icon>
           <span class="button-text">Save as Draft</span>
       </button>
-      <button class="button-fill">
+      <button class="button-fill" (click)="submitApplication(1)">
           <mat-icon>done</mat-icon>
           <span class="button-text">Submit</span>
       </button>
@@ -81,7 +81,7 @@
             <mat-icon>arrow_back</mat-icon>
             <span class="button-text">Back</span>
           </button>
-          <button class="button-fill" (click)="submitApplication()">
+          <button class="button-fill" (click)="submitApplication(1)">
             <mat-icon>done</mat-icon>
             <span class="button-text">Submit</span>
           </button>

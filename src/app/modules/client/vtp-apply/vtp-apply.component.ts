@@ -167,7 +167,7 @@ export class VtpApplyComponent {
   /**
    * Collect all form data from child components and submit to API
    */
-  submitApplication(): void {
+  submitApplication(overall_status: number = 0): void {
     // Validate all forms before submission
     if (!this.validateAllForms()) {
       const hasAttachments = (this.attachmentsComponent?.getAttachments()?.length ?? 0) > 0;
@@ -180,7 +180,7 @@ export class VtpApplyComponent {
     }
 
     // Collect all form data
-    const combinedForm = this.createCombinedFormGroup();
+    const combinedForm = this.createCombinedFormGroup(overall_status);
     const payload = this.buildPayloadFromFormGroup(combinedForm);
 
     // Submit to API using VTP service
@@ -271,7 +271,7 @@ export class VtpApplyComponent {
   /**
    * Create a combined FormGroup from all child component forms
    */
-  private createCombinedFormGroup(): FormGroup {
+  private createCombinedFormGroup(overall_status: number = 0): FormGroup {
     const basicInfoValue = this.basicInformationComponent?.formGroup?.value || {};
     const driverDetailsValue = this.driverDetailsComponent?.formGroup?.value || {};
     const vehicleParticularsValue = this.particularOfVehicleComponent?.formGroup?.value || {};
@@ -300,7 +300,7 @@ export class VtpApplyComponent {
       applicant_name: basicInfoValue.vehicleOwnerName || '',
       application_type: 'VTP', // Default application type
       status: 1, // Default status
-      overall_status: 0, // Draft status
+      overall_status: overall_status, // Draft status
       isMulkiyaTranslationRequired,
 
       basic_information: basicInfoValue,
