@@ -9,107 +9,210 @@
                     <span class="mx-4">
                         Particular of Vehicle
                     </span>
+                    <span class="ml-2 text-sm" [class.text-green-600]="isFormValid()" [class.text-red-600]="!isFormValid()">
+                        {{ isFormValid() ? '✓' : '✗' }}
+                    </span>
                 </mat-panel-title>
               </mat-expansion-panel-header>
           <div class="contant-section">
-            <form class="grid grid-cols-1 md:grid-cols-3 gap-4 ">
+            <form [formGroup]="formGroup" class="grid grid-cols-1 md:grid-cols-3 gap-4 ">
                 <!-- Row 1 -->
-                <mat-form-field appearance="outline">
-                  <mat-label>Country Of Registration</mat-label>
-                  <input matInput placeholder="Country" />
+                <mat-form-field appearance="outline" class="countrySet example-chip-list form-field formFieldHelpers">
+                  <mat-label>Country Of Registration*</mat-label>
+                  <div class="chip-input-row">
+                    <mat-chip-grid #countryChipGrid aria-label="Country selection">
+                      <mat-chip-row *ngIf="selectedCountry" (removed)="removeCountry()">
+                        {{ selectedCountry.name }}
+                        <button matChipRemove [attr.aria-label]="'remove ' + selectedCountry.name">
+                          <mat-icon>cancel</mat-icon>
+                        </button>
+                      </mat-chip-row>
+                    </mat-chip-grid>
+                    <input name="currentCountry" placeholder="Select country..." #countryInput formControlName="countryOfRegistration"
+                      [matChipInputFor]="countryChipGrid" [matAutocomplete]="countryAuto" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                      (matChipInputTokenEnd)="addCountry($event)" (input)="onCountryInputChange($event)" 
+                      (click)="openCountryAutocomplete(countryInput, countryAuto)" />
+                  </div>
+                  <mat-autocomplete #countryAuto="matAutocomplete" (optionSelected)="selectedCountryOption($event); countryInput.value = ''">
+                    <mat-option *ngFor="let country of filteredCountries()" [value]="country" [attr.aria-label]="country">
+                      {{ country }}
+                    </mat-option>
+                  </mat-autocomplete>
+                  <mat-error *ngIf="hasError('countryOfRegistration', 'required')">
+                      Country Of Registration is required
+                  </mat-error>
                 </mat-form-field>
               
                 <mat-form-field appearance="outline">
                   <mat-label>Registration Number</mat-label>
-                  <input matInput />
+                  <input matInput formControlName="registrationNumber" />
+                  <mat-error *ngIf="hasError('registrationNumber', 'required')">  
+                      Registration Number is required
+                  </mat-error>
+                  <mat-error *ngIf="hasError('registrationNumber', 'pattern')">  
+                      Registration Number format is invalid 
+                  </mat-error>
                 </mat-form-field>
-              
-                <mat-form-field appearance="outline">
-                  <mat-label>Make of Vehicle’s Chassis</mat-label>
-                  <input matInput />
-                </mat-form-field>
-              
+      
                 <!-- Row 2 -->
                 <mat-form-field appearance="outline">
                   <mat-label>Chassis Number</mat-label>
-                  <input matInput />
-                </mat-form-field>
-              
-                <mat-form-field appearance="outline">
-                  <mat-label>Make Of Vehicle’s Engine</mat-label>
-                  <input matInput />
+                  <input matInput formControlName="chassisNumber" />
+                  <mat-error *ngIf="hasError('chassisNumber', 'required')">
+                      Chassis Number is required  
+                  </mat-error>
+                  <mat-error *ngIf="hasError('chassisNumber', 'pattern')">
+                      Chassis Number format is invalid
+                  </mat-error>
                 </mat-form-field>
               
                 <mat-form-field appearance="outline">
                   <mat-label>Engine Number</mat-label>
-                  <input matInput />
+                  <input matInput formControlName="engineNumber" />
+                  <mat-error *ngIf="hasError('engineNumber', 'required')">
+                      Engine Number is required
+                  </mat-error>
+                  <mat-error *ngIf="hasError('engineNumber', 'pattern')">
+                      Engine Number format is invalid
+                  </mat-error>
                 </mat-form-field>
               
                 <!-- Row 3 -->
                 <mat-form-field appearance="outline">
                   <mat-label>Number Of Cylinders</mat-label>
-                  <input matInput />
+                  <input matInput formControlName="numberOfCylinders" />
+                  <mat-error *ngIf="hasError('numberOfCylinders', 'required')">
+                      Number Of Cylinders is required
+                  </mat-error>
+                  <mat-error *ngIf="hasError('numberOfCylinders', 'pattern')">
+                      Number Of Cylinders format is invalid
+                  </mat-error>
                 </mat-form-field>
               
                 <mat-form-field appearance="outline">
                   <mat-label>Engine Power (In CC)</mat-label>
-                  <input matInput />
+                  <input matInput formControlName="enginePowerCc" />
+                  <mat-error *ngIf="hasError('enginePowerCc', 'required')">
+                      Engine Power (In CC) is required
+                  </mat-error>
                 </mat-form-field>
               
-                <mat-form-field appearance="outline">
-                  <mat-label>Type Of Vehicle</mat-label>
-                  <mat-select>
-                    <mat-option value="car">Car</mat-option>
-                    <mat-option value="truck">Truck</mat-option>
-                  </mat-select>
+                <mat-form-field appearance="outline" class="countrySet example-chip-list form-field formFieldHelpers">
+                  <mat-label>Type Of Vehicle*</mat-label>
+                  <div class="chip-input-row">
+                    <mat-chip-grid #vehicleTypeChipGrid aria-label="Vehicle Type selection">
+                      <mat-chip-row *ngIf="selectedVehicleType" (removed)="removeVehicleType()">
+                        {{ selectedVehicleType.vehicle_name || selectedVehicleType.name }}
+                        <button matChipRemove [attr.aria-label]="'remove ' + (selectedVehicleType.vehicle_name || selectedVehicleType.name)">
+                          <mat-icon>cancel</mat-icon>
+                        </button>
+                      </mat-chip-row>
+                    </mat-chip-grid>
+                    <input name="currentVehicleType" placeholder="Select vehicle type..." #vehicleTypeInput formControlName="typeOfVehicle"
+                      [matChipInputFor]="vehicleTypeChipGrid" [matAutocomplete]="vehicleTypeAuto" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                      (matChipInputTokenEnd)="addVehicleType($event)" (input)="onVehicleTypeInputChange($event)" 
+                      (click)="openVehicleTypeAutocomplete(vehicleTypeInput, vehicleTypeAuto)" />
+                  </div>
+                  <mat-autocomplete #vehicleTypeAuto="matAutocomplete" (optionSelected)="selectedVehicleTypeOption($event); vehicleTypeInput.value = ''">
+                    <mat-option *ngFor="let vehicleType of filteredVehicleTypes()" [value]="vehicleType" [attr.aria-label]="vehicleType.vehicle_name">
+                      {{ vehicleType.vehicle_name }}
+                    </mat-option>
+                  </mat-autocomplete>
+                  <mat-error *ngIf="hasError('typeOfVehicle', 'required')">
+                    Type Of Vehicle is required
+                  </mat-error>
                 </mat-form-field>
               
                 <!-- Row 4 -->
                 <mat-form-field appearance="outline">
                   <mat-label>Exterior Color</mat-label>
-                  <input matInput />
+                  <input matInput formControlName="exteriorColor" />
+                  <mat-error *ngIf="hasError('exteriorColor', 'required')">
+                      Exterior Color is required
+                  </mat-error>
                 </mat-form-field>
               
                 <mat-form-field appearance="outline">
                   <mat-label>Interior Color</mat-label>
-                  <input matInput />
+                  <input matInput formControlName="interiorColor" />
+                  <mat-error *ngIf="hasError('interiorColor', 'required')">
+                      Interior Color is required
+                  </mat-error>
                 </mat-form-field>
               
                 <mat-form-field appearance="outline">
                   <mat-label>No. Of Seats</mat-label>
-                  <input matInput />
+                  <input matInput formControlName="numberOfSeats" />
+                  <mat-error *ngIf="hasError('numberOfSeats', 'required')">
+                      No. Of Seats is required
+                  </mat-error>
+                  <mat-error *ngIf="hasError('numberOfSeats', 'pattern')">
+                      No. Of Seats format is invalid
+                  </mat-error>
                 </mat-form-field>
               
                 <!-- Row 5 -->
                 <mat-form-field appearance="outline">
                   <mat-label>No. Of Spare Tyres</mat-label>
-                  <input matInput />
+                  <input matInput formControlName="numberOfSpareTyres" />
+                  <mat-error *ngIf="hasError('numberOfSpareTyres', 'required')">
+                      No. Of Spare Tyres is required
+                  </mat-error>
+                  <mat-error *ngIf="hasError('numberOfSpareTyres', 'pattern')">
+                      No. Of Spare Tyres format is invalid
+                  </mat-error>
                 </mat-form-field>
               
                 <mat-form-field appearance="outline">
                   <mat-label>Make Of Radio / Recorder</mat-label>
-                  <input matInput />
+                  <input matInput formControlName="makeOfRadioRecorder" />
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                  <mat-label>Make Of Car</mat-label>
+                  <input matInput formControlName="makeOfCar" />
+                  <mat-error *ngIf="hasError('makeOfCar', 'required')">
+                      Make Of Car is required
+                  </mat-error>
                 </mat-form-field>
               
-                <mat-form-field class="md:col-span-3" appearance="outline">
+                <mat-form-field appearance="outline">
                   <mat-label>Other Accessories</mat-label>
-                  <input matInput placeholder="e.g., Recorder, Location Tracker" />
+                  <input matInput placeholder="e.g., Recorder, Location Tracker" formControlName="otherAccessories" />
                 </mat-form-field>
               
                 <!-- Row 6 -->
                 <mat-form-field appearance="outline">
                   <mat-label>Year Of Manufacture</mat-label>
-                  <input matInput />
+                  <input matInput formControlName="yearOfManufacture" />
+                  <mat-error *ngIf="hasError('yearOfManufacture', 'required')">
+                      Year Of Manufacture is required
+                  </mat-error>
+                  <mat-error *ngIf="hasError('yearOfManufacture', 'pattern')">
+                      Year Of Manufacture format is invalid
+                  </mat-error>
                 </mat-form-field>
               
                 <mat-form-field appearance="outline">
                   <mat-label>Weight In Kg</mat-label>
-                  <input matInput />
+                  <input matInput formControlName="weightInKg" />
+                  <mat-error *ngIf="hasError('weightInKg', 'required')">
+                      Weight In Kg is required  
+                  </mat-error>
+                  <mat-error *ngIf="hasError('weightInKg', 'pattern')">
+                      Weight In Kg format is invalid
+                  </mat-error>
                 </mat-form-field>
               
                 <mat-form-field appearance="outline">
                   <mat-label>Present Value Of Vehicle R.O</mat-label>
-                  <input matInput />
+                  <input matInput formControlName="presentValueRO" />
+                  <mat-error *ngIf="hasError('presentValueRO', 'required')">
+                      Present Value Of Vehicle R.O is required
+                  </mat-error>
+                  <mat-error *ngIf="hasError('presentValueRO', 'pattern')">
+                      Present Value Of Vehicle R.O format is invalid
+                  </mat-error>
                 </mat-form-field>
               
                 <!-- Footer Note -->

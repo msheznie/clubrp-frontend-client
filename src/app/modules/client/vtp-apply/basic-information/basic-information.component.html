@@ -9,47 +9,106 @@
                     <span class="mx-4">
                         Basic Information
                     </span>
+                    <span class="ml-2 text-sm" [class.text-green-600]="isFormValid()" [class.text-red-600]="!isFormValid()">
+                        {{ isFormValid() ? '✓' : '✗' }}
+                    </span>
                 </mat-panel-title>
               </mat-expansion-panel-header>
-          <div class="contant-section">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+              <div class="contant-section" [formGroup]="formGroup">
+                <div class="grid md:grid-cols-3 sm:grid-cols-1 gap-4 mb-4">
                     <mat-form-field appearance="outline" class="mat-form-field">
                         <mat-label>Name Of Vehicle Owner</mat-label>
-                        <input matInput />
+                        <input matInput formControlName="vehicleOwnerName" />
+                        <mat-error *ngIf="hasError('vehicleOwnerName', 'required')">
+                          Name Of Vehicle Owner is required
+                        </mat-error>
                       </mat-form-field>
                     
                       <mat-form-field appearance="outline" class="form-field">
                         <mat-label>Driver’s Name</mat-label>
-                        <input matInput />
+                        <input matInput formControlName="driverName" />
+                        <mat-error *ngIf="hasError('driverName', 'required')">
+                          Driver's Name is required
+                        </mat-error>
                       </mat-form-field>
                     
-                      <mat-form-field appearance="outline" class="form-field">
-                        <mat-label>Nationality</mat-label>
-                        <input matInput />
+                      <mat-form-field appearance="outline" class="countrySet example-chip-list form-field formFieldHelpers">
+                        <mat-label>Nationality*</mat-label>
+                        <div class="chip-input-row">
+                          <mat-chip-grid #nationalityChipGrid aria-label="Nationality selection">
+                            <mat-chip-row *ngIf="selectedNationality" (removed)="removeNationality()">
+                              {{ selectedNationality.name }}
+                              <button matChipRemove [attr.aria-label]="'remove ' + selectedNationality.name">
+                                <mat-icon>cancel</mat-icon>
+                              </button>
+                            </mat-chip-row>
+                          </mat-chip-grid>
+                          <input name="currentNationality" #nationalityInput formControlName="nationality" placeholder="Select nationality..."
+                            [matChipInputFor]="nationalityChipGrid" [matAutocomplete]="nationalityAuto" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                            (matChipInputTokenEnd)="addNationality($event)" (input)="onNationalityInputChange($event)" 
+                            (click)="openNationalityAutocomplete(nationalityInput, nationalityAuto)" />
+                        </div>
+                        <mat-autocomplete #nationalityAuto="matAutocomplete" (optionSelected)="selectedNationalityOption($event); nationalityInput.value = ''">
+                          <mat-option *ngFor="let nationality of filteredNationalities()" [value]="nationality" [attr.aria-label]="nationality">
+                            {{ nationality }}
+                          </mat-option>
+                        </mat-autocomplete>
+                        <mat-error *ngIf="hasError('nationality', 'required')">
+                          Nationality is required
+                        </mat-error>
                       </mat-form-field>
     
+
                       <mat-form-field appearance="outline" class="form-field">
                         <mat-label>ID/Passport Number</mat-label>
-                        <input matInput />
+                        <input matInput formControlName="idOrPassportNumber" />
+                        <mat-error *ngIf="hasError('idOrPassportNumber', 'required')">
+                          ID/Passport Number is required
+                        </mat-error>
+                        <mat-error *ngIf="hasError('idOrPassportNumber', 'pattern')">
+                          ID/Passport Number format is invalid
+                        </mat-error>
                       </mat-form-field>
                     
-                      <mat-form-field appearance="outline" class="form-field">
-                        <mat-label>Countries To Be Visited</mat-label>
-                        <input matInput />
+                      <mat-form-field appearance="outline" class="countrySet example-chip-list form-field col-span-2 formFieldHelpers">
+                        <mat-label>Countries to be visit*</mat-label>
+                        <div class="chip-input-row">
+                          <mat-chip-grid #chipGrid aria-label="Country selection">
+                            <mat-chip-row *ngFor="let country of selectedCountries; let i = index; trackBy: trackByIndex"
+                              (removed)="remove(country)">
+                              {{ country.name }}
+                              <button matChipRemove [attr.aria-label]="'remove ' + country.name">
+                                <mat-icon>cancel</mat-icon>
+                              </button>
+                            </mat-chip-row>
+                          </mat-chip-grid>
+                          <input name="currentCountry" placeholder="Select countries.." #countryInput formControlName="countriesToBeVisited"
+                            [matChipInputFor]="chipGrid" [matAutocomplete]="auto" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                            (matChipInputTokenEnd)="add($event)" (input)="onChipInputChange($event)" 
+                            (click)="openCountryAutocomplete(countryInput, auto)" />
+                        </div>
+                        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event); countryInput.value = ''">
+                          <mat-option *ngFor="let country of filteredCountries()" [value]="country" [attr.aria-label]="country">
+                            {{ country }}
+                          </mat-option>
+                        </mat-autocomplete>
                       </mat-form-field>
-                </div>
+                <!-- </div>
     
-                <div class="grid gap-4 mb-4">
+                <div class="grid gap-4 mb-4"> -->
                     <mat-form-field appearance="outline" class="form-field w-full">
                         <mat-label>Address : Business</mat-label>
-                        <input matInput />
+                        <input matInput formControlName="businessAddress" />
                       </mat-form-field>
                       <mat-form-field appearance="outline" class="form-field w-full">
                         <mat-label>Address : Residence</mat-label>
-                        <input matInput />
+                        <input matInput formControlName="residenceAddress" />
+                        <mat-error *ngIf="hasError('residenceAddress', 'required')">
+                          Address : Residence is required
+                        </mat-error>
                       </mat-form-field>
-                </div>
-                <div class="grid gap-4 grid-cols-1 md:grid-cols-3">
+                <!-- </div>
+                <div class="grid gap-4 grid-cols-1 md:grid-cols-3"> -->
                     <mat-form-field appearance="outline" class="form-field">
                         <mat-label>P.O Box Number</mat-label>
                         <input matInput />
@@ -62,22 +121,40 @@
                     
                       <mat-form-field appearance="outline" class="form-field">
                         <mat-label>Tel Number : Business</mat-label>
-                        <input matInput />
+                        <input matInput type="tel" formControlName="telBusiness">
                       </mat-form-field>
                     
                       <mat-form-field appearance="outline" class="form-field">
                         <mat-label>Tel Number : Residence</mat-label>
-                        <input matInput />
+                        <input matInput type="tel" formControlName="telResidence">
+                        <mat-error *ngIf="hasError('telResidence', 'required')">
+                            Tel Number : Residence is required
+                        </mat-error>
+                        <mat-error *ngIf="hasError('telResidence', 'pattern')">
+                            Tel Number : Residence format is invalid
+                        </mat-error>
                       </mat-form-field>
                     
                       <mat-form-field appearance="outline" class="form-field">
                         <mat-label>GSM</mat-label>
-                        <input matInput />
+                        <input matInput type="tel" formControlName="mobile">
+                        <mat-error *ngIf="hasError('mobile', 'required')">
+                            GSM is required
+                        </mat-error>
+                        <mat-error *ngIf="hasError('mobile', 'pattern')">
+                            GSM format is invalid
+                        </mat-error>
                       </mat-form-field>
                     
                       <mat-form-field appearance="outline" class="form-field">
                         <mat-label>E-Mail Address</mat-label>
-                        <input matInput type="email" />
+                        <input matInput type="email" formControlName="email">
+                        <mat-error *ngIf="hasError('email', 'required')">
+                            E-Mail Address is required
+                        </mat-error>
+                        <mat-error *ngIf="hasError('email', 'email')">
+                            Email format is invalid
+                        </mat-error>
                       </mat-form-field>
           
                 </div>

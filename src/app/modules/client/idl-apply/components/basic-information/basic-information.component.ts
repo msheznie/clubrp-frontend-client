@@ -118,7 +118,6 @@ export class BasicInformationComponent implements OnInit, OnDestroy{
       this.selectedCountries.push({ name: value });
     }
 
-    // Clear the input value
     this.currentCountry.set('');
     
     // Clear the input element

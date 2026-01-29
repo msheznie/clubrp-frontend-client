@@ -1,42 +1,134 @@
 <div class="mb-4">
-    <mat-accordion class="example-headers-align" multi>
-        <mat-expansion-panel>
-            <mat-expansion-panel-header>
-                <mat-panel-title> 
-                    <span>
-                        <img class="w-[28px]" src="../../../assets/img/accordion6.png" alt="">
-                    </span>
-                    <span class="mx-4">
-                        Attachments
-                    </span>
-                </mat-panel-title>
-              </mat-expansion-panel-header>
-          <div class="contant-section">
-            <div class="border-dashed border-2 border-[var(--color-border)] rounded-lg p-4">
-                <div class="text-center mb-4">
-                  <mat-icon>cloud_upload</mat-icon>
-                  <p class="text-sm text-[var(--color-text-secondary)]">File Size should be between 2MB to 10MB</p>
-                  <button mat-button color="primary" (click)="fileInput.click()">Browse File</button>
-                  <input #fileInput type="file" multiple (change)="onFilesSelected($event)" class="hidden" />
-                </div>
-              
-                <div *ngFor="let file of uploadedFiles; let i = index" class="flex items-center justify-between border border-dashed border-[var(--color-border)] p-2 rounded-md my-2">
-                  <div class="flex items-center gap-2">
-                    <img src="assets/pdf-icon.png" class="w-6 h-6" alt="PDF" />
-                    <div>
-                      <p class="font-semibold text-sm">{{ file.name }}</p>
-                      <p class="text-xs text-[var(--color-text-secondary)]">File Size should be between 2MB to 10MB</p>
-                    </div>
-                  </div>
-                  <button mat-icon-button (click)="removeFile(i)">
-                    <mat-icon>close</mat-icon>
-                  </button>
-                </div>
-              </div>            
+  <mat-accordion class="example-headers-align" multi>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <span>
+            <img class="w-[28px]" src="../../../assets/img/accordion6.png" alt="">
+          </span>
+          <span class="mx-4">Attachments</span>
+          <span class="ml-2 text-sm" [class.text-green-600]="isFormValid()" [class.text-red-600]="!isFormValid()">
+            {{ isFormValid() ? '✓' : '✗' }}
+          </span>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <form [formGroup]="attachmentsForm">
+        <div class="px-4 py-4">
+          <div class="mb-6">
+            <h4 class="text-lg font-semibold mb-4">
+              Required Documents
+              <span class="text-primary-500 text-sm ml-2">*</span>
+            </h4>
+            <div class="space-y-2">
+              <div *ngFor="let doc of requiredDocuments" class="text-sm text-gray-700">
+                <span class="font-medium">{{ doc.display_name }}</span>
+                <span *ngIf="doc.is_mandatory" class="text-red-600 ml-2">- Mandatory</span>
+                <span *ngIf="!doc.is_mandatory" class="text-gray-500 ml-2">- Optional</span>
+              </div>
+            </div>
           </div>
-        </mat-expansion-panel>
-    </mat-accordion>
+
+          <div class="flex items-center justify-between mb-4">
+            <div class="text-sm text-gray-600">Attachment(s)</div>
+          </div>
+
+          <div *ngIf="!attachments.length"
+               class="bg-red-50 border border-red-200 rounded-lg p-3 mb-4">
+            <div class="flex items-center gap-2">
+              <mat-icon class="text-red-500 text-sm">warning</mat-icon>
+              <span class="text-red-700 text-sm font-medium">
+                At least one attachment is required to submit the application
+              </span>
+            </div>
+          </div>
+
+          <div class="border border-gray-200 rounded-lg p-4 bg-white">
+            <div class="flex items-center justify-between mb-4">
+              <div class="flex flex-wrap gap-2">
+                <div *ngFor="let attachment of attachments; let i = index"
+                     class="bg-blue-100 text-blue-800 px-3 py-2 rounded-lg text-sm flex items-center gap-2 border border-blue-200 hover:bg-blue-200 transition-colors">
+                  <mat-icon class="text-blue-600 text-sm">
+                    {{ getFileIcon(attachment.file_type) }}
+                  </mat-icon>
+                  <span class="font-medium flex-1 truncate" [title]="attachment.file_name">
+                    {{ attachment.file_name }}
+                  </span>
+                  <span class="text-xs text-blue-600">({{ formatFileSize(attachment.file_size) }})</span>
+                  <div class="flex items-center gap-1 ml-2">
+                    <button type="button"
+                            class="text-blue-600 hover:text-blue-800 text-xs"
+                            (click)="previewFile(attachment)"
+                            matTooltip="Preview file">
+                      <mat-icon class="text-sm">visibility</mat-icon>
+                    </button>
+                    <button type="button"
+                            class="text-green-600 hover:text-green-800 text-xs"
+                            (click)="downloadFile(attachment)"
+                            matTooltip="Download file">
+                      <mat-icon class="text-sm">download</mat-icon>
+                    </button>
+                    <button type="button"
+                            class="text-red-500 hover:text-red-700 text-xs"
+                            (click)="removeAttachment(i)"
+                            matTooltip="Remove file">
+                      <mat-icon class="text-sm">close</mat-icon>
+                    </button>
+                  </div>
+                </div>
+                <div *ngIf="!attachments.length" class="text-gray-500 text-sm italic">
+                  No files uploaded
+                </div>
+              </div>
+              <div class="flex items-center gap-2">
+                <button *ngIf="attachments.length"
+                        type="button"
+                        class="text-gray-500 hover:text-gray-700 p-2 rounded-full hover:bg-gray-100"
+                        (click)="clearAllAttachments()"
+                        matTooltip="Clear all files">
+                  <mat-icon>delete_sweep</mat-icon>
+                </button>
+              </div>
+            </div>
+
+            <div class="mt-4">
+              <input type="file"
+                     multiple
+                     class="hidden"
+                     #fileInput
+                     (change)="onFileSelected($event)"
+                     accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.gif,.txt,.xlsx,.xls">
+              <div class="w-full border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-400 transition-colors cursor-pointer relative"
+                   [class.border-blue-400]="isDragOver"
+                   [class.bg-blue-50]="isDragOver"
+                   [class.pointer-events-none]="isProcessingFiles"
+                   (click)="!isProcessingFiles && fileInput.click()"
+                   (dragover)="onDragOver($event)"
+                   (dragleave)="onDragLeave($event)"
+                   (drop)="onDrop($event)">
+                <div *ngIf="isProcessingFiles"
+                     class="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center rounded-lg">
+                  <div class="flex flex-col items-center">
+                    <mat-spinner diameter="30"></mat-spinner>
+                    <span class="text-sm text-gray-600 mt-2">Processing files...</span>
+                  </div>
+                </div>
+                <mat-icon class="text-gray-400 text-4xl mb-2" [class.text-blue-400]="isDragOver">
+                  {{ isProcessingFiles ? 'hourglass_empty' : 'cloud_upload' }}
+                </mat-icon>
+                <div class="text-gray-600 mb-2">
+                  <span class="font-medium">Click to upload</span> or drag and drop files here
+                </div>
+                <div class="text-sm text-gray-500">
+                  Supported: PDF, DOC, DOCX, JPG, PNG, GIF, TXT, XLSX
+                </div>
+                <div class="text-xs text-gray-400 mt-2">
+                  {{ attachments.length }} file(s) selected
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </mat-expansion-panel>
+  </mat-accordion>
 </div>
-
-
-  
