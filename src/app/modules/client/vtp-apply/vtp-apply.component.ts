@@ -164,11 +164,7 @@ export class VtpApplyComponent {
     return this.authService.isAuthenticated();
   }
 
-  /**
-   * Collect all form data from child components and submit to API
-   */
   submitApplication(overall_status: number = 0): void {
-    // Validate all forms before submission
     if (!this.validateAllForms()) {
       const hasAttachments = (this.attachmentsComponent?.getAttachments()?.length ?? 0) > 0;
       const message = !hasAttachments
@@ -179,11 +175,9 @@ export class VtpApplyComponent {
       return;
     }
 
-    // Collect all form data
     const combinedForm = this.createCombinedFormGroup(overall_status);
     const payload = this.buildPayloadFromFormGroup(combinedForm);
 
-    // Submit to API using VTP service
     this.vtpService.submitVtpApplication(payload).subscribe({
       next: (response: any) => {
         this.helperService.openMessageSnackBar('Application submitted successfully!', '');
@@ -196,9 +190,6 @@ export class VtpApplyComponent {
     });
   }
 
-  /**
-   * Validate all child component forms
-   */
   private validateAllForms(): boolean {
     const hasAttachments = (this.attachmentsComponent?.getAttachments()?.length ?? 0) > 0;
     const validationResults: any = {
@@ -212,7 +203,6 @@ export class VtpApplyComponent {
       termsAccepted: this.termsAndConditionComponent?.accepted ?? false
     };
 
-    // Log invalid forms and their empty fields
     const invalidForms: string[] = [];
     Object.keys(validationResults).forEach((key) => {
       if (key === 'termsAccepted') {
@@ -243,9 +233,6 @@ export class VtpApplyComponent {
     return allValid;
   }
 
-  /**
-   * Validate a form and return validation details
-   */
   private validateForm(formName: string, formGroup: FormGroup | undefined): { isValid: boolean; formName: string; invalidFields: string[] } {
     if (!formGroup) {
       return { isValid: false, formName, invalidFields: ['Form not initialized'] };
@@ -253,7 +240,6 @@ export class VtpApplyComponent {
 
     const invalidFields: string[] = [];
     
-    // Check each control in the form
     Object.keys(formGroup.controls).forEach((key) => {
       const control = formGroup.get(key);
       if (control && control.invalid) {
@@ -268,9 +254,7 @@ export class VtpApplyComponent {
     };
   }
 
-  /**
-   * Create a combined FormGroup from all child component forms
-   */
+
   private createCombinedFormGroup(overall_status: number = 0): FormGroup {
     const basicInfoValue = this.basicInformationComponent?.formGroup?.value || {};
     const driverDetailsValue = this.driverDetailsComponent?.formGroup?.value || {};
@@ -281,19 +265,15 @@ export class VtpApplyComponent {
     const termsAccepted = this.termsAndConditionComponent?.accepted || false;
     const isMulkiyaTranslationRequired = (this.secondFormGroup.get('isMulkiyaTranslationRequired')?.value ?? false) ? 1 : 0;
 
-    // Handle vehicle type - convert typeOfVehicle (ID) to vehicle_license_type
     let vehicleParticularsProcessed = { ...vehicleParticularsValue };
     if (vehicleParticularsProcessed.typeOfVehicle && !vehicleParticularsProcessed.vehicle_license_type) {
-      // typeOfVehicle now contains the ID, so we can directly use it
       vehicleParticularsProcessed.vehicle_license_type = vehicleParticularsProcessed.typeOfVehicle;
       delete vehicleParticularsProcessed.typeOfVehicle;
     } else if (!vehicleParticularsProcessed.typeOfVehicle && !vehicleParticularsProcessed.vehicle_license_type) {
-      // If no vehicle type is selected, ensure both are removed
       delete vehicleParticularsProcessed.vehicle_license_type;
       delete vehicleParticularsProcessed.typeOfVehicle;
     }
 
-    // Process attachments
     const attachments = this.processAttachments();
 
     return this._formBuilder.group({
@@ -320,17 +300,10 @@ export class VtpApplyComponent {
     });
   }
 
-  /**
-   * Process attachments from AttachmentsComponent (same shape as admin payload)
-   */
   private processAttachments(): any[] {
     return this.attachmentsComponent?.getAttachments() ?? [];
   }
 
-  /**
-   * Build payload from FormGroup matching admin component structure
-   * Returns FormData if files are present, otherwise returns JSON
-   */
   private buildPayloadFromFormGroup(formGroup: FormGroup): FormData | any {
     const formValue = formGroup.value;
 
@@ -360,10 +333,8 @@ export class VtpApplyComponent {
       });
     }
 
-    // Build clean payload
     const cleanPayload: any = { ...formValue };
     
-    // Handle vehicle_particulars - ensure vehicle_license_type is set
     if (cleanPayload.vehicle_particulars && typeof cleanPayload.vehicle_particulars === 'object') {
       const vp = cleanPayload.vehicle_particulars;
       if (!vp.vehicle_license_type && vp.typeOfVehicle) {
@@ -372,14 +343,11 @@ export class VtpApplyComponent {
       }
     }
 
-    // Set attachments metadata
     cleanPayload.attachments = attachments;
 
-    // If we have file objects, create FormData
     if (hasFileObjects) {
       const formData = new FormData();
       
-      // Add all form fields except attachments
       Object.keys(cleanPayload).forEach((key) => {
         if (key === 'attachments') {
           return; // Handle attachments separately
@@ -388,7 +356,6 @@ export class VtpApplyComponent {
         const value = cleanPayload[key];
         if (value !== undefined && value !== null) {
           if (typeof value === 'object' && !Array.isArray(value)) {
-            // Handle nested objects (like basic_information, driver_details, etc.)
             Object.keys(value).forEach((nestedKey) => {
               const nestedValue = value[nestedKey];
               if (nestedValue !== undefined && nestedValue !== null) {

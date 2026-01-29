@@ -61,7 +61,7 @@ export class ReferencesYourHomeCountryComponent implements OnInit {
 
     optionalPhoneValidator(control: any): { [key: string]: any } | null {
     if (!control.value || control.value === '' || control.value === '+968') {
-      return null; // Valid for optional fields
+      return null; 
     }
     const pattern = /^\+[1-9]\d{5,14}$/;
     return pattern.test(control.value) ? null : { pattern: true };

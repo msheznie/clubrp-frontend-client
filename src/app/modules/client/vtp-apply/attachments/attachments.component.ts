@@ -71,7 +71,6 @@ export class AttachmentsComponent implements OnInit {
     return this.attachmentsForm.get('attachments')?.value || [];
   }
 
-  /** Returns attachment array in payload shape for parent (vtp-apply) to send. */
   getAttachments(): any[] {
     return this.attachments;
   }

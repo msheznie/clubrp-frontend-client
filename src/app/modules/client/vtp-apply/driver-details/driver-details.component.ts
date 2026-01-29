@@ -173,7 +173,6 @@ export class DriverDetailsComponent implements OnInit, OnDestroy {
     }
   }
 
-  // Driver 2 Nationality methods
   addDriver2Nationality(event: MatChipInputEvent): void {
     const value = (event.value || '').trim();
     
@@ -233,7 +232,7 @@ export class DriverDetailsComponent implements OnInit, OnDestroy {
 
   optionalPhoneValidator(control: any): { [key: string]: any } | null {
     if (!control.value || control.value === '' || control.value === '+968') {
-      return null; // Valid for optional fields
+      return null; 
     }
     const pattern = /^\+[1-9]\d{5,14}$/;
     return pattern.test(control.value) ? null : { pattern: true };

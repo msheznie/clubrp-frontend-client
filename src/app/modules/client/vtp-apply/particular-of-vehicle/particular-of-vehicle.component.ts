@@ -61,7 +61,6 @@ export class ParticularOfVehicleComponent implements OnInit, OnDestroy {
     this.getAssignmentDetails();
     this.getIdlFormData();
 
-    // Setup filtered vehicle types computed signal
     this.filteredVehicleTypes = computed(() => {
       const currentVehicleType = this.currentVehicleType().toLowerCase();
       const vehicleTypeObjects = this.vehicleTypeObjects();
@@ -72,7 +71,6 @@ export class ParticularOfVehicleComponent implements OnInit, OnDestroy {
         : vehicleTypeObjects.slice();
     });
 
-    // Setup filtered countries computed signal
     this.filteredCountries = computed(() => {
       const currentCountry = this.currentCountry().toLowerCase();
       const countries = this.allCountries();
@@ -81,10 +79,7 @@ export class ParticularOfVehicleComponent implements OnInit, OnDestroy {
         : countries.slice();
     });
 
-    // Initialize selected vehicle type from form if it exists
-    // This will be set after vehicle types are loaded
 
-    // Initialize selected country from form if it exists
     if (this.formGroup && this.formGroup.get('countryOfRegistration')?.value) {
       const existingCountry = this.formGroup.get('countryOfRegistration')?.value;
       if (existingCountry) {
@@ -96,15 +91,12 @@ export class ParticularOfVehicleComponent implements OnInit, OnDestroy {
   getAssignmentDetails() {
     this.idlService.getVtpApplicationAssignmentDetails().pipe(takeUntil(this.destroy$)).subscribe((response: any) => {
       const licenseMasters = response.data?.license_masters || [];
-      // Store full objects with id and vehicle_name
       this.vehicleTypeObjects.set(licenseMasters);
-      // Also store names for display
       const vehicleTypes = licenseMasters.map((vehicleType: any) => {
         return vehicleType.vehicle_name;
       });
       this.vehicleTypes.set(vehicleTypes);
       
-      // Initialize selected vehicle type from form if it exists (after data is loaded)
       if (this.formGroup && this.formGroup.get('typeOfVehicle')?.value) {
         const existingVehicleTypeId = this.formGroup.get('typeOfVehicle')?.value;
         if (existingVehicleTypeId) {
@@ -161,7 +153,6 @@ export class ParticularOfVehicleComponent implements OnInit, OnDestroy {
     const value = (event.value || '').trim();
     
     if (value) {
-      // Find matching vehicle type by name
       const matched = this.vehicleTypeObjects().find((v: any) => 
         (v.vehicle_name || '').toLowerCase() === value.toLowerCase()
       );
@@ -196,7 +187,7 @@ export class ParticularOfVehicleComponent implements OnInit, OnDestroy {
   }
 
   selectedVehicleTypeOption(event: MatAutocompleteSelectedEvent): void {
-    const selected = event.option?.value; // This will be the full vehicle type object
+    const selected = event.option?.value; 
     if (selected && selected.id) {
       this.selectedVehicleType = selected;
       this.currentVehicleType.set('');
@@ -204,7 +195,7 @@ export class ParticularOfVehicleComponent implements OnInit, OnDestroy {
       
       if (this.formGroup) {
         this.formGroup.patchValue({
-          typeOfVehicle: selected.id // Store the ID, not the name
+          typeOfVehicle: selected.id 
         });
       }
     }
@@ -221,7 +212,6 @@ export class ParticularOfVehicleComponent implements OnInit, OnDestroy {
     }
   }
 
-  // Country methods (single selection)
   addCountry(event: MatChipInputEvent): void {
     const value = (event.value || '').trim();
     

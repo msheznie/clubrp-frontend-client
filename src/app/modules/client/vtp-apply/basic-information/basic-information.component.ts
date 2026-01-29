@@ -61,7 +61,6 @@ export class BasicInformationComponent implements OnInit, OnDestroy {
     this.initializeForm();
     this.getIdlFormData()
     
-    // Initialize selected countries from form if they exist
     if (this.formGroup && this.formGroup.get('countriesToBeVisited')?.value) {
       const existingCountries = this.formGroup.get('countriesToBeVisited')?.value;
       if (Array.isArray(existingCountries)) {
@@ -69,7 +68,6 @@ export class BasicInformationComponent implements OnInit, OnDestroy {
       }
     }
 
-    // Setup filtered countries computed signal
     this.filteredCountries = computed(() => {
       const currentCountry = this.currentCountry().toLowerCase();
       const countries = this.allCountries();
@@ -87,7 +85,6 @@ export class BasicInformationComponent implements OnInit, OnDestroy {
         : nationalities.slice();
     });
 
-    // Initialize selected nationality from form if it exists
     if (this.formGroup && this.formGroup.get('nationality')?.value) {
       const existingNationality = this.formGroup.get('nationality')?.value;
       if (existingNationality) {
@@ -145,20 +142,16 @@ export class BasicInformationComponent implements OnInit, OnDestroy {
     add(event: MatChipInputEvent): void {
       const value = (event.value || '').trim();
   
-      // Add country if it's not empty and not already selected
       if (value && !this.selectedCountries.find(country => country.name === value)) {
         this.selectedCountries.push({ name: value });
       }
   
-      // Clear the input value
       this.currentCountry.set('');
       
-      // Clear the input element
       if (event.input) {
         event.input.value = '';
       }
       
-      // Update form control
       if (this.formGroup) {
         this.formGroup.patchValue({
           countriesToBeVisited: this.selectedCountries.map(country => country.name)
@@ -172,7 +165,6 @@ export class BasicInformationComponent implements OnInit, OnDestroy {
       this.announcer.announce(`Removed ${country.name}`);
     }
     
-    // Update form control
     if (this.formGroup) {
       this.formGroup.patchValue({
         countriesToBeVisited: this.selectedCountries.map(country => country.name)
@@ -188,7 +180,6 @@ export class BasicInformationComponent implements OnInit, OnDestroy {
     this.currentCountry.set('');
     event.option.deselect();
     
-    // Update form control
     if (this.formGroup) {
       this.formGroup.patchValue({
         countriesToBeVisited: this.selectedCountries.map(country => country.name)
@@ -200,24 +191,19 @@ export class BasicInformationComponent implements OnInit, OnDestroy {
     this.currentCountry.set(event.target.value);
   }
 
-  // Nationality methods (single selection)
   addNationality(event: MatChipInputEvent): void {
     const value = (event.value || '').trim();
     
-    // Add nationality if it's not empty
     if (value) {
       this.selectedNationality = { name: value };
     }
     
-    // Clear the input value
     this.currentNationality.set('');
     
-    // Clear the input element
     if (event.input) {
       event.input.value = '';
     }
     
-    // Update form control
     if (this.formGroup) {
       this.formGroup.patchValue({
         nationality: this.selectedNationality?.name || ''
@@ -231,7 +217,6 @@ export class BasicInformationComponent implements OnInit, OnDestroy {
       this.selectedNationality = null;
     }
     
-    // Update form control
     if (this.formGroup) {
       this.formGroup.patchValue({
         nationality: ''
@@ -245,7 +230,6 @@ export class BasicInformationComponent implements OnInit, OnDestroy {
     this.currentNationality.set('');
     event.option.deselect();
     
-    // Update form control
     if (this.formGroup) {
       this.formGroup.patchValue({
         nationality: selectedNationality
@@ -273,7 +257,7 @@ export class BasicInformationComponent implements OnInit, OnDestroy {
 
     optionalPhoneValidator(control: any): { [key: string]: any } | null {
     if (!control.value || control.value === '' || control.value === '+968') {
-      return null; // Valid for optional fields
+      return null;
     }
     const pattern = /^\+[1-9]\d{5,14}$/;
     return pattern.test(control.value) ? null : { pattern: true };
