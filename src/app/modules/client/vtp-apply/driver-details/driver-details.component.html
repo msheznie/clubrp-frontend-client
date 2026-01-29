@@ -41,18 +41,20 @@
 
                             <mat-form-field appearance="outline" class="countrySet example-chip-list form-field formFieldHelpers w-full">
                             <mat-label>Driver 01 Nationality <span>*</span></mat-label>
-                            <mat-chip-grid #driver1NationalityChipGrid aria-label="Driver 1 Nationality selection">
+                            <div class="chip-input-row">
+                              <mat-chip-grid #driver1NationalityChipGrid aria-label="Driver 1 Nationality selection">
                                 <mat-chip-row *ngIf="selectedDriver1Nationality" (removed)="removeDriver1Nationality()">
-                                    {{ selectedDriver1Nationality.name }}
-                                    <button matChipRemove [attr.aria-label]="'remove ' + selectedDriver1Nationality.name">
-                                        <mat-icon>cancel</mat-icon>
-                                    </button>
+                                  {{ selectedDriver1Nationality.name }}
+                                  <button matChipRemove [attr.aria-label]="'remove ' + selectedDriver1Nationality.name">
+                                    <mat-icon>cancel</mat-icon>
+                                  </button>
                                 </mat-chip-row>
-                            </mat-chip-grid>
-                            <input name="currentDriver1Nationality" placeholder="Select nationality..." #driver1NationalityInput formControlName="driver1Nationality"
+                              </mat-chip-grid>
+                              <input name="currentDriver1Nationality" placeholder="Select nationality..." #driver1NationalityInput formControlName="driver1Nationality"
                                 [matChipInputFor]="driver1NationalityChipGrid" [matAutocomplete]="driver1NationalityAuto" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                                 (matChipInputTokenEnd)="addDriver1Nationality($event)" (input)="onDriver1NationalityInputChange($event)" 
                                 (click)="openDriver1NationalityAutocomplete(driver1NationalityInput, driver1NationalityAuto)" />
+                            </div>
                             <mat-autocomplete #driver1NationalityAuto="matAutocomplete" (optionSelected)="selectedDriver1NationalityOption($event); driver1NationalityInput.value = ''">
                                 <mat-option *ngFor="let nationality of filteredDriver1Nationalities()" [value]="nationality" [attr.aria-label]="nationality">
                                     {{ nationality }}
@@ -89,18 +91,20 @@
 
                             <mat-form-field appearance="outline" class="countrySet example-chip-list form-field formFieldHelpers w-full">
                             <mat-label>Driver 02 Nationality</mat-label>
-                            <mat-chip-grid #driver2NationalityChipGrid aria-label="Driver 2 Nationality selection">
+                            <div class="chip-input-row">
+                              <mat-chip-grid #driver2NationalityChipGrid aria-label="Driver 2 Nationality selection">
                                 <mat-chip-row *ngIf="selectedDriver2Nationality" (removed)="removeDriver2Nationality()">
-                                    {{ selectedDriver2Nationality.name }}
-                                    <button matChipRemove [attr.aria-label]="'remove ' + selectedDriver2Nationality.name">
-                                        <mat-icon>cancel</mat-icon>
-                                    </button>
+                                  {{ selectedDriver2Nationality.name }}
+                                  <button matChipRemove [attr.aria-label]="'remove ' + selectedDriver2Nationality.name">
+                                    <mat-icon>cancel</mat-icon>
+                                  </button>
                                 </mat-chip-row>
-                            </mat-chip-grid>
-                            <input name="currentDriver2Nationality" placeholder="Select nationality..." #driver2NationalityInput formControlName="driver2Nationality"
+                              </mat-chip-grid>
+                              <input name="currentDriver2Nationality" placeholder="Select nationality..." #driver2NationalityInput formControlName="driver2Nationality"
                                 [matChipInputFor]="driver2NationalityChipGrid" [matAutocomplete]="driver2NationalityAuto" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                                 (matChipInputTokenEnd)="addDriver2Nationality($event)" (input)="onDriver2NationalityInputChange($event)" 
                                 (click)="openDriver2NationalityAutocomplete(driver2NationalityInput, driver2NationalityAuto)" />
+                            </div>
                             <mat-autocomplete #driver2NationalityAuto="matAutocomplete" (optionSelected)="selectedDriver2NationalityOption($event); driver2NationalityInput.value = ''">
                                 <mat-option *ngFor="let nationality of filteredDriver2Nationalities()" [value]="nationality" [attr.aria-label]="nationality">
                                     {{ nationality }}

@@ -32,23 +32,25 @@
               
                 <mat-form-field appearance="outline" class="countrySet example-chip-list form-field formFieldHelpers">
                   <mat-label>Residence (Country)*</mat-label>
-                  <mat-chip-grid #residenceCountryChipGrid aria-label="Residence country selection">
-                    <mat-chip-row *ngIf="selectedResidenceCountry" (removed)="removeResidenceCountry()">
-                      {{ selectedResidenceCountry.name }}
-                      <button matChipRemove [attr.aria-label]="'remove ' + selectedResidenceCountry.name">
-                        <mat-icon>cancel</mat-icon>
-                      </button>
-                    </mat-chip-row>
-                  </mat-chip-grid>
-                  <input
-                    matInput
-                    placeholder="Select country"
-                    formControlName="residenceCountry"
-                    [matChipInputFor]="residenceCountryChipGrid"
-                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                    [matAutocomplete]="resCountryAuto"
-                    (matChipInputTokenEnd)="addResidenceCountry($event)"
-                    (input)="onResidenceCountryInputChange($event)" />
+                  <div class="chip-input-row">
+                    <mat-chip-grid #residenceCountryChipGrid aria-label="Residence country selection">
+                      <mat-chip-row *ngIf="selectedResidenceCountry" (removed)="removeResidenceCountry()">
+                        {{ selectedResidenceCountry.name }}
+                        <button matChipRemove [attr.aria-label]="'remove ' + selectedResidenceCountry.name">
+                          <mat-icon>cancel</mat-icon>
+                        </button>
+                      </mat-chip-row>
+                    </mat-chip-grid>
+                    <input
+                      matInput
+                      placeholder="Select country"
+                      formControlName="residenceCountry"
+                      [matChipInputFor]="residenceCountryChipGrid"
+                      [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                      [matAutocomplete]="resCountryAuto"
+                      (matChipInputTokenEnd)="addResidenceCountry($event)"
+                      (input)="onResidenceCountryInputChange($event)" />
+                  </div>
                   <mat-autocomplete
                     #resCountryAuto="matAutocomplete"
                     (optionSelected)="selectedResidenceCountryOption($event)">

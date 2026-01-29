@@ -13,3 +13,57 @@
 ::ng-deep .mdc-notched-outline__notch{
     border: none;
 }
+
+/* Chips on left, input on right (same layout as basic-information) */
+::ng-deep .example-chip-list .chip-input-row {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    gap: 6px 8px !important;
+    width: 100% !important;
+    min-height: 0 !important;
+
+    mat-chip-grid {
+        flex: 1 1 auto !important;
+        min-width: 0 !important;
+        display: flex !important;
+        flex-wrap: wrap !important;
+        align-items: center !important;
+        gap: 4px 6px !important;
+        min-height: 0 !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        line-height: normal !important;
+    }
+
+    mat-chip-grid:empty {
+        display: none !important;
+    }
+
+    input {
+        flex: 0 0 auto !important;
+        min-width: 140px !important;
+        max-width: 200px !important;
+        margin-left: auto !important;
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
+        padding: 0 !important;
+        height: auto !important;
+        min-height: auto !important;
+    }
+}
+
+::ng-deep .countrySet .mat-mdc-form-field-subscript-wrapper {
+    display: none !important;
+}
+
+::ng-deep .countrySet.example-chip-list {
+    input::placeholder {
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+    }
+    input:focus::placeholder {
+        opacity: 0 !important;
+    }
+}

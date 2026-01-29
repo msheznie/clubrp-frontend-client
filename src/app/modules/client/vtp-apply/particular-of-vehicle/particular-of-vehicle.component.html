@@ -19,18 +19,20 @@
                 <!-- Row 1 -->
                 <mat-form-field appearance="outline" class="countrySet example-chip-list form-field formFieldHelpers">
                   <mat-label>Country Of Registration*</mat-label>
-                  <mat-chip-grid #countryChipGrid aria-label="Country selection">
-                    <mat-chip-row *ngIf="selectedCountry" (removed)="removeCountry()">
-                      {{ selectedCountry.name }}
-                      <button matChipRemove [attr.aria-label]="'remove ' + selectedCountry.name">
-                        <mat-icon>cancel</mat-icon>
-                      </button>
-                    </mat-chip-row>
-                  </mat-chip-grid>
-                  <input name="currentCountry" placeholder="Select country..." #countryInput formControlName="countryOfRegistration"
-                    [matChipInputFor]="countryChipGrid" [matAutocomplete]="countryAuto" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                    (matChipInputTokenEnd)="addCountry($event)" (input)="onCountryInputChange($event)" 
-                    (click)="openCountryAutocomplete(countryInput, countryAuto)" />
+                  <div class="chip-input-row">
+                    <mat-chip-grid #countryChipGrid aria-label="Country selection">
+                      <mat-chip-row *ngIf="selectedCountry" (removed)="removeCountry()">
+                        {{ selectedCountry.name }}
+                        <button matChipRemove [attr.aria-label]="'remove ' + selectedCountry.name">
+                          <mat-icon>cancel</mat-icon>
+                        </button>
+                      </mat-chip-row>
+                    </mat-chip-grid>
+                    <input name="currentCountry" placeholder="Select country..." #countryInput formControlName="countryOfRegistration"
+                      [matChipInputFor]="countryChipGrid" [matAutocomplete]="countryAuto" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                      (matChipInputTokenEnd)="addCountry($event)" (input)="onCountryInputChange($event)" 
+                      (click)="openCountryAutocomplete(countryInput, countryAuto)" />
+                  </div>
                   <mat-autocomplete #countryAuto="matAutocomplete" (optionSelected)="selectedCountryOption($event); countryInput.value = ''">
                     <mat-option *ngFor="let country of filteredCountries()" [value]="country" [attr.aria-label]="country">
                       {{ country }}
@@ -97,18 +99,20 @@
               
                 <mat-form-field appearance="outline" class="countrySet example-chip-list form-field formFieldHelpers">
                   <mat-label>Type Of Vehicle*</mat-label>
-                  <mat-chip-grid #vehicleTypeChipGrid aria-label="Vehicle Type selection">
-                    <mat-chip-row *ngIf="selectedVehicleType" (removed)="removeVehicleType()">
-                      {{ selectedVehicleType.vehicle_name || selectedVehicleType.name }}
-                      <button matChipRemove [attr.aria-label]="'remove ' + (selectedVehicleType.vehicle_name || selectedVehicleType.name)">
-                        <mat-icon>cancel</mat-icon>
-                      </button>
-                    </mat-chip-row>
-                  </mat-chip-grid>
-                  <input name="currentVehicleType" placeholder="Select vehicle type..." #vehicleTypeInput formControlName="typeOfVehicle"
-                    [matChipInputFor]="vehicleTypeChipGrid" [matAutocomplete]="vehicleTypeAuto" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                    (matChipInputTokenEnd)="addVehicleType($event)" (input)="onVehicleTypeInputChange($event)" 
-                    (click)="openVehicleTypeAutocomplete(vehicleTypeInput, vehicleTypeAuto)" />
+                  <div class="chip-input-row">
+                    <mat-chip-grid #vehicleTypeChipGrid aria-label="Vehicle Type selection">
+                      <mat-chip-row *ngIf="selectedVehicleType" (removed)="removeVehicleType()">
+                        {{ selectedVehicleType.vehicle_name || selectedVehicleType.name }}
+                        <button matChipRemove [attr.aria-label]="'remove ' + (selectedVehicleType.vehicle_name || selectedVehicleType.name)">
+                          <mat-icon>cancel</mat-icon>
+                        </button>
+                      </mat-chip-row>
+                    </mat-chip-grid>
+                    <input name="currentVehicleType" placeholder="Select vehicle type..." #vehicleTypeInput formControlName="typeOfVehicle"
+                      [matChipInputFor]="vehicleTypeChipGrid" [matAutocomplete]="vehicleTypeAuto" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                      (matChipInputTokenEnd)="addVehicleType($event)" (input)="onVehicleTypeInputChange($event)" 
+                      (click)="openVehicleTypeAutocomplete(vehicleTypeInput, vehicleTypeAuto)" />
+                  </div>
                   <mat-autocomplete #vehicleTypeAuto="matAutocomplete" (optionSelected)="selectedVehicleTypeOption($event); vehicleTypeInput.value = ''">
                     <mat-option *ngFor="let vehicleType of filteredVehicleTypes()" [value]="vehicleType" [attr.aria-label]="vehicleType.vehicle_name">
                       {{ vehicleType.vehicle_name }}
