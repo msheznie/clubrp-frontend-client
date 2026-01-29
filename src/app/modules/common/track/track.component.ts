@@ -223,7 +223,7 @@ export class TrackComponent implements OnInit {
 
   private updateBreadcrumbs(): void {
     const middleLabel = this.applicationTypeFilter === '2'
-      ? 'Vehicle Transportation Permit'
+      ? 'Carnte De Passage'
       : 'International Driving License';
 
     const middleLink = this.applicationTypeFilter === '2'

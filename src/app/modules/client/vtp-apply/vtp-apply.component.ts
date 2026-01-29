@@ -105,7 +105,7 @@ export class VtpApplyComponent {
 
   breadcrumbs = [
     { label: 'Oman Automobile Association', link: '/association' },
-    { label: 'Vehicle Transportation Permit', link: '/vehicle-transport' },
+    { label: 'Carnte De Passage', link: '/vehicle-transport' },
     { label: 'Apply for CDP' },
   ];
 
